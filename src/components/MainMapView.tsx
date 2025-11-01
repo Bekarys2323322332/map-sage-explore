@@ -151,19 +151,14 @@ const MainMapView = ({ onCountryClick, hoveredCountry, setHoveredCountry }: Main
       attributionControl: false,
     });
 
-    // Add base tile layer
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: "",
-    }).addTo(mapRef.current);
-
     // Add country boundaries
     countriesGeoJSON.features.forEach((feature) => {
       const layer = L.geoJSON(feature as any, {
         style: {
-          fillColor: "#e7d8b1", // soft beige tone
-          fillOpacity: 0.6,
-          color: "#b8a98a", // muted border
-          weight: 1.5,
+          fillColor: "transparent",
+          fillOpacity: 0.3,
+          color: "hsl(var(--border))",
+          weight: 2,
         },
         onEachFeature: (feature, layer) => {
           const countryId = feature.properties.id;
@@ -210,9 +205,10 @@ const MainMapView = ({ onCountryClick, hoveredCountry, setHoveredCountry }: Main
   useEffect(() => {
     countryLayersRef.current.forEach((layer, id) => {
       layer.setStyle({
-        fillColor: hoveredCountry === id ? "#d4b97f" : "#e7d8b1",
-        fillOpacity: hoveredCountry === id ? 0.8 : 0.6,
-        weight: hoveredCountry === id ? 2 : 1.5,
+        fillColor: hoveredCountry === id ? "hsl(var(--primary))" : "transparent",
+        fillOpacity: hoveredCountry === id ? 0.5 : 0.3,
+        color: "hsl(var(--border))",
+        weight: hoveredCountry === id ? 3 : 2,
       });
     });
   }, [hoveredCountry]);
