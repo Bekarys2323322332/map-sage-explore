@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import MainMapView from "@/components/MainMapView";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -11,25 +10,93 @@ const Index = () => {
   };
 
   return (
-    <div className="relative w-screen h-screen overflow-hidden bg-background">
-      {/* Header */}
-      <div className="absolute top-0 left-0 right-0 z-10 pt-8 pb-6 text-center bg-gradient-to-b from-background/95 to-transparent backdrop-blur-sm">
-        <h1 className="text-3xl font-bold text-foreground mb-2">Central Asia Interactive Museum</h1>
-        <p className="text-sm text-muted-foreground">Select a country to explore</p>
-      </div>
+    <div className="min-h-screen flex flex-col items-center justify-center p-8 bg-background">
+      <div className="max-w-6xl w-full space-y-8">
+        <div className="text-center space-y-4">
+          <h1 className="text-4xl font-bold text-foreground">Central Asia Interactive Museum</h1>
+          <p className="text-muted-foreground">Select a country to explore its cultural heritage</p>
+        </div>
 
-      {/* Main Map Container */}
-      <div className="absolute inset-0 pt-32 pb-16">
-        <MainMapView
-          onCountryClick={handleCountryClick}
-          hoveredCountry={hoveredCountry}
-          setHoveredCountry={setHoveredCountry}
-        />
-      </div>
+        <svg
+          viewBox="0 0 800 600"
+          className="w-full h-auto"
+          style={{ maxHeight: "70vh" }}
+        >
+          {/* Kazakhstan */}
+          <path
+            d="M 150 100 L 600 80 L 650 150 L 620 250 L 550 280 L 400 260 L 300 200 L 200 180 Z"
+            fill={hoveredCountry === "kazakhstan" ? "hsl(var(--primary))" : "hsl(var(--muted))"}
+            stroke="hsl(var(--border))"
+            strokeWidth="2"
+            className="cursor-pointer transition-all duration-300 hover:opacity-80"
+            onMouseEnter={() => setHoveredCountry("kazakhstan")}
+            onMouseLeave={() => setHoveredCountry(null)}
+            onClick={() => handleCountryClick("kazakhstan")}
+          />
+          <text x="400" y="180" textAnchor="middle" className="fill-foreground text-xl font-semibold pointer-events-none">
+            Kazakhstan
+          </text>
 
-      {/* Footer */}
-      <div className="absolute bottom-0 left-0 right-0 z-10 pb-6 text-center bg-gradient-to-t from-background/95 to-transparent backdrop-blur-sm">
-        <p className="text-xs text-muted-foreground">Discover the rich heritage of Central Asia</p>
+          {/* Uzbekistan */}
+          <path
+            d="M 250 300 L 400 280 L 480 320 L 470 400 L 380 420 L 280 380 Z"
+            fill={hoveredCountry === "uzbekistan" ? "hsl(var(--primary))" : "hsl(var(--muted))"}
+            stroke="hsl(var(--border))"
+            strokeWidth="2"
+            className="cursor-pointer transition-all duration-300 hover:opacity-80"
+            onMouseEnter={() => setHoveredCountry("uzbekistan")}
+            onMouseLeave={() => setHoveredCountry(null)}
+            onClick={() => handleCountryClick("uzbekistan")}
+          />
+          <text x="370" y="350" textAnchor="middle" className="fill-foreground text-xl font-semibold pointer-events-none">
+            Uzbekistan
+          </text>
+
+          {/* Kyrgyzstan */}
+          <path
+            d="M 480 280 L 580 260 L 620 300 L 600 360 L 520 380 L 480 320 Z"
+            fill={hoveredCountry === "kyrgyzstan" ? "hsl(var(--primary))" : "hsl(var(--muted))"}
+            stroke="hsl(var(--border))"
+            strokeWidth="2"
+            className="cursor-pointer transition-all duration-300 hover:opacity-80"
+            onMouseEnter={() => setHoveredCountry("kyrgyzstan")}
+            onMouseLeave={() => setHoveredCountry(null)}
+            onClick={() => handleCountryClick("kyrgyzstan")}
+          />
+          <text x="540" y="320" textAnchor="middle" className="fill-foreground text-xl font-semibold pointer-events-none">
+            Kyrgyzstan
+          </text>
+
+          {/* Tajikistan */}
+          <path
+            d="M 480 380 L 560 400 L 580 450 L 520 480 L 450 460 L 440 420 Z"
+            fill={hoveredCountry === "tajikistan" ? "hsl(var(--primary))" : "hsl(var(--muted))"}
+            stroke="hsl(var(--border))"
+            strokeWidth="2"
+            className="cursor-pointer transition-all duration-300 hover:opacity-80"
+            onMouseEnter={() => setHoveredCountry("tajikistan")}
+            onMouseLeave={() => setHoveredCountry(null)}
+            onClick={() => handleCountryClick("tajikistan")}
+          />
+          <text x="510" y="440" textAnchor="middle" className="fill-foreground text-xl font-semibold pointer-events-none">
+            Tajikistan
+          </text>
+
+          {/* Turkmenistan */}
+          <path
+            d="M 150 400 L 280 380 L 320 450 L 300 520 L 180 500 Z"
+            fill={hoveredCountry === "turkmenistan" ? "hsl(var(--primary))" : "hsl(var(--muted))"}
+            stroke="hsl(var(--border))"
+            strokeWidth="2"
+            className="cursor-pointer transition-all duration-300 hover:opacity-80"
+            onMouseEnter={() => setHoveredCountry("turkmenistan")}
+            onMouseLeave={() => setHoveredCountry(null)}
+            onClick={() => handleCountryClick("turkmenistan")}
+          />
+          <text x="250" y="450" textAnchor="middle" className="fill-foreground text-xl font-semibold pointer-events-none">
+            Turkmenistan
+          </text>
+        </svg>
       </div>
     </div>
   );
