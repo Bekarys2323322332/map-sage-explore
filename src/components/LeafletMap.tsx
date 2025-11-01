@@ -754,6 +754,7 @@ interface LeafletMapProps {
   selectedCountry?: string;
   onLocationClick: (id: string) => void;
   onCoordinatesDrop?: (coords: [number, number]) => void;
+  resetMarker?: boolean;
 }
 
 const LeafletMap = ({
@@ -763,11 +764,13 @@ const LeafletMap = ({
   selectedCountry,
   onLocationClick,
   onCoordinatesDrop,
+  resetMarker = false,
 }: LeafletMapProps) => {
   const mapRef = useRef<LeafletMapInstance | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const markersLayerRef = useRef<L.LayerGroup | null>(null);
   const draggableMarkerRef = useRef<L.Marker | null>(null);
+  const initialMarkerPositionRef = useRef<[number, number] | null>(null);
   const boundariesLayerRef = useRef<L.GeoJSON | null>(null);
   const regionalBoundariesLayerRef = useRef<L.GeoJSON | null>(null);
 
@@ -851,6 +854,9 @@ const LeafletMap = ({
         bottomRight.lng - (bounds.getEast() - bounds.getWest()) * 0.05,
       ];
 
+      // Store initial position for reset
+      initialMarkerPositionRef.current = initialPosition;
+
       draggableMarkerRef.current = L.marker(initialPosition, {
         icon: customIcon,
         draggable: true,
@@ -921,6 +927,13 @@ const LeafletMap = ({
       marker.addTo(markersLayerRef.current!);
     });
   }, [locations, onLocationClick]);
+
+  // Reset marker position when resetMarker becomes true
+  useEffect(() => {
+    if (resetMarker && draggableMarkerRef.current && initialMarkerPositionRef.current) {
+      draggableMarkerRef.current.setLatLng(initialMarkerPositionRef.current);
+    }
+  }, [resetMarker]);
 
   useEffect(() => {
     return () => {

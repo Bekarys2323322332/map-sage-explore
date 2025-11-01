@@ -110,6 +110,7 @@ const CountryView = () => {
         zoom={data.zoom}
         locations={data.locations}
         selectedCountry={data.name}
+        resetMarker={!chatOpen && droppedCoordinates === null}
         onLocationClick={(id) => {
           setSelectedLocation(id);
           setDroppedCoordinates(null);
