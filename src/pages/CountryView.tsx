@@ -1,9 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
-import { Icon } from 'leaflet';
+import { MapContainer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import LocationMarker from '@/components/LocationMarker';
+import MapContent from '@/components/MapContent';
 import ChatPopup from '@/components/ChatPopup';
 import LanguageSelector from '@/components/LanguageSelector';
 import { Button } from '@/components/ui/button';
@@ -114,20 +113,13 @@ const CountryView = () => {
         zoomControl={false}
         attributionControl={false}
       >
-        <TileLayer
-          url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+        <MapContent
+          locations={data.locations}
+          onLocationClick={(id) => {
+            setSelectedLocation(id);
+            setChatOpen(true);
+          }}
         />
-        {data.locations.map((location) => (
-          <LocationMarker
-            key={location.id}
-            position={location.position}
-            name={location.name}
-            onClick={() => {
-              setSelectedLocation(location.id);
-              setChatOpen(true);
-            }}
-          />
-        ))}
       </MapContainer>
 
       {/* Chat Popup */}
