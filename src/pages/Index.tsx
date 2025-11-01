@@ -28,7 +28,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-8 bg-background">
-      <div className="max-w-9xl w-full space-y-10">
+      <div className="max-w-9xl w-full space-y-5">
         <div className="text-center space-y-3">
           <h1 className="text-4xl font-bold text-foreground">Central Asia Interactive Museum</h1>
           <p className="text-muted-foreground">Select a country to explore its cultural heritage</p>
