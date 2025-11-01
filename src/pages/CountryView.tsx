@@ -25,6 +25,97 @@ const countryNameToCode = (name: string): string => {
   }
 };
 
+// Country data with locations and map settings
+const countryData: Record<string, {
+  name: string;
+  center: [number, number];
+  zoom: number;
+  locations: Array<{
+    id: string;
+    name: string;
+    position: [number, number];
+    description: string;
+  }>;
+}> = {
+  kazakhstan: {
+    name: "Kazakhstan",
+    center: [51.1694, 71.4491],
+    zoom: 5,
+    locations: [
+      {
+        id: "almaty",
+        name: "Almaty",
+        position: [43.2220, 76.8512],
+        description: "The largest city and former capital of Kazakhstan",
+      },
+      {
+        id: "astana",
+        name: "Astana",
+        position: [51.1694, 71.4491],
+        description: "The capital city of Kazakhstan",
+      },
+    ],
+  },
+  uzbekistan: {
+    name: "Uzbekistan",
+    center: [41.3775, 64.5853],
+    zoom: 6,
+    locations: [
+      {
+        id: "tashkent",
+        name: "Tashkent",
+        position: [41.3775, 69.3406],
+        description: "The capital and largest city of Uzbekistan",
+      },
+      {
+        id: "samarkand",
+        name: "Samarkand",
+        position: [39.6270, 66.9750],
+        description: "Ancient city on the Silk Road",
+      },
+    ],
+  },
+  kyrgyzstan: {
+    name: "Kyrgyzstan",
+    center: [41.2044, 74.7661],
+    zoom: 7,
+    locations: [
+      {
+        id: "bishkek",
+        name: "Bishkek",
+        position: [42.8746, 74.5698],
+        description: "The capital and largest city of Kyrgyzstan",
+      },
+    ],
+  },
+  tajikistan: {
+    name: "Tajikistan",
+    center: [38.8610, 71.2761],
+    zoom: 7,
+    locations: [
+      {
+        id: "dushanbe",
+        name: "Dushanbe",
+        position: [38.5598, 68.7738],
+        description: "The capital and largest city of Tajikistan",
+      },
+    ],
+  },
+  turkmenistan: {
+    name: "Turkmenistan",
+    center: [38.9697, 59.5563],
+    zoom: 6,
+    locations: [
+      {
+        id: "ashgabat",
+        name: "Ashgabat",
+        position: [37.9601, 58.3261],
+        description: "The capital and largest city of Turkmenistan",
+      },
+    ],
+  },
+};
+
 const CountryView = () => {
   const { country } = useParams<{ country: string }>();
   const navigate = useNavigate();
