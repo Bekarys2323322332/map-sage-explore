@@ -1,229 +1,280 @@
-# assistant_api.py
-import os
-import json
-import time
-import requests
+import { useState, useEffect } from "react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { X, Send, Mic, Image as ImageIcon, Info } from "lucide-react";
+import { Avatar } from "@/components/ui/avatar";
+import { useToast } from "@/components/ui/use-toast";
 
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from dotenv import load_dotenv
+interface ChatPopupProps {
+  location: {
+    id: string;
+    name: string;
+    position: [number, number];
+    description: string;
+  } | null;
+  coordinates?: [number, number];
+  onClose: () => void;
+  language: string;
+}
 
-from openai import OpenAI
+interface Message {
+  id: string;
+  role: "user" | "assistant";
+  content: string;
+}
 
-load_dotenv()
+const ASSISTANT_BASE_URL = "http://localhost:8010";
 
-app = FastAPI(title="Central Asia Assistant Bridge")
+function mapCountryNameToCode(name?: string): string {
+  if (!name) return "kz";
+  const n = name.toLowerCase();
+  if (n.includes("kazak")) return "kz";
+  if (n.includes("uzbek")) return "uz";
+  if (n.includes("kyrgyz")) return "kg";
+  if (n.includes("tajik")) return "tj";
+  if (n.includes("turkmen")) return "tm";
+  return "kz";
+}
 
-# CORS чтобы React/Lovable пускало
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # сузишь потом
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+const ChatPopup = ({ location, coordinates, onClose, language }: ChatPopupProps) => {
+  const { toast } = useToast();
 
+  const [countryName, setCountryName] = useState<string>("");
+  const [threadId, setThreadId] = useState<string | null>(null);
+  const [messages, setMessages] = useState<Message[]>([]); // 👈 ПУСТО, без локального "I'm your AI guide"
+  const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-# ====== MODELS ======
-class StartReq(BaseModel):
-    country: str
-    lat: float
-    lon: float
-    location_name: str | None = None
+  // 1) тянем название страны
+  useEffect(() => {
+    if (!coordinates) return;
 
+    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${coordinates[0]}&lon=${coordinates[1]}&zoom=3`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.address?.country) {
+          setCountryName(data.address.country);
+        }
+      })
+      .catch((err) => {
+        console.error("Error fetching country name:", err);
+      });
+  }, [coordinates]);
 
-class ContinueReq(BaseModel):
-    thread_id: str
-    message: str
+  // 2) СРАЗУ после появления координат → запрос к ассистенту
+  useEffect(() => {
+    const start = async () => {
+      if (!coordinates) return;
 
+      const [lat, lon] = coordinates;
+      const countryCode = mapCountryNameToCode(countryName);
 
-# ====== HELPERS ======
-def get_openai_client() -> OpenAI:
-    api_key = os.getenv("OPENAI_API_KEY")
-    if not api_key:
-        raise RuntimeError("OPENAI_API_KEY is not set")
-    return OpenAI(api_key=api_key)
+      setIsLoading(true);
+      try {
+        console.log("→ calling assistant/start", {
+          country: countryCode,
+          lat,
+          lon,
+          location_name: location?.name ?? null,
+        });
 
+        const res = await fetch(`${ASSISTANT_BASE_URL}/assistant/start`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            country: countryCode,
+            lat,
+            lon,
+            location_name: location?.name ?? null,
+          }),
+        });
 
-def wait_for_run(client: OpenAI, thread_id: str, run_id: str, timeout_sec: int = 60):
-    start = time.time()
-    while time.time() - start < timeout_sec:
-        run = client.beta.threads.runs.retrieve(thread_id=thread_id, run_id=run_id)
-        if run.status in ("completed", "failed", "expired", "cancelled"):
-            return run
-        time.sleep(0.6)
-    return run
+        const data = await res.json();
+        console.log("← assistant/start response", data);
 
-
-def handle_tool_calls(client: OpenAI, thread_id: str, run):
-    """если ассистент попросил get_geo_context — идём в твой main.py"""
-    tool_calls = run.required_action.submit_tool_outputs.tool_calls
-    outputs = []
-
-    BACKEND_URL = "https://bf7e4bdb3488.ngrok-free.app"
-
-    for tc in tool_calls:
-        if tc.function.name == "get_geo_context":
-            args = json.loads(tc.function.arguments)
-            try:
-                resp = requests.post(
-                    BACKEND_URL,
-                    json={
-                        "lat": args["lat"],
-                        "lon": args["lon"],
-                        "country": args["country"],
-                    },
-                    timeout=10,
-                )
-                resp.raise_for_status()
-                payload = resp.json()
-            except Exception as e:
-                # если твой main.py не запущен — мы всё равно вернём ассистенту ошибку,
-                # но не урони́м весь /assistant/start
-                payload = {"error": f"geo-context call failed: {e}"}
-
-            outputs.append(
-                {
-                    "tool_call_id": tc.id,
-                    "output": json.dumps(payload),
-                }
-            )
-
-    run = client.beta.threads.runs.submit_tool_outputs(
-        thread_id=thread_id,
-        run_id=run.id,
-        tool_outputs=outputs,
-    )
-    return run
-
-
-def get_last_assistant_message(client: OpenAI, thread_id: str) -> str:
-    msgs = client.beta.threads.messages.list(thread_id=thread_id)
-    for m in reversed(msgs.data):
-        if m.role == "assistant":
-            parts = [p.text.value for p in m.content if p.type == "text"]
-            return "\n".join(parts)
-    return ""
-
-
-# ====== ROUTES ======
-@app.get("/")
-def root():
-    return {"status": "ok", "msg": "assistant bridge running"}
-
-
-@app.post("/assistant/start")
-def assistant_start(body: StartReq):
-    """
-    фронт прислал координаты → создаём thread → ассистент → (возможно) tool → ответ
-    """
-    try:
-        client = get_openai_client()
-    except RuntimeError as e:
-        # тут будет 500 и фронт это увидит
-        raise HTTPException(status_code=500, detail=str(e))
-
-    ASSISTANT_ID = os.getenv("ASSISTANT_ID")
-    if not ASSISTANT_ID:
-        raise HTTPException(status_code=500, detail="ASSISTANT_ID is not set in .env")
-
-    # собираем первый промпт
-    user_text = (
-        f"User clicked in {body.country.upper()} at coordinates ({body.lat}, {body.lon}). "
-        f"Describe this place for a museum touchscreen: geography, nature, minerals, history (if any). "
-        f"Answer in English, 3–5 sentences."
-    )
-    if body.location_name:
-      user_text += f" This point is shown on the map UI as '{body.location_name}'. Use it if helpful."
-
-    try:
-        # 1. создаём thread
-        thread = client.beta.threads.create()
-
-        # 2. кладём первое сообщение
-        client.beta.threads.messages.create(
-            thread_id=thread.id,
-            role="user",
-            content=user_text,
-        )
-
-        # 3. запускаем run
-        run = client.beta.threads.runs.create(
-            thread_id=thread.id,
-            assistant_id=ASSISTANT_ID,
-        )
-
-        # 4. смотрим, не нужно ли вызвать tool
-        run = client.beta.threads.runs.retrieve(thread_id=thread.id, run_id=run.id)
-        if run.status == "requires_action":
-            run = handle_tool_calls(client, thread.id, run)
-
-        # 5. ждём финала
-        run = wait_for_run(client, thread.id, run.id)
-
-        answer = get_last_assistant_message(client, thread.id)
-        if not answer:
-            answer = "I found this point but there is no detailed description in the database."
-
-        return {
-            "thread_id": thread.id,
-            "answer": answer,
-            "meta": {
-                "country": body.country,
-                "lat": body.lat,
-                "lon": body.lon,
-                "location_name": body.location_name,
-            },
+        if (!res.ok) {
+          throw new Error(data.detail || "assistant/start failed");
         }
 
-    except HTTPException:
-        raise
-    except Exception as e:
-        # ЛЮБУЮ ошибку отдаём фронту — чтобы ты видел текст
-        print("❌ /assistant/start ERROR:", repr(e))
-        raise HTTPException(status_code=500, detail=f"/assistant/start failed: {e}")
+        setThreadId(data.thread_id);
+        setMessages([
+          {
+            id: Date.now().toString(),
+            role: "assistant",
+            content: data.answer || "I found this location in the database, but there is no detailed description.",
+          },
+        ]);
+      } catch (err: any) {
+        console.error("assistant/start error", err);
+        setMessages([
+          {
+            id: "err",
+            role: "assistant",
+            content: "I could not load information for this point (assistant/start failed). Check backend.",
+          },
+        ]);
+        toast({
+          title: "Backend error",
+          description: err?.message || "assistant/start failed",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
+    // вызываем, когда появились координаты
+    if (coordinates) {
+      start();
+    } else {
+      // если координат нет — просто покажем приветствие
+      setMessages([
+        {
+          id: "welcome",
+          role: "assistant",
+          content: location ? `Welcome to ${location.name}! ${location.description}` : "Choose a point on the map.",
+        },
+      ]);
+    }
+  }, [coordinates, countryName, location, toast]);
 
-@app.post("/assistant/continue")
-def assistant_continue(body: ContinueReq):
-    try:
-        client = get_openai_client()
-    except RuntimeError as e:
-        raise HTTPException(status_code=500, detail=str(e))
+  // 3) отправка последующих сообщений
+  const handleSend = async () => {
+    if (!input.trim() || isLoading) return;
 
-    ASSISTANT_ID = os.getenv("ASSISTANT_ID")
-    if not ASSISTANT_ID:
-        raise HTTPException(status_code=500, detail="ASSISTANT_ID is not set in .env")
+    if (!threadId) {
+      toast({
+        title: "Assistant not ready",
+        description: "No active thread. Click on the map again.",
+        variant: "destructive",
+      });
+      return;
+    }
 
-    try:
-        # 1. добавляем сообщение пользователя
-        client.beta.threads.messages.create(
-            thread_id=body.thread_id,
-            role="user",
-            content=body.message,
-        )
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      role: "user",
+      content: input,
+    };
 
-        # 2. запускаем ассистента
-        run = client.beta.threads.runs.create(
-            thread_id=body.thread_id,
-            assistant_id=ASSISTANT_ID,
-        )
+    setMessages((prev) => [...prev, userMessage]);
+    setInput("");
+    setIsLoading(true);
 
-        # 3. на всякий
-        run = client.beta.threads.runs.retrieve(thread_id=body.thread_id, run_id=run.id)
-        if run.status == "requires_action":
-            run = handle_tool_calls(client, body.thread_id, run)
+    try {
+      const res = await fetch(`${ASSISTANT_BASE_URL}/assistant/continue`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          thread_id: threadId,
+          message: userMessage.content,
+        }),
+      });
 
-        # 4. ждём
-        run = wait_for_run(client, body.thread_id, run.id)
+      const data = await res.json();
+      console.log("← assistant/continue response", data);
 
-        answer = get_last_assistant_message(client, body.thread_id)
-        if not answer:
-            answer = "I have no additional information."
+      if (!res.ok) {
+        throw new Error(data.detail || "assistant/continue failed");
+      }
 
-        return {"thread_id": body.thread_id, "answer": answer}
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: (Date.now() + 1).toString(),
+          role: "assistant",
+          content: data.answer || "I have no additional information.",
+        },
+      ]);
+    } catch (err: any) {
+      console.error("assistant/continue error", err);
+      toast({
+        title: "Error",
+        description: err?.message || "assistant/continue failed",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    except Exception as e:
-        print("❌ /assistant/continue ERROR:", repr(e))
-        raise HTTPException(status_code=500, detail=f"/assistant/continue failed: {e}")
+  return (
+    <div className="fixed inset-0 z-[2000] flex items-center justify-center p-4 sm:p-8 bg-background/80 backdrop-blur-md">
+      <Card className="relative w-full max-w-3xl h-[90vh] max-h-[700px] border-2 overflow-hidden">
+        {/* header */}
+        <div className="flex items-center justify-between p-5 border-b bg-gradient-to-r from-primary/20 via-accent/15 to-primary/20">
+          <div className="flex items-center gap-4">
+            <Avatar className="h-14 w-14 bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+              <div className="text-3xl">🏛️</div>
+            </Avatar>
+            <div>
+              <h3 className="text-xl font-bold">{location?.name || countryName || "Selected location"}</h3>
+              {coordinates && (
+                <p className="text-xs text-muted-foreground">
+                  {coordinates[0].toFixed(4)}, {coordinates[1].toFixed(4)}
+                </p>
+              )}
+            </div>
+          </div>
+          <Button variant="ghost" size="icon" onClick={onClose}>
+            <X className="h-5 w-5" />
+          </Button>
+        </div>
+
+        {/* messages */}
+        <ScrollArea className="flex-1 h-[calc(90vh-280px)] max-h-[420px] p-6">
+          <div className="space-y-4">
+            {messages.map((m) => (
+              <div key={m.id} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
+                <div
+                  className={`max-w-[85%] px-4 py-3 rounded-2xl ${
+                    m.role === "user"
+                      ? "bg-primary text-primary-foreground rounded-br-sm"
+                      : "bg-card border rounded-bl-sm"
+                  }`}
+                >
+                  {m.content}
+                </div>
+              </div>
+            ))}
+            {isLoading && (
+              <div className="flex justify-start">
+                <div className="px-4 py-3 rounded-2xl bg-card border">
+                  <div className="flex gap-1">
+                    <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
+                    <div
+                      className="w-2 h-2 bg-primary rounded-full animate-bounce"
+                      style={{ animationDelay: "150ms" }}
+                    ></div>
+                    <div
+                      className="w-2 h-2 bg-primary rounded-full animate-bounce"
+                      style={{ animationDelay: "300ms" }}
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </ScrollArea>
+
+        {/* bottom */}
+        <div className="flex items-center gap-3 p-6 border-t bg-background/50">
+          <Input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && !isLoading && handleSend()}
+            placeholder="Ask about this place..."
+            disabled={isLoading}
+          />
+          <Button onClick={handleSend} disabled={isLoading || !input.trim()} size="icon">
+            <Send className="h-4 w-4" />
+          </Button>
+        </div>
+      </Card>
+    </div>
+  );
+};
+
+export default ChatPopup;
