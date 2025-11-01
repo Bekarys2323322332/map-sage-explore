@@ -177,7 +177,7 @@ const ChatPopup = ({ location, coordinates, onClose }: ChatPopupProps) => {
               <h3 className="text-xl font-bold">{location?.name || "Selected location"}</h3>
               {coordinates && (
                 <p className="text-xs text-muted-foreground">
-                  {coordinates[0].toFixed(4)}, {coordinates[1].toFixed(4)} }
+                  {coordinates[0].toFixed(4)}, {coordinates[1].toFixed(4)}
                 </p>
               )}
             </div>
