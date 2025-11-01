@@ -87,7 +87,7 @@ const Index = () => {
                   alignmentBaseline="middle"
                   className="fill-foreground font-bold pointer-events-none capitalize"
                   style={{
-                    fontSize: "14px",
+                    fontSize: "20px",
                     paintOrder: "stroke",
                     stroke: "hsl(var(--background))",
                     strokeWidth: "3px",
