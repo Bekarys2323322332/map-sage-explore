@@ -93,6 +93,8 @@ const Index = () => {
                     strokeWidth: "3px",
                     strokeLinecap: "round",
                     strokeLinejoin: "round",
+                    opacity: hoveredCountry === countryId ? 1 : 0,
+                    transition: "opacity 0.3s ease-in-out",
                   }}
                 >
                   {countryId}
