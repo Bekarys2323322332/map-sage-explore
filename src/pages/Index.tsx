@@ -1,6 +1,4 @@
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Sparkles } from 'lucide-react';
 import { useState } from 'react';
 
 interface CountryRegion {
@@ -23,57 +21,44 @@ const Index = () => {
   const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
 
   return (
-    <div className="relative w-screen h-screen overflow-hidden bg-[var(--gradient-ambient)]">
-      {/* Animated Background */}
-      <div className="absolute inset-0 opacity-30">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent/20 rounded-full blur-3xl animate-pulse delay-1000" />
-      </div>
-
+    <div className="relative w-screen h-screen overflow-hidden bg-background">
       {/* Header */}
-      <div className="relative z-10 pt-12 pb-8 text-center">
-        <div className="inline-flex items-center gap-3 px-8 py-4 bg-card/80 backdrop-blur-sm rounded-full shadow-[var(--shadow-card)] mb-4">
-          <Sparkles className="h-8 w-8 text-primary" />
-          <h1 className="text-4xl font-bold bg-[var(--gradient-hero)] bg-clip-text text-transparent">
-            Central Asia Interactive Museum
-          </h1>
-        </div>
-        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-          Touch any country to explore its history, culture, and landmarks through AI-guided storytelling
+      <div className="relative z-10 pt-8 pb-6 text-center">
+        <h1 className="text-3xl font-bold text-foreground mb-2">
+          Central Asia Interactive Museum
+        </h1>
+        <p className="text-sm text-muted-foreground">
+          Select a country to explore
         </p>
       </div>
 
       {/* Main Map Container */}
-      <div className="relative z-10 flex items-center justify-center h-[calc(100vh-250px)]">
-        <div className="relative w-full max-w-5xl aspect-[16/10] mx-8">
+      <div className="relative z-10 flex items-center justify-center h-[calc(100vh-180px)]">
+        <div className="relative w-full max-w-6xl aspect-[16/10] mx-8">
           {/* SVG Map of Central Asia */}
           <svg
             viewBox="0 0 800 500"
-            className="w-full h-full drop-shadow-2xl"
-            style={{ filter: 'drop-shadow(0 4px 20px rgba(0,0,0,0.15))' }}
+            className="w-full h-full"
           >
             {/* Kazakhstan */}
             <g
               onClick={() => navigate('/country/kazakhstan')}
               onMouseEnter={() => setHoveredCountry('kazakhstan')}
               onMouseLeave={() => setHoveredCountry(null)}
-              className="cursor-pointer transition-all duration-300"
+              className="cursor-pointer transition-all duration-200"
             >
               <path
                 d="M 400 50 L 700 50 L 700 250 L 550 280 L 400 250 Z"
-                fill={hoveredCountry === 'kazakhstan' ? 'hsl(35, 75%, 58%)' : 'hsl(35, 75%, 48%)'}
-                stroke="hsl(40, 30%, 98%)"
-                strokeWidth="3"
-                className="transition-all duration-300"
-                style={{
-                  filter: hoveredCountry === 'kazakhstan' ? 'url(#glow)' : 'none',
-                }}
+                fill={hoveredCountry === 'kazakhstan' ? 'hsl(var(--primary))' : 'transparent'}
+                stroke="hsl(var(--border))"
+                strokeWidth="2"
+                className="transition-colors duration-200"
               />
               <text
                 x="550"
                 y="150"
                 textAnchor="middle"
-                className="text-2xl font-bold fill-primary-foreground pointer-events-none"
+                className="text-xl font-medium fill-foreground pointer-events-none select-none"
               >
                 Kazakhstan
               </text>
@@ -84,23 +69,20 @@ const Index = () => {
               onClick={() => navigate('/country/uzbekistan')}
               onMouseEnter={() => setHoveredCountry('uzbekistan')}
               onMouseLeave={() => setHoveredCountry(null)}
-              className="cursor-pointer transition-all duration-300"
+              className="cursor-pointer transition-all duration-200"
             >
               <path
                 d="M 280 250 L 450 240 L 420 350 L 280 360 Z"
-                fill={hoveredCountry === 'uzbekistan' ? 'hsl(180, 55%, 45%)' : 'hsl(180, 45%, 35%)'}
-                stroke="hsl(40, 30%, 98%)"
-                strokeWidth="3"
-                className="transition-all duration-300"
-                style={{
-                  filter: hoveredCountry === 'uzbekistan' ? 'url(#glow)' : 'none',
-                }}
+                fill={hoveredCountry === 'uzbekistan' ? 'hsl(var(--secondary))' : 'transparent'}
+                stroke="hsl(var(--border))"
+                strokeWidth="2"
+                className="transition-colors duration-200"
               />
               <text
                 x="350"
                 y="300"
                 textAnchor="middle"
-                className="text-2xl font-bold fill-secondary-foreground pointer-events-none"
+                className="text-xl font-medium fill-foreground pointer-events-none select-none"
               >
                 Uzbekistan
               </text>
@@ -111,23 +93,20 @@ const Index = () => {
               onClick={() => navigate('/country/kyrgyzstan')}
               onMouseEnter={() => setHoveredCountry('kyrgyzstan')}
               onMouseLeave={() => setHoveredCountry(null)}
-              className="cursor-pointer transition-all duration-300"
+              className="cursor-pointer transition-all duration-200"
             >
               <path
                 d="M 460 240 L 560 230 L 570 320 L 450 330 Z"
-                fill={hoveredCountry === 'kyrgyzstan' ? 'hsl(15, 75%, 68%)' : 'hsl(15, 65%, 58%)'}
-                stroke="hsl(40, 30%, 98%)"
-                strokeWidth="3"
-                className="transition-all duration-300"
-                style={{
-                  filter: hoveredCountry === 'kyrgyzstan' ? 'url(#glow)' : 'none',
-                }}
+                fill={hoveredCountry === 'kyrgyzstan' ? 'hsl(var(--accent))' : 'transparent'}
+                stroke="hsl(var(--border))"
+                strokeWidth="2"
+                className="transition-colors duration-200"
               />
               <text
                 x="510"
                 y="285"
                 textAnchor="middle"
-                className="text-xl font-bold fill-accent-foreground pointer-events-none"
+                className="text-lg font-medium fill-foreground pointer-events-none select-none"
               >
                 Kyrgyzstan
               </text>
@@ -138,23 +117,20 @@ const Index = () => {
               onClick={() => navigate('/country/tajikistan')}
               onMouseEnter={() => setHoveredCountry('tajikistan')}
               onMouseLeave={() => setHoveredCountry(null)}
-              className="cursor-pointer transition-all duration-300"
+              className="cursor-pointer transition-all duration-200"
             >
               <path
                 d="M 430 340 L 540 330 L 530 400 L 420 410 Z"
-                fill={hoveredCountry === 'tajikistan' ? 'hsl(150, 50%, 50%)' : 'hsl(150, 40%, 40%)'}
-                stroke="hsl(40, 30%, 98%)"
-                strokeWidth="3"
-                className="transition-all duration-300"
-                style={{
-                  filter: hoveredCountry === 'tajikistan' ? 'url(#glow)' : 'none',
-                }}
+                fill={hoveredCountry === 'tajikistan' ? 'hsl(150, 40%, 45%)' : 'transparent'}
+                stroke="hsl(var(--border))"
+                strokeWidth="2"
+                className="transition-colors duration-200"
               />
               <text
                 x="480"
                 y="375"
                 textAnchor="middle"
-                className="text-xl font-bold fill-white pointer-events-none"
+                className="text-lg font-medium fill-foreground pointer-events-none select-none"
               >
                 Tajikistan
               </text>
@@ -165,48 +141,31 @@ const Index = () => {
               onClick={() => navigate('/country/turkmenistan')}
               onMouseEnter={() => setHoveredCountry('turkmenistan')}
               onMouseLeave={() => setHoveredCountry(null)}
-              className="cursor-pointer transition-all duration-300"
+              className="cursor-pointer transition-all duration-200"
             >
               <path
                 d="M 100 280 L 280 270 L 280 380 L 100 390 Z"
-                fill={hoveredCountry === 'turkmenistan' ? 'hsl(120, 50%, 50%)' : 'hsl(120, 40%, 40%)'}
-                stroke="hsl(40, 30%, 98%)"
-                strokeWidth="3"
-                className="transition-all duration-300"
-                style={{
-                  filter: hoveredCountry === 'turkmenistan' ? 'url(#glow)' : 'none',
-                }}
+                fill={hoveredCountry === 'turkmenistan' ? 'hsl(120, 40%, 45%)' : 'transparent'}
+                stroke="hsl(var(--border))"
+                strokeWidth="2"
+                className="transition-colors duration-200"
               />
               <text
                 x="190"
                 y="330"
                 textAnchor="middle"
-                className="text-xl font-bold fill-white pointer-events-none"
+                className="text-lg font-medium fill-foreground pointer-events-none select-none"
               >
                 Turkmenistan
               </text>
             </g>
-
-            {/* SVG Filters */}
-            <defs>
-              <filter id="glow">
-                <feGaussianBlur stdDeviation="8" result="coloredBlur" />
-                <feMerge>
-                  <feMergeNode in="coloredBlur" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-            </defs>
           </svg>
         </div>
       </div>
 
       {/* Footer */}
-      <div className="relative z-10 pb-8 text-center">
-        <div className="inline-flex flex-col items-center gap-2 px-8 py-4 bg-card/80 backdrop-blur-sm rounded-2xl shadow-[var(--shadow-card)]">
-          <p className="text-sm text-muted-foreground">Discover the rich heritage of Central Asia</p>
-          <div className="h-1 w-48 bg-gradient-to-r from-transparent via-primary to-transparent rounded-full" />
-        </div>
+      <div className="relative z-10 pb-6 text-center">
+        <p className="text-xs text-muted-foreground">Discover the rich heritage of Central Asia</p>
       </div>
     </div>
   );
