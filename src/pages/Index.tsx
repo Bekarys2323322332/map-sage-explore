@@ -1,10 +1,35 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { ComposableMap, Geographies, Geography, Marker } from "react-simple-maps";
+import LanguageSelector from "@/components/LanguageSelector";
 
 const Index = () => {
   const navigate = useNavigate();
   const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
+  const [language, setLanguage] = useState("English");
+
+  const translations: Record<string, { title: string; subtitle: string }> = {
+    English: {
+      title: "Central Asia Interactive Museum",
+      subtitle: "Select a country to explore its cultural heritage",
+    },
+    Русский: {
+      title: "Интерактивный музей Центральной Азии",
+      subtitle: "Выберите страну, чтобы изучить её культурное наследие",
+    },
+    Қазақша: {
+      title: "Орталық Азия интерактивті мұражайы",
+      subtitle: "Мәдени мұрасын зерттеу үшін елді таңдаңыз",
+    },
+    "O'zbek": {
+      title: "Markaziy Osiyo interaktiv muzeyi",
+      subtitle: "Madaniy merosini o'rganish uchun mamlakatni tanlang",
+    },
+    Кыргызча: {
+      title: "Борбордук Азия интерактивдүү музейи",
+      subtitle: "Маданий мурасын изилдөө үчүн өлкөнү тандаңыз",
+    },
+  };
 
   const countryColors: Record<string, string> = {
     kazakhstan: "hsl(210, 70%, 60%)",
@@ -28,10 +53,14 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-7 bg-gradient-to-b from-background to-muted/30">
+      <div className="absolute top-8 right-8 z-[1000]">
+        <LanguageSelector language={language} onLanguageChange={setLanguage} />
+      </div>
+      
       <div className="max-w-9xl w-full space-y-8 animate-fade-in">
         <div className="text-center space-y-4">
-          <h1 className="text-5xl font-bold text-foreground tracking-tight">Central Asia Interactive Museum</h1>
-          <p className="text-lg text-muted-foreground">Select a country to explore its cultural heritage</p>
+          <h1 className="text-5xl font-bold text-foreground tracking-tight">{translations[language].title}</h1>
+          <p className="text-lg text-muted-foreground">{translations[language].subtitle}</p>
         </div>
 
         <div className="relative rounded-2xl overflow-hidden shadow-2xl bg-card/50 backdrop-blur-sm border border-border/50">

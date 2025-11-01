@@ -17,6 +17,7 @@ interface ChatPopupProps {
   coordinates?: [number, number];
   onClose: () => void;
   language: string;
+  country: string;
 }
 
 interface Message {
@@ -27,20 +28,11 @@ interface Message {
 
 const API_BASE = "https://73914f615f22.ngrok-free.app"; // наш main.py
 
-const ChatPopup = ({ location, coordinates, onClose }: ChatPopupProps) => {
+const ChatPopup = ({ location, coordinates, onClose, language, country }: ChatPopupProps) => {
   const { toast } = useToast();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [countryCode, setCountryCode] = useState("kz");
-
-  // 1. можно определить страну по координатам (оставлю простую заглушку)
-  useEffect(() => {
-    if (!coordinates) return;
-    // если хочешь — тут можно сделать fetch к nominatim, как у тебя было
-    // пока что просто 'kz'
-    setCountryCode("kz");
-  }, [coordinates]);
 
   // 2. когда попап открылся и есть координаты — сразу запросим описание
   useEffect(() => {
@@ -65,10 +57,11 @@ const ChatPopup = ({ location, coordinates, onClose }: ChatPopupProps) => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            country: countryCode,
+            country: country,
             lat: coordinates[0],
             lon: coordinates[1],
             location_name: location?.name ?? null,
+            language: language,
             messages: [
               {
                 role: "user",
@@ -108,7 +101,7 @@ const ChatPopup = ({ location, coordinates, onClose }: ChatPopupProps) => {
     };
 
     fetchInitial();
-  }, [coordinates, countryCode, location, toast]);
+  }, [coordinates, country, location, toast, language]);
 
   // 3. отправка последующих сообщений
   const handleSend = async () => {
@@ -130,10 +123,11 @@ const ChatPopup = ({ location, coordinates, onClose }: ChatPopupProps) => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          country: countryCode,
+          country: country,
           lat: coordinates[0],
           lon: coordinates[1],
           location_name: location?.name ?? null,
+          language: language,
           messages: newMessages.map((m) => ({
             role: m.role,
             content: m.content,
@@ -177,7 +171,7 @@ const ChatPopup = ({ location, coordinates, onClose }: ChatPopupProps) => {
               <h3 className="text-xl font-bold">{location?.name || "Selected location"}</h3>
               {coordinates && (
                 <p className="text-xs text-muted-foreground">
-                  {coordinates[0].toFixed(4)}, {coordinates[1].toFixed(4)} · {countryCode.toUpperCase()}
+                  {coordinates[0].toFixed(4)}, {coordinates[1].toFixed(4)} · {country.toUpperCase()}
                 </p>
               )}
             </div>
