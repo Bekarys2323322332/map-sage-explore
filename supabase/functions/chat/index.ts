@@ -14,8 +14,8 @@ serve(async (req) => {
   }
 
   try {
-    const { messages, locationName, coordinates } = await req.json();
-    console.log('Received chat request for:', locationName || `coordinates ${coordinates}`);
+    const { messages, locationName, coordinates, language = 'English' } = await req.json();
+    console.log('Received chat request for:', locationName || `coordinates ${coordinates}`, 'in language:', language);
 
     if (!openAIApiKey) {
       throw new Error('OPENAI_API_KEY is not configured');
@@ -33,8 +33,8 @@ serve(async (req) => {
           {
             role: 'system',
             content: coordinates 
-              ? `You are an expert geographical and cultural guide. The user has dropped a marker at coordinates [${coordinates[0]}, ${coordinates[1]}]. Identify what location, landmark, or region this is, and provide detailed, accurate, and engaging information about its history, culture, significance, and interesting facts. Be conversational and helpful.`
-              : `You are an expert cultural and historical guide for ${locationName}. Provide detailed, accurate, and engaging information about the location's history, culture, significance, and interesting facts. Be conversational and helpful.`
+              ? `You are an expert geographical and cultural guide. The user has dropped a marker at coordinates [${coordinates[0]}, ${coordinates[1]}]. Identify what location, landmark, or region this is, and provide detailed, accurate, and engaging information about its history, culture, significance, and interesting facts. IMPORTANT: Respond in ${language}. Be conversational and helpful.`
+              : `You are an expert cultural and historical guide for ${locationName}. Provide detailed, accurate, and engaging information about the location's history, culture, significance, and interesting facts. IMPORTANT: Respond in ${language}. Be conversational and helpful.`
           },
           ...messages
         ],

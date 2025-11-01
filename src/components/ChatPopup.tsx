@@ -30,10 +30,27 @@ const ChatPopup = ({ location, coordinates, onClose, language }: ChatPopupProps)
   const { toast } = useToast();
   const [countryName, setCountryName] = useState<string>('');
   
+  // Language code mapping
+  const getLanguageCode = (lang: string) => {
+    const langMap: Record<string, string> = {
+      'English': 'en',
+      'Русский': 'ru',
+      'Қазақша': 'kk',
+      "O'zbek": 'uz',
+      'Кыргызча': 'ky',
+    };
+    return langMap[lang] || 'en';
+  };
+  
   useEffect(() => {
     if (coordinates) {
-      // Reverse geocode to get country name
-      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${coordinates[0]}&lon=${coordinates[1]}&zoom=3`)
+      const langCode = getLanguageCode(language);
+      // Reverse geocode to get country name with language support
+      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${coordinates[0]}&lon=${coordinates[1]}&zoom=3&accept-language=${langCode}`, {
+        headers: {
+          'Accept-Language': langCode
+        }
+      })
         .then(res => res.json())
         .then(data => {
           if (data.address?.country) {
@@ -42,7 +59,7 @@ const ChatPopup = ({ location, coordinates, onClose, language }: ChatPopupProps)
         })
         .catch(err => console.error('Error fetching country name:', err));
     }
-  }, [coordinates]);
+  }, [coordinates, language]);
   
   const getInitialMessage = () => {
     if (coordinates) {
@@ -64,16 +81,56 @@ const ChatPopup = ({ location, coordinates, onClose, language }: ChatPopupProps)
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // Update initial message when country name is fetched
+  // Update initial message when country name is fetched or language changes
   useEffect(() => {
-    if (countryName && coordinates) {
+    if ((countryName && coordinates) || language) {
+      const getWelcomeMessage = () => {
+        const translations: Record<string, { guide: string; ask: string; welcome: string }> = {
+          'English': { 
+            guide: "I'm your AI guide for",
+            ask: "Ask me anything about this location!",
+            welcome: "Welcome to"
+          },
+          'Русский': { 
+            guide: "Я ваш AI-гид по",
+            ask: "Спрашивайте меня о чем угодно!",
+            welcome: "Добро пожаловать в"
+          },
+          'Қазақша': { 
+            guide: "Мен сіздің AI-гидіңізмін",
+            ask: "Бұл орын туралы не болса да сұраңыз!",
+            welcome: "Қош келдіңіз"
+          },
+          "O'zbek": { 
+            guide: "Men sizning AI-yo'riqnomangizman",
+            ask: "Bu joy haqida hamma narsani so'rang!",
+            welcome: "Xush kelibsiz"
+          },
+          'Кыргызча': { 
+            guide: "Мен сиздин AI-гидиңизмин",
+            ask: "Бул жөнүндө эмне болсо сураңыз!",
+            welcome: "Кош келиңиз"
+          },
+        };
+
+        const t = translations[language] || translations['English'];
+        
+        if (coordinates) {
+          const locationText = countryName 
+            ? `${countryName} [${coordinates[0].toFixed(4)}, ${coordinates[1].toFixed(4)}]`
+            : `[${coordinates[0].toFixed(4)}, ${coordinates[1].toFixed(4)}]`;
+          return `${t.guide} ${locationText}. ${t.ask}`;
+        }
+        return `${t.welcome} ${location?.name}! ${location?.description}. ${t.guide}. ${t.ask}`;
+      };
+
       setMessages([{
         id: '1',
         role: 'assistant',
-        content: getInitialMessage(),
+        content: getWelcomeMessage(),
       }]);
     }
-  }, [countryName]);
+  }, [countryName, language, coordinates, location]);
 
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
@@ -96,7 +153,8 @@ const ChatPopup = ({ location, coordinates, onClose, language }: ChatPopupProps)
             content: m.content
           })),
           locationName: location?.name,
-          coordinates: coordinates
+          coordinates: coordinates,
+          language: language
         }
       });
 
@@ -213,7 +271,11 @@ const ChatPopup = ({ location, coordinates, onClose, language }: ChatPopupProps)
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && !isLoading && handleSend()}
-            placeholder="Ask about history, culture, or significance..."
+            placeholder={language === 'English' ? "Ask about history, culture, or significance..." 
+              : language === 'Русский' ? "Спросите об истории, культуре или значении..."
+              : language === 'Қазақша' ? "Тарих, мәдениет немесе маңызы туралы сұраңыз..."
+              : language === "O'zbek" ? "Tarix, madaniyat yoki ahamiyat haqida so'rang..."
+              : "Тарых, маданият же мааниси жөнүндө сураңыз..."}
             className="flex-1 h-12 border-2 focus:border-primary transition-all bg-card shadow-sm rounded-xl px-4 text-base"
             disabled={isLoading}
           />
