@@ -81,19 +81,24 @@ const Index = () => {
               }
             </Geographies>
             {Object.entries(countryPositions).map(([countryId, pos]) => (
-              <text
-                key={countryId}
-                x={pos.x}
-                y={pos.y}
-                textAnchor="middle"
-                className="fill-foreground text-xs font-semibold pointer-events-none capitalize transition-all duration-300"
-                style={{
-                  fontSize: hoveredCountry === countryId ? "20px" : "20px",
-                  opacity: hoveredCountry === countryId ? 1 : 0,
-                }}
-              >
-                {countryId}
-              </text>
+              <g key={countryId}>
+                <text
+                  x={pos.x}
+                  y={pos.y}
+                  textAnchor="middle"
+                  className="fill-foreground font-bold pointer-events-none capitalize"
+                  style={{
+                    fontSize: "14px",
+                    paintOrder: "stroke",
+                    stroke: "hsl(var(--background))",
+                    strokeWidth: "3px",
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                  }}
+                >
+                  {countryId}
+                </text>
+              </g>
             ))}
           </ComposableMap>
         </div>
