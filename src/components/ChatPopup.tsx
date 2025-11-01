@@ -25,7 +25,7 @@ interface Message {
   content: string;
 }
 
-const API_BASE = "https://40a587c40a6f.ngrok-free.app"; // наш main.py
+const API_BASE = "https://73914f615f22.ngrok-free.app"; // наш main.py
 
 const ChatPopup = ({ location, coordinates, onClose }: ChatPopupProps) => {
   const { toast } = useToast();
@@ -177,7 +177,7 @@ const ChatPopup = ({ location, coordinates, onClose }: ChatPopupProps) => {
               <h3 className="text-xl font-bold">{location?.name || "Selected location"}</h3>
               {coordinates && (
                 <p className="text-xs text-muted-foreground">
-                  {coordinates[0].toFixed(4)}, {coordinates[1].toFixed(4)}
+                  {coordinates[0].toFixed(4)}, {coordinates[1].toFixed(4)} · {countryCode.toUpperCase()}
                 </p>
               )}
             </div>
