@@ -32,6 +32,8 @@ const LeafletMap = ({ center, zoom, locations, onLocationClick, onCoordinatesDro
         zoom,
         zoomControl: false,
         attributionControl: false,
+        minZoom: 3,
+        maxZoom: 18,
       });
 
       L.tileLayer(
@@ -41,19 +43,26 @@ const LeafletMap = ({ center, zoom, locations, onLocationClick, onCoordinatesDro
 
       markersLayerRef.current = L.layerGroup().addTo(mapRef.current);
 
-      // Create draggable marker with custom icon
+      // Create Street View-style draggable marker
       const customIcon = L.divIcon({
         className: 'custom-draggable-marker',
-        html: '<div style="background: hsl(var(--primary)); width: 30px; height: 30px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 3px solid white; box-shadow: 0 4px 8px rgba(0,0,0,0.3);"><div style="transform: rotate(45deg); margin-top: 6px; text-align: center; font-size: 16px;">📍</div></div>',
-        iconSize: [30, 30],
-        iconAnchor: [15, 30],
+        html: `<div style="display: flex; flex-direction: column; align-items: center; cursor: move;">
+          <div style="background: #FDD835; width: 32px; height: 32px; border-radius: 50%; border: 3px solid white; box-shadow: 0 4px 12px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; position: relative;">
+            <div style="width: 12px; height: 12px; background: white; border-radius: 50%; position: absolute; top: 8px;"></div>
+            <div style="width: 16px; height: 8px; background: white; border-radius: 0 0 8px 8px; position: absolute; bottom: 6px;"></div>
+          </div>
+          <div style="width: 2px; height: 16px; background: #FDD835; margin-top: -2px;"></div>
+          <div style="width: 8px; height: 8px; background: #FDD835; border-radius: 50%;"></div>
+        </div>`,
+        iconSize: [32, 56],
+        iconAnchor: [16, 56],
       });
 
       const bounds = mapRef.current.getBounds();
-      const bottomLeft = bounds.getSouthWest();
+      const bottomRight = bounds.getSouthEast();
       const initialPosition: [number, number] = [
-        bottomLeft.lat + (bounds.getNorth() - bottomLeft.lat) * 0.15,
-        bottomLeft.lng + (bounds.getEast() - bottomLeft.lng) * 0.1,
+        bottomRight.lat + (bounds.getNorth() - bottomRight.lat) * 0.15,
+        bottomRight.lng - (bounds.getEast() - bounds.getWest()) * 0.05,
       ];
 
       draggableMarkerRef.current = L.marker(initialPosition, {
