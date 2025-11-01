@@ -25,7 +25,7 @@ interface Message {
   content: string;
 }
 
-const ASSISTANT_BASE_URL = "http://localhost:8010";
+const ASSISTANT_BASE_URL = "https://bf7e4bdb3488.ngrok-free.app";
 
 function mapCountryNameToCode(name?: string): string {
   if (!name) return "kz";
