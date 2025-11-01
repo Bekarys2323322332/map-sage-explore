@@ -806,6 +806,7 @@ const LeafletMap = ({
         },
       }).addTo(mapRef.current);
 
+      
         },
         onEachFeature: (feature, layer) => {
           if (feature.properties && feature.properties.name) {
