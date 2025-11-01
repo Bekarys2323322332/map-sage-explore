@@ -4,7 +4,7 @@ import LeafletMap from "@/components/LeafletMap";
 import ChatPopup from "@/components/ChatPopup";
 import LanguageSelector from "@/components/LanguageSelector";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, MapPin } from "lucide-react";
 
 // 👇 маппинг внутри, без отдельного файла
 const countryNameToCode = (name: string): string => {
@@ -182,9 +182,27 @@ const CountryView = () => {
             setDroppedCoordinates(null);
           }}
           language={language}
-          country={countryCode} // 👈 добавлено
+          country={countryCode}
         />
       )}
+
+      {/* Draggable Marker Footer */}
+      <div className="absolute bottom-8 right-8 z-[1000] flex items-center gap-3 px-4 py-3 bg-card/95 backdrop-blur-md rounded-lg border border-border shadow-lg">
+        <span className="text-sm font-medium text-muted-foreground">Drop a pin:</span>
+        <div
+          draggable
+          onDragStart={(e) => {
+            e.dataTransfer.setData("marker", "true");
+            e.currentTarget.style.cursor = 'pointer';
+          }}
+          onDragEnd={(e) => {
+            e.currentTarget.style.cursor = 'pointer';
+          }}
+          className="cursor-pointer transition-transform hover:scale-110 active:scale-95 p-2 rounded-full bg-primary/10 hover:bg-primary/20"
+        >
+          <MapPin className="h-6 w-6 text-primary" />
+        </div>
+      </div>
     </div>
   );
 };
