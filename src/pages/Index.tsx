@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import MainMapView from "@/components/MainMapView";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -19,9 +20,11 @@ const Index = () => {
 
       {/* Main Map Container */}
       <div className="absolute inset-0 pt-32 pb-16">
-        onCountryClick={handleCountryClick}
-        hoveredCountry={hoveredCountry}
-        setHoveredCountry={setHoveredCountry}
+        <MainMapView
+          onCountryClick={handleCountryClick}
+          hoveredCountry={hoveredCountry}
+          setHoveredCountry={setHoveredCountry}
+        />
       </div>
 
       {/* Footer */}
