@@ -140,14 +140,24 @@ const CountryView = () => {
       {/* Bottom Bar with Marker */}
       <div className="absolute bottom-0 left-0 right-0 z-[1000] px-8 py-4 bg-gradient-to-t from-card/95 to-transparent backdrop-blur-sm pointer-events-none">
         <div className="flex items-center justify-between">
+          {/* Center Text */}
+          <div className="flex-1">
+            <p className="text-sm text-muted-foreground">Central Asia Interactive Museum</p>
+            <div className="mt-2 h-1 w-48 bg-gradient-to-r from-transparent via-primary to-transparent rounded-full" />
+          </div>
+
           {/* Draggable Marker Icon */}
           <div 
             draggable
             onDragStart={(e) => {
               e.dataTransfer.effectAllowed = 'move';
               e.dataTransfer.setData('text/plain', 'marker');
+              e.currentTarget.style.cursor = 'pointer';
             }}
-            className="flex items-center gap-3 px-4 py-2 bg-card/80 backdrop-blur-md rounded-full border border-border/50 shadow-lg cursor-grab active:cursor-grabbing pointer-events-auto transition-transform hover:scale-105"
+            onDragEnd={(e) => {
+              e.currentTarget.style.cursor = 'pointer';
+            }}
+            className="flex items-center gap-3 px-4 py-2 bg-card/80 backdrop-blur-md rounded-full border border-border/50 shadow-lg cursor-pointer pointer-events-auto transition-transform hover:scale-105"
           >
             <div className="flex flex-col items-center">
               <div className="bg-[#FDD835] w-8 h-8 rounded-full border-2 border-white shadow-md flex items-center justify-center relative">
@@ -158,14 +168,6 @@ const CountryView = () => {
             <span className="text-sm font-medium text-foreground">Drag pin to map</span>
           </div>
 
-          {/* Center Text */}
-          <div className="text-center flex-1">
-            <p className="text-sm text-muted-foreground">Central Asia Interactive Museum</p>
-            <div className="mt-2 h-1 w-48 mx-auto bg-gradient-to-r from-transparent via-primary to-transparent rounded-full" />
-          </div>
-
-          {/* Spacer for balance */}
-          <div className="w-[200px]"></div>
         </div>
       </div>
     </div>
