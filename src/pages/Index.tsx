@@ -1,10 +1,13 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { ComposableMap, Geographies, Geography, Marker } from "react-simple-maps";
+import { MapPin } from "lucide-react";
 
 const Index = () => {
   const navigate = useNavigate();
   const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
+  const [droppedMarkers, setDroppedMarkers] = useState<Array<{ x: number; y: number }>>([]);
+  const mapRef = useRef<HTMLDivElement>(null);
 
   const countryColors: Record<string, string> = {
     kazakhstan: "hsl(210, 70%, 60%)",
@@ -23,7 +26,30 @@ const Index = () => {
   };
 
   const handleCountryClick = (countryId: string) => {
-    navigate(`/country/${countryId}`); // 👈 переходим на CountryView
+    navigate(`/country/${countryId}`);
+  };
+
+  const handleDragStart = (e: React.DragEvent) => {
+    e.dataTransfer.setData("marker", "true");
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    if (mapRef.current) {
+      const rect = mapRef.current.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      
+      // Convert pixel coordinates to map coordinates (approximate)
+      const mapX = 40 + (x / 100) * 50; // Longitude range ~40-90
+      const mapY = 55 - (y / 100) * 20; // Latitude range ~35-55
+      
+      setDroppedMarkers([...droppedMarkers, { x: mapX, y: mapY }]);
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
   };
 
   return (
@@ -34,7 +60,12 @@ const Index = () => {
           <p className="text-lg text-muted-foreground">Select a country to explore its cultural heritage</p>
         </div>
 
-        <div className="relative rounded-2xl overflow-hidden shadow-2xl bg-card/50 backdrop-blur-sm border border-border/50">
+        <div 
+          ref={mapRef}
+          className="relative rounded-2xl overflow-hidden shadow-2xl bg-card/50 backdrop-blur-sm border border-border/50"
+          onDrop={handleDrop}
+          onDragOver={handleDragOver}
+        >
           <ComposableMap
             projection="geoMercator"
             projectionConfig={{
@@ -102,7 +133,25 @@ const Index = () => {
                 </text>
               </Marker>
             ))}
+
+            {droppedMarkers.map((marker, idx) => (
+              <Marker key={`dropped-${idx}`} coordinates={[marker.x, marker.y]}>
+                <circle r={6} fill="hsl(var(--primary))" stroke="hsl(var(--background))" strokeWidth={2} />
+              </Marker>
+            ))}
           </ComposableMap>
+
+          {/* Draggable Marker Footer */}
+          <div className="absolute bottom-4 right-4 z-10 flex items-center gap-3 px-4 py-3 bg-card/95 backdrop-blur-sm rounded-lg border border-border shadow-lg">
+            <span className="text-sm font-medium text-muted-foreground">Drop a pin:</span>
+            <div
+              draggable
+              onDragStart={handleDragStart}
+              className="cursor-pointer transition-transform hover:scale-110 active:scale-95 p-2 rounded-full bg-primary/10 hover:bg-primary/20"
+            >
+              <MapPin className="h-6 w-6 text-primary" />
+            </div>
+          </div>
         </div>
       </div>
     </div>
