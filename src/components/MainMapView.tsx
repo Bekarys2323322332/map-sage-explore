@@ -151,6 +151,11 @@ const MainMapView = ({ onCountryClick, hoveredCountry, setHoveredCountry }: Main
       attributionControl: false,
     });
 
+    // Add base tile layer
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "",
+    }).addTo(mapRef.current);
+
     // Add country boundaries
     countriesGeoJSON.features.forEach((feature) => {
       const layer = L.geoJSON(feature as any, {
@@ -213,7 +218,7 @@ const MainMapView = ({ onCountryClick, hoveredCountry, setHoveredCountry }: Main
     });
   }, [hoveredCountry]);
 
-  return <div ref={containerRef} className="w-full h-full" />;
+  return <div ref={containerRef} className="w-full h-full map-container" />;
 };
 
 export default MainMapView;
