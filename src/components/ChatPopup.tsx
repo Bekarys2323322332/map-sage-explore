@@ -5,6 +5,8 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { X, Send, Mic, Image as ImageIcon, Info } from 'lucide-react';
 import { Avatar } from '@/components/ui/avatar';
+import { useToast } from '@/components/ui/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 interface ChatPopupProps {
   location: {
@@ -24,6 +26,7 @@ interface Message {
 }
 
 const ChatPopup = ({ location, onClose, language }: ChatPopupProps) => {
+  const { toast } = useToast();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -32,9 +35,10 @@ const ChatPopup = ({ location, onClose, language }: ChatPopupProps) => {
     },
   ]);
   const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSend = () => {
-    if (!input.trim()) return;
+  const handleSend = async () => {
+    if (!input.trim() || isLoading) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -42,19 +46,40 @@ const ChatPopup = ({ location, onClose, language }: ChatPopupProps) => {
       content: input,
     };
 
-    setMessages([...messages, userMessage]);
+    setMessages((prev) => [...prev, userMessage]);
+    setInput('');
+    setIsLoading(true);
 
-    // Simulate AI response
-    setTimeout(() => {
+    try {
+      const { data, error } = await supabase.functions.invoke('chat', {
+        body: {
+          messages: [...messages, userMessage].map(m => ({
+            role: m.role,
+            content: m.content
+          })),
+          locationName: location.name
+        }
+      });
+
+      if (error) throw error;
+
       const aiResponse: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: `This is a simulated response about ${location.name}. In the full version, this would connect to an AI service to provide detailed historical and cultural insights.`,
+        content: data.message,
       };
+      
       setMessages((prev) => [...prev, aiResponse]);
-    }, 1000);
-
-    setInput('');
+    } catch (error) {
+      console.error('Error sending message:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to get AI response. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -124,11 +149,12 @@ const ChatPopup = ({ location, onClose, language }: ChatPopupProps) => {
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+            onKeyDown={(e) => e.key === 'Enter' && !isLoading && handleSend()}
             placeholder="Ask about this location..."
             className="flex-1"
+            disabled={isLoading}
           />
-          <Button onClick={handleSend} size="icon" className="shrink-0">
+          <Button onClick={handleSend} size="icon" className="shrink-0" disabled={isLoading}>
             <Send className="h-4 w-4" />
           </Button>
         </div>
