@@ -113,13 +113,15 @@ const CountryView = () => {
         zoomControl={false}
         attributionControl={false}
       >
-        <MapContent
-          locations={data.locations}
-          onLocationClick={(id) => {
-            setSelectedLocation(id);
-            setChatOpen(true);
-          }}
-        />
+        {(() => (
+          <MapContent
+            locations={data.locations}
+            onLocationClick={(id) => {
+              setSelectedLocation(id);
+              setChatOpen(true);
+            }}
+          />
+        )) as any}
       </MapContainer>
 
       {/* Chat Popup */}
