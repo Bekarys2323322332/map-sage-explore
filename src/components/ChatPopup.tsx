@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -28,10 +28,28 @@ interface Message {
 
 const ChatPopup = ({ location, coordinates, onClose, language }: ChatPopupProps) => {
   const { toast } = useToast();
+  const [countryName, setCountryName] = useState<string>('');
+  
+  useEffect(() => {
+    if (coordinates) {
+      // Reverse geocode to get country name
+      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${coordinates[0]}&lon=${coordinates[1]}&zoom=3`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.address?.country) {
+            setCountryName(data.address.country);
+          }
+        })
+        .catch(err => console.error('Error fetching country name:', err));
+    }
+  }, [coordinates]);
   
   const getInitialMessage = () => {
     if (coordinates) {
-      return `I'm your AI guide for the coordinates [${coordinates[0].toFixed(4)}, ${coordinates[1].toFixed(4)}]. Ask me anything about this location!`;
+      const locationText = countryName 
+        ? `${countryName} [${coordinates[0].toFixed(4)}, ${coordinates[1].toFixed(4)}]`
+        : `coordinates [${coordinates[0].toFixed(4)}, ${coordinates[1].toFixed(4)}]`;
+      return `I'm your AI guide for ${locationText}. Ask me anything about this location!`;
     }
     return `Welcome to ${location?.name}! ${location?.description}. I'm your AI guide. Ask me anything about this location's history, culture, or significance.`;
   };
@@ -45,6 +63,17 @@ const ChatPopup = ({ location, coordinates, onClose, language }: ChatPopupProps)
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  // Update initial message when country name is fetched
+  useEffect(() => {
+    if (countryName && coordinates) {
+      setMessages([{
+        id: '1',
+        role: 'assistant',
+        content: getInitialMessage(),
+      }]);
+    }
+  }, [countryName]);
 
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
@@ -107,12 +136,14 @@ const ChatPopup = ({ location, coordinates, onClose, language }: ChatPopupProps)
             <div className="space-y-1">
               <h3 className="text-xl font-bold text-foreground tracking-tight">
                 {coordinates 
-                  ? `Location [${coordinates[0].toFixed(4)}, ${coordinates[1].toFixed(4)}]`
+                  ? (countryName || 'Loading location...')
                   : location?.name}
               </h3>
               <p className="text-xs text-muted-foreground flex items-center gap-1.5">
                 <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                AI Guide Active
+                {coordinates 
+                  ? `${coordinates[0].toFixed(4)}, ${coordinates[1].toFixed(4)}`
+                  : 'AI Guide Active'}
               </p>
             </div>
           </div>
