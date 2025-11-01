@@ -17,7 +17,6 @@ interface ChatPopupProps {
   coordinates?: [number, number];
   onClose: () => void;
   language: string;
-  country: string; // 👈 принимаем из Index
 }
 
 interface Message {
@@ -26,40 +25,78 @@ interface Message {
   content: string;
 }
 
-const API_BASE = "https://40a587c40a6f.ngrok-free.app";
+const API_BASE = "https://40a587c40a6f.ngrok-free.app"; // наш main.py
 
-const ChatPopup = ({ location, coordinates, onClose, country }: ChatPopupProps) => {
+const ChatPopup = ({ location, coordinates, onClose }: ChatPopupProps) => {
   const { toast } = useToast();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [countryCode, setCountryCode] = useState("kz");
 
-  const effectiveCountry = (country || "kz").toLowerCase();
+  // 1. можно определить страну по координатам (оставлю простую заглушку)
+  useEffect(() => {
+    if (!coordinates) return;
+    // если хочешь — тут можно сделать fetch к nominatim, как у тебя было
+    // пока что просто 'kz'
+    setCountryCode("kz");
+  }, [coordinates]);
 
+  // 2. когда попап открылся и есть координаты — сразу запросим описание
   useEffect(() => {
     const fetchInitial = async () => {
-      if (!coordinates) return;
+      if (!coordinates) {
+        // если точка выбрана из списка, не по карте
+        if (location) {
+          setMessages([
+            {
+              id: "welcome",
+              role: "assistant",
+              content: `Welcome to ${location.name}. ${location.description}`,
+            },
+          ]);
+        }
+        return;
+      }
+
       setIsLoading(true);
       try {
         const res = await fetch(`${API_BASE}/location-chat`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            country: effectiveCountry,
+            country: countryCode,
             lat: coordinates[0],
             lon: coordinates[1],
             location_name: location?.name ?? null,
-            messages: [{ role: "user", content: "Describe this location for a visitor." }],
+            messages: [
+              {
+                role: "user",
+                content: "Describe this location for a visitor.",
+              },
+            ],
           }),
         });
 
         const data = await res.json();
         if (!res.ok) throw new Error(data.detail || "location-chat failed");
 
-        setMessages([{ id: "assistant-1", role: "assistant", content: data.answer }]);
+        setMessages([
+          {
+            id: "assistant-1",
+            role: "assistant",
+            content: data.answer,
+          },
+        ]);
       } catch (err: any) {
         console.error(err);
-        setMessages([{ id: "err", role: "assistant", content: "Could not load info about this point." }]);
+        setMessages([
+          {
+            id: "err",
+            role: "assistant",
+            content: "Could not load info about this point.",
+          },
+        ]);
         toast({
           title: "Error",
           description: err?.message || "location-chat failed",
@@ -69,14 +106,21 @@ const ChatPopup = ({ location, coordinates, onClose, country }: ChatPopupProps) 
         setIsLoading(false);
       }
     };
-    fetchInitial();
-  }, [coordinates, effectiveCountry, location, toast]);
 
+    fetchInitial();
+  }, [coordinates, countryCode, location, toast]);
+
+  // 3. отправка последующих сообщений
   const handleSend = async () => {
     if (!input.trim() || !coordinates) return;
 
-    const userMsg: Message = { id: Date.now().toString(), role: "user", content: input };
-    const newMessages = [...messages, userMsg];
+    const newMsg: Message = {
+      id: Date.now().toString(),
+      role: "user",
+      content: input,
+    };
+
+    const newMessages = [...messages, newMsg];
     setMessages(newMessages);
     setInput("");
     setIsLoading(true);
@@ -86,18 +130,28 @@ const ChatPopup = ({ location, coordinates, onClose, country }: ChatPopupProps) 
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          country: effectiveCountry,
+          country: countryCode,
           lat: coordinates[0],
           lon: coordinates[1],
           location_name: location?.name ?? null,
-          messages: newMessages.map((m) => ({ role: m.role, content: m.content })),
+          messages: newMessages.map((m) => ({
+            role: m.role,
+            content: m.content,
+          })),
         }),
       });
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.detail || "location-chat failed");
 
-      setMessages((prev) => [...prev, { id: (Date.now() + 1).toString(), role: "assistant", content: data.answer }]);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: (Date.now() + 1).toString(),
+          role: "assistant",
+          content: data.answer,
+        },
+      ]);
     } catch (err: any) {
       console.error(err);
       toast({
@@ -113,6 +167,7 @@ const ChatPopup = ({ location, coordinates, onClose, country }: ChatPopupProps) 
   return (
     <div className="fixed inset-0 z-[2000] flex items-center justify-center p-4 bg-background/80 backdrop-blur-md">
       <Card className="relative w-full max-w-3xl h-[90vh] max-h-[700px] border-2 overflow-hidden shadow-2xl">
+        {/* header */}
         <div className="flex items-center justify-between p-5 border-b bg-gradient-to-r from-primary/20 via-accent/15 to-primary/20">
           <div className="flex items-center gap-4">
             <Avatar className="h-14 w-14 bg-gradient-to-br from-primary to-accent flex items-center justify-center">
@@ -122,7 +177,7 @@ const ChatPopup = ({ location, coordinates, onClose, country }: ChatPopupProps) 
               <h3 className="text-xl font-bold">{location?.name || "Selected location"}</h3>
               {coordinates && (
                 <p className="text-xs text-muted-foreground">
-                  {coordinates[0].toFixed(4)}, {coordinates[1].toFixed(4)} · {effectiveCountry.toUpperCase()}
+                  {coordinates[0].toFixed(4)}, {coordinates[1].toFixed(4)} }
                 </p>
               )}
             </div>
@@ -132,6 +187,7 @@ const ChatPopup = ({ location, coordinates, onClose, country }: ChatPopupProps) 
           </Button>
         </div>
 
+        {/* messages */}
         <ScrollArea className="flex-1 h-[calc(90vh-280px)] max-h-[420px] p-6">
           <div className="space-y-4">
             {messages.map((m) => (
@@ -167,6 +223,7 @@ const ChatPopup = ({ location, coordinates, onClose, country }: ChatPopupProps) 
           </div>
         </ScrollArea>
 
+        {/* input */}
         <div className="flex items-center gap-3 p-6 border-t bg-background/50">
           <Input
             value={input}
