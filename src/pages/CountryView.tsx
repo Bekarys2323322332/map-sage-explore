@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { MapContainer } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
-import MapContent from '@/components/MapContent';
+import LeafletMap from '@/components/LeafletMap';
 import ChatPopup from '@/components/ChatPopup';
 import LanguageSelector from '@/components/LanguageSelector';
 import { Button } from '@/components/ui/button';
@@ -106,23 +104,15 @@ const CountryView = () => {
       </div>
 
       {/* Map */}
-      <MapContainer
+      <LeafletMap
         center={data.center}
         zoom={data.zoom}
-        className="w-full h-full"
-        zoomControl={false}
-        attributionControl={false}
-      >
-        {(() => (
-          <MapContent
-            locations={data.locations}
-            onLocationClick={(id) => {
-              setSelectedLocation(id);
-              setChatOpen(true);
-            }}
-          />
-        )) as any}
-      </MapContainer>
+        locations={data.locations}
+        onLocationClick={(id) => {
+          setSelectedLocation(id);
+          setChatOpen(true);
+        }}
+      />
 
       {/* Chat Popup */}
       {chatOpen && selectedLocation && (
