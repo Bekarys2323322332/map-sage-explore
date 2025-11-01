@@ -60,11 +60,12 @@ interface LeafletMapProps {
   center: [number, number];
   zoom: number;
   locations: Location[];
+  selectedCountry?: string;
   onLocationClick: (id: string) => void;
   onCoordinatesDrop?: (coords: [number, number]) => void;
 }
 
-const LeafletMap = ({ center, zoom, locations, onLocationClick, onCoordinatesDrop }: LeafletMapProps) => {
+const LeafletMap = ({ center, zoom, locations, selectedCountry, onLocationClick, onCoordinatesDrop }: LeafletMapProps) => {
   const mapRef = useRef<LeafletMapInstance | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const markersLayerRef = useRef<L.LayerGroup | null>(null);
@@ -91,13 +92,18 @@ const LeafletMap = ({ center, zoom, locations, onLocationClick, onCoordinatesDro
 
       markersLayerRef.current = L.layerGroup().addTo(mapRef.current);
 
-      // Add country boundaries
+      // Add country boundaries with dynamic styling
       boundariesLayerRef.current = L.geoJSON(COUNTRY_BOUNDARIES as any, {
-        style: {
-          color: '#FFD700',
-          weight: 2,
-          opacity: 0.8,
-          fill: false,
+        style: (feature) => {
+          const isSelected = feature?.properties?.name === selectedCountry;
+          return {
+            color: isSelected ? '#FFD700' : '#888888',
+            weight: isSelected ? 3 : 1.5,
+            opacity: isSelected ? 1 : 0.4,
+            fill: isSelected,
+            fillColor: isSelected ? '#FFD700' : 'transparent',
+            fillOpacity: isSelected ? 0.1 : 0,
+          };
         }
       }).addTo(mapRef.current);
 
@@ -138,10 +144,26 @@ const LeafletMap = ({ center, zoom, locations, onLocationClick, onCoordinatesDro
       mapRef.current.setView(center, zoom);
     }
 
+    // Update boundaries when selectedCountry changes
+    if (boundariesLayerRef.current) {
+      boundariesLayerRef.current.eachLayer((layer: any) => {
+        const feature = layer.feature;
+        const isSelected = feature?.properties?.name === selectedCountry;
+        layer.setStyle({
+          color: isSelected ? '#FFD700' : '#888888',
+          weight: isSelected ? 3 : 1.5,
+          opacity: isSelected ? 1 : 0.4,
+          fill: isSelected,
+          fillColor: isSelected ? '#FFD700' : 'transparent',
+          fillOpacity: isSelected ? 0.1 : 0,
+        });
+      });
+    }
+
     return () => {
       // Don't remove the map here to preserve across rerenders; cleanup on unmount handled below
     };
-  }, [center, zoom]);
+  }, [center, zoom, selectedCountry]);
 
   useEffect(() => {
     if (!mapRef.current || !markersLayerRef.current) return;

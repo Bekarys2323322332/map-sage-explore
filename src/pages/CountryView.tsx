@@ -109,6 +109,7 @@ const CountryView = () => {
         center={data.center}
         zoom={data.zoom}
         locations={data.locations}
+        selectedCountry={data.name}
         onLocationClick={(id) => {
           setSelectedLocation(id);
           setDroppedCoordinates(null);
