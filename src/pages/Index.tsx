@@ -19,11 +19,11 @@ const Index = () => {
   };
 
   const countryPositions: Record<string, { x: number; y: number }> = {
-    "kazakhstan": { x: 67, y: 50 },
-    "uzbekistan": { x: 63, y: 42 },
-    "kyrgyzstan": { x: 75, y: 42 },
-    "tajikistan": { x: 71, y: 39 },
-    "turkmenistan": { x: 58, y: 39 },
+    "kazakhstan": { x: 68, y: 48 },
+    "uzbekistan": { x: 63, y: 41 },
+    "kyrgyzstan": { x: 75, y: 41 },
+    "tajikistan": { x: 70, y: 38.5 },
+    "turkmenistan": { x: 59, y: 39 },
   };
 
   return (
@@ -39,10 +39,10 @@ const Index = () => {
             projection="geoMercator"
             projectionConfig={{
               center: [65, 42],
-              scale: 1400,
+              scale: 1200,
             }}
             className="w-full h-auto"
-            style={{ maxHeight: "75vh" }}
+            style={{ maxHeight: "60vh" }}
           >
             <Geographies geography="https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json">
               {({ geographies }) =>
@@ -57,8 +57,8 @@ const Index = () => {
                       <Geography
                         key={geo.rsmKey}
                         geography={geo}
-                        fill={hoveredCountry === countryId ? `${baseColor.replace(')', ', 0.9)')}` : baseColor}
-                        stroke="hsl(var(--background))"
+                        fill={hoveredCountry === countryId ? baseColor : "hsl(var(--muted))"}
+                        stroke="hsl(var(--border))"
                         strokeWidth={0.8}
                         className="cursor-pointer transition-all duration-500 ease-out"
                         onMouseEnter={() => setHoveredCountry(countryId)}
@@ -66,8 +66,8 @@ const Index = () => {
                         onClick={() => handleCountryClick(countryId)}
                         style={{
                           outline: "none",
-                          filter: hoveredCountry === countryId ? "brightness(1.2) drop-shadow(0 0 10px rgba(255,255,255,0.5))" : "brightness(1)",
-                          transform: hoveredCountry === countryId ? "scale(1.02)" : "scale(1)",
+                          filter: hoveredCountry === countryId ? "brightness(1.1) drop-shadow(0 0 8px rgba(255,255,255,0.3))" : "none",
+                          transform: hoveredCountry === countryId ? "scale(1.01)" : "scale(1)",
                           transformOrigin: "center",
                         }}
                       />
@@ -81,11 +81,10 @@ const Index = () => {
                 x={pos.x}
                 y={pos.y}
                 textAnchor="middle"
-                className="fill-white text-sm font-bold pointer-events-none capitalize transition-all duration-300"
+                className="fill-foreground text-xs font-semibold pointer-events-none capitalize transition-all duration-300"
                 style={{
-                  textShadow: "2px 2px 4px rgba(0,0,0,0.8)",
-                  fontSize: hoveredCountry === countryId ? "16px" : "14px",
-                  opacity: hoveredCountry === countryId ? 1 : 0.9,
+                  fontSize: hoveredCountry === countryId ? "13px" : "11px",
+                  opacity: hoveredCountry === countryId ? 1 : 0.8,
                 }}
               >
                 {countryId}
