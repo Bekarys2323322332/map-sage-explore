@@ -18,7 +18,7 @@ const Index = () => {
         </div>
 
         <svg
-          viewBox="45 32 45 28"
+          viewBox="46 35 44 25"
           className="w-full h-auto"
           style={{ maxHeight: "70vh" }}
         >
