@@ -88,7 +88,7 @@ const Index = () => {
                 textAnchor="middle"
                 className="fill-foreground text-xs font-semibold pointer-events-none capitalize transition-all duration-300"
                 style={{
-                  fontSize: hoveredCountry === countryId ? "14px" : "12px",
+                  fontSize: hoveredCountry === countryId ? "20px" : "20px",
                   opacity: hoveredCountry === countryId ? 1 : 0,
                 }}
               >
