@@ -67,15 +67,21 @@ const Index = () => {
                         onMouseLeave={() => setHoveredCountry(null)}
                         onClick={() => handleCountryClick(countryId)}
                         style={{
-                          outline: "none", // <-- remove the default focus outline
-                          filter:
-                            hoveredCountry === countryId
-                              ? "brightness(1.1) drop-shadow(0 0 8px rgba(255,255,255,0.3))"
-                              : "none",
-                          transform: hoveredCountry === countryId ? "scale(1.01)" : "scale(1)",
-                          transformOrigin: "center",
+                          default: {
+                            outline: "none",
+                            filter:
+                              hoveredCountry === countryId
+                                ? "brightness(1.1) drop-shadow(0 0 8px rgba(255,255,255,0.3))"
+                                : "none",
+                            transform: hoveredCountry === countryId ? "scale(1.01)" : "scale(1)",
+                            transformOrigin: "center",
+                            WebkitTapHighlightColor: "transparent",
+                          },
+                          hover: { outline: "none" },
+                          pressed: { outline: "none" },
                         }}
                         tabIndex={-1}
+                        focusable={false}
                       />
                     );
                   })
