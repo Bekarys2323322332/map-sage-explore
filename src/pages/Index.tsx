@@ -67,6 +67,7 @@ const Index = () => {
                         onMouseLeave={() => setHoveredCountry(null)}
                         onClick={() => handleCountryClick(countryId)}
                         style={{
+                          outline: 'none'}}
                           filter:
                             hoveredCountry === countryId
                               ? "brightness(1.1) drop-shadow(0 0 8px rgba(255,255,255,0.3))"
