@@ -806,7 +806,17 @@ const LeafletMap = ({
         },
       }).addTo(mapRef.current);
 
-      
+      // Add regional boundaries
+      regionalBoundariesLayerRef.current = L.geoJSON(REGIONAL_BOUNDARIES as any, {
+        style: (feature) => {
+          const isSelectedCountry = feature?.properties?.country === selectedCountry;
+          return {
+            color: isSelectedCountry ? "#FFD700" : "#666666",
+            weight: 1,
+            opacity: isSelectedCountry ? 0.6 : 0.2,
+            fill: false,
+            dashArray: "4, 6",
+          };
         },
         onEachFeature: (feature, layer) => {
           if (feature.properties && feature.properties.name) {
