@@ -14,12 +14,12 @@ const Index = () => {
     turkmenistan: "hsl(35, 75%, 60%)",
   };
 
-  const countryPositions: Record<string, { x: number; y: number }> = {
-    kazakhstan: { x: 68, y: 47 },
-    uzbekistan: { x: 62, y: 40.5 },
-    kyrgyzstan: { x: 75, y: 42 },
-    tajikistan: { x: 71, y: 39 },
-    turkmenistan: { x: 59, y: 40 },
+  const countryPositions: Record<string, { x: number; y: number; animal: string }> = {
+    kazakhstan: { x: 68, y: 47, animal: "🦅" },
+    uzbekistan: { x: 62, y: 40.5, animal: "🐪" },
+    kyrgyzstan: { x: 75, y: 42, animal: "🦌" },
+    tajikistan: { x: 71, y: 39, animal: "🐆" },
+    turkmenistan: { x: 59, y: 40, animal: "🐴" },
   };
 
   const handleCountryClick = (countryId: string) => {
@@ -93,11 +93,12 @@ const Index = () => {
                   className="fill-foreground font-bold pointer-events-none capitalize"
                   style={{
                     fontSize: "28px",
-                    opacity: hoveredCountry === countryId ? 1 : 0.9,
+                    opacity: hoveredCountry === countryId ? 1 : 0,
                     transition: "all 0.3s ease",
+                    transform: hoveredCountry === countryId ? "scale(1.1)" : "scale(1)",
                   }}
                 >
-                  {countryId}
+                  {pos.animal} {countryId}
                 </text>
               </Marker>
             ))}
