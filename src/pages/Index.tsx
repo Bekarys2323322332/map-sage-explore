@@ -81,7 +81,7 @@ const Index = () => {
               }
             </Geographies>
             {Object.entries(countryPositions).map(([countryId, pos]) => (
-              <Marker key={countryId} coordinates={[pos.x, pos.y + 2]}>
+              <Marker key={countryId} coordinates={[pos.x, pos.y + 1]}>
                 <text
                   textAnchor="middle"
                   alignmentBaseline="middle"
