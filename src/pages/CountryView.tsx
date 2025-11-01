@@ -138,17 +138,24 @@ const CountryView = () => {
       )}
 
       {/* Bottom Bar with Marker */}
-      <div className="absolute bottom-0 left-0 right-0 z-[1000] px-8 py-4 bg-gradient-to-t from-card/95 to-transparent backdrop-blur-sm">
+      <div className="absolute bottom-0 left-0 right-0 z-[1000] px-8 py-4 bg-gradient-to-t from-card/95 to-transparent backdrop-blur-sm pointer-events-none">
         <div className="flex items-center justify-between">
-          {/* Marker Icon */}
-          <div className="flex items-center gap-3 px-4 py-2 bg-card/80 backdrop-blur-md rounded-full border border-border/50 shadow-lg">
+          {/* Draggable Marker Icon */}
+          <div 
+            draggable
+            onDragStart={(e) => {
+              e.dataTransfer.effectAllowed = 'move';
+              e.dataTransfer.setData('text/plain', 'marker');
+            }}
+            className="flex items-center gap-3 px-4 py-2 bg-card/80 backdrop-blur-md rounded-full border border-border/50 shadow-lg cursor-grab active:cursor-grabbing pointer-events-auto transition-transform hover:scale-105"
+          >
             <div className="flex flex-col items-center">
               <div className="bg-[#FDD835] w-8 h-8 rounded-full border-2 border-white shadow-md flex items-center justify-center relative">
                 <div className="w-3 h-3 bg-white rounded-full absolute top-1.5"></div>
                 <div className="w-4 h-2 bg-white rounded-b-full absolute bottom-1.5"></div>
               </div>
             </div>
-            <span className="text-sm font-medium text-foreground">Click map to drop pin</span>
+            <span className="text-sm font-medium text-foreground">Drag pin to map</span>
           </div>
 
           {/* Center Text */}

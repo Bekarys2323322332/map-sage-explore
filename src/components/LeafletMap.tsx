@@ -807,10 +807,8 @@ const LeafletMap = ({
         },
       }).addTo(mapRef.current);
 
-      // Add click handler to drop marker on map
-      mapRef.current.on("click", (e: L.LeafletMouseEvent) => {
-        const coords: [number, number] = [e.latlng.lat, e.latlng.lng];
-        
+      // Function to create and add marker
+      const createMarker = (coords: [number, number]) => {
         // Remove existing dropped marker
         if (droppedMarkerRef.current) {
           droppedMarkerRef.current.remove();
@@ -840,7 +838,48 @@ const LeafletMap = ({
         if (onCoordinatesDrop) {
           onCoordinatesDrop(coords);
         }
+      };
+
+      // Add click handler to drop marker on map
+      mapRef.current.on("click", (e: L.LeafletMouseEvent) => {
+        const coords: [number, number] = [e.latlng.lat, e.latlng.lng];
+        createMarker(coords);
       });
+
+      // Add drag and drop handlers to container
+      const handleDragOver = (e: DragEvent) => {
+        e.preventDefault();
+        e.dataTransfer!.dropEffect = 'move';
+      };
+
+      const handleDrop = (e: DragEvent) => {
+        e.preventDefault();
+        const markerData = e.dataTransfer!.getData('text/plain');
+        if (markerData === 'marker' && mapRef.current) {
+          // Get the coordinates from the drop position
+          const containerRect = containerRef.current!.getBoundingClientRect();
+          const point = L.point(
+            e.clientX - containerRect.left,
+            e.clientY - containerRect.top
+          );
+          const latlng = mapRef.current.containerPointToLatLng(point);
+          const coords: [number, number] = [latlng.lat, latlng.lng];
+          createMarker(coords);
+        }
+      };
+
+      containerRef.current!.addEventListener('dragover', handleDragOver);
+      containerRef.current!.addEventListener('drop', handleDrop);
+
+      // Store cleanup functions
+      const cleanupDragListeners = () => {
+        containerRef.current?.removeEventListener('dragover', handleDragOver);
+        containerRef.current?.removeEventListener('drop', handleDrop);
+      };
+
+      return () => {
+        cleanupDragListeners();
+      };
     } else {
       mapRef.current.setView(center, zoom);
     }
