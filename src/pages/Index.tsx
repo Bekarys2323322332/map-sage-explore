@@ -102,9 +102,10 @@ const Index = () => {
                     strokeLinejoin: "round",
                     opacity: hoveredCountry === countryId ? 1 : 0,
                     transition: "opacity 0.3s ease-in-out",
+                    textTransform: "capitalize",
                   }}
                 >
-                  Capitalize<{countryId}>
+                  {countryId}
                 </text>
               </Marker>
             ))}
