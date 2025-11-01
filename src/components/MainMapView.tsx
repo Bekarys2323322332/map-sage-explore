@@ -1,6 +1,4 @@
 import { useEffect, useRef } from "react";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
 
 interface MainMapViewProps {
   onCountryClick: (country: string) => void;
@@ -150,6 +148,11 @@ const MainMapView = ({ onCountryClick, hoveredCountry, setHoveredCountry }: Main
       zoomControl: false,
       attributionControl: false,
     });
+
+    // Add base tile layer
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "",
+    }).addTo(mapRef.current);
 
     // Add country boundaries
     countriesGeoJSON.features.forEach((feature) => {
