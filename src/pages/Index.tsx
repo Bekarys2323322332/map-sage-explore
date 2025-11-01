@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { ComposableMap, Geographies, Geography } from "react-simple-maps";
+import { ComposableMap, Geographies, Geography, Marker } from "react-simple-maps";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -81,11 +81,10 @@ const Index = () => {
               }
             </Geographies>
             {Object.entries(countryPositions).map(([countryId, pos]) => (
-              <g key={countryId}>
+              <Marker key={countryId} coordinates={[pos.x, pos.y]}>
                 <text
-                  x={pos.x}
-                  y={pos.y}
                   textAnchor="middle"
+                  alignmentBaseline="middle"
                   className="fill-foreground font-bold pointer-events-none capitalize"
                   style={{
                     fontSize: "14px",
@@ -98,7 +97,7 @@ const Index = () => {
                 >
                   {countryId}
                 </text>
-              </g>
+              </Marker>
             ))}
           </ComposableMap>
         </div>
