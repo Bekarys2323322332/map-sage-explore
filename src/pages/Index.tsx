@@ -38,8 +38,8 @@ const Index = () => {
           <ComposableMap
             projection="geoMercator"
             projectionConfig={{
-              center: [65, 42],
-              scale: 1200,
+              center: [65, 38],
+              scale: 1000,
             }}
             className="w-full h-auto"
             style={{ maxHeight: "60vh" }}
