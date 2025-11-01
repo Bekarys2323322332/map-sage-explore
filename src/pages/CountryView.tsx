@@ -156,7 +156,7 @@ const CountryView = () => {
       <LeafletMap
         center={data.center}
         zoom={data.zoom}
-        locations={data.locations}
+        locations={[]}
         selectedCountry={data.name}
         resetMarker={!chatOpen && droppedCoordinates === null}
         onLocationClick={(id) => {
