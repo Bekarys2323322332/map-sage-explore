@@ -772,7 +772,6 @@ const LeafletMap = ({
   const draggableMarkerRef = useRef<L.Marker | null>(null);
   const initialMarkerPositionRef = useRef<[number, number] | null>(null);
   const boundariesLayerRef = useRef<L.GeoJSON | null>(null);
-  const regionalBoundariesLayerRef = useRef<L.GeoJSON | null>(null);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -809,28 +808,6 @@ const LeafletMap = ({
         },
       }).addTo(mapRef.current);
 
-      // Add regional boundaries
-      regionalBoundariesLayerRef.current = L.geoJSON(REGIONAL_BOUNDARIES as any, {
-        style: (feature) => {
-          const isSelectedCountry = feature?.properties?.country === selectedCountry;
-          return {
-            color: isSelectedCountry ? "#FFD700" : "#666666",
-            weight: 1,
-            opacity: isSelectedCountry ? 0.6 : 0.2,
-            fill: true,
-            dashArray: "4, 6",
-          };
-        },
-        onEachFeature: (feature, layer) => {
-          if (feature.properties && feature.properties.name) {
-            layer.bindTooltip(feature.properties.name, {
-              permanent: false,
-              direction: "center",
-              className: "region-label",
-            });
-          }
-        },
-      }).addTo(mapRef.current);
 
       // Create Street View-style draggable marker
       const customIcon = L.divIcon({
@@ -888,20 +865,6 @@ const LeafletMap = ({
       });
     }
 
-    // Update regional boundaries
-    if (regionalBoundariesLayerRef.current) {
-      regionalBoundariesLayerRef.current.eachLayer((layer: any) => {
-        const feature = layer.feature;
-        const isSelectedCountry = feature?.properties?.country === selectedCountry;
-        layer.setStyle({
-          color: isSelectedCountry ? "#FFD700" : "#403f3f",
-          weight: 1,
-          opacity: isSelectedCountry ? 0.6 : 0.2,
-          fill: false,
-          dashArray: "4, 6",
-        });
-      });
-    }
 
     return () => {
       // Don't remove the map here to preserve across rerenders; cleanup on unmount handled below
@@ -944,10 +907,6 @@ const LeafletMap = ({
       if (boundariesLayerRef.current) {
         boundariesLayerRef.current.remove();
         boundariesLayerRef.current = null;
-      }
-      if (regionalBoundariesLayerRef.current) {
-        regionalBoundariesLayerRef.current.remove();
-        regionalBoundariesLayerRef.current = null;
       }
       if (mapRef.current) {
         mapRef.current.remove();
