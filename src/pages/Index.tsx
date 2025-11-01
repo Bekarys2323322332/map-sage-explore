@@ -83,7 +83,7 @@ const Index = () => {
             {Object.entries(countryPositions).map(([countryId, pos]) => (
               <Marker key={countryId} coordinates={[pos.x, pos.y]}>
                 <text
-                  textAnchor="middle"
+                  textAnchor="start"
                   alignmentBaseline="middle"
                   className="fill-foreground font-bold pointer-events-none capitalize"
                   style={{
