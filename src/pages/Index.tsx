@@ -84,7 +84,7 @@ const Index = () => {
               <Marker key={countryId} coordinates={[pos.x, pos.y]}>
                 <text
                   textAnchor="start"
-                  alignmentBaseline="middle"
+                  alignmentBaseline="start"
                   className="fill-foreground font-bold pointer-events-none capitalize"
                   style={{
                     fontSize: "20px",
