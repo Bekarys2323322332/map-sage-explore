@@ -1,222 +1,229 @@
-import { useState } from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { X, Send, Mic, Image as ImageIcon, Info } from "lucide-react";
-import { Avatar } from "@/components/ui/avatar";
-import { useToast } from "@/components/ui/use-toast";
-import { supabase } from "@/integrations/supabase/client";
+# assistant_api.py
+import os
+import json
+import time
+import requests
 
-interface ChatPopupProps {
-  location: {
-    id: string;
-    name: string;
-    position: [number, number];
-    description: string;
-  } | null;
-  coordinates?: [number, number];
-  onClose: () => void;
-  language: string;
-}
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+from dotenv import load_dotenv
 
-interface Message {
-  id: string;
-  role: "user" | "assistant";
-  content: string;
-}
+from openai import OpenAI
 
-const ChatPopup = ({ location, coordinates, onClose, language }: ChatPopupProps) => {
-  const { toast } = useToast();
+load_dotenv()
 
-  const getInitialMessage = () => {
-    if (coordinates) {
-      return `I'm your AI guide for the coordinates [${coordinates[0].toFixed(4)}, ${coordinates[1].toFixed(4)}]. Ask me anything about this location!`;
-    }
-    return `Welcome to ${location?.name}! ${location?.description}. I'm your AI guide. Ask me anything about this location's history, culture, or significance.`;
-  };
+app = FastAPI(title="Central Asia Assistant Bridge")
 
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: "1",
-      role: "assistant",
-      content: getInitialMessage(),
-    },
-  ]);
-  const [input, setInput] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+# CORS чтобы React/Lovable пускало
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # сузишь потом
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-  const handleSend = async () => {
-    if (!input.trim() || isLoading) return;
 
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      role: "user",
-      content: input,
-    };
+# ====== MODELS ======
+class StartReq(BaseModel):
+    country: str
+    lat: float
+    lon: float
+    location_name: str | None = None
 
-    setMessages((prev) => [...prev, userMessage]);
-    setInput("");
-    setIsLoading(true);
 
-    try {
-      const { data, error } = await supabase.functions.invoke("chat", {
-        body: {
-          messages: [...messages, userMessage].map((m) => ({
-            role: m.role,
-            content: m.content,
-          })),
-          locationName: location?.name,
-          coordinates: coordinates,
-        },
-      });
+class ContinueReq(BaseModel):
+    thread_id: str
+    message: str
 
-      if (error) throw error;
 
-      const aiResponse: Message = {
-        id: (Date.now() + 1).toString(),
-        role: "assistant",
-        content: data.message,
-      };
+# ====== HELPERS ======
+def get_openai_client() -> OpenAI:
+    api_key = os.getenv("OPENAI_API_KEY")
+    if not api_key:
+        raise RuntimeError("OPENAI_API_KEY is not set")
+    return OpenAI(api_key=api_key)
 
-      setMessages((prev) => [...prev, aiResponse]);
-    } catch (error) {
-      console.error("Error sending message:", error);
-      toast({
-        title: "Error",
-        description: "Failed to get AI response. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
-  return (
-    <div className="fixed inset-0 z-[2000] flex items-center justify-center p-4 sm:p-8 bg-background/80 backdrop-blur-md animate-in fade-in-0 duration-300">
-      <Card className="relative w-full max-w-3xl h-[90vh] max-h-[700px] shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-8 duration-500 border-2 overflow-hidden">
-        {/* Header with enhanced gradient */}
-        <div className="flex items-center justify-between p-5 border-b border-border/50 bg-gradient-to-r from-primary/20 via-accent/15 to-primary/20 backdrop-blur-sm">
-          <div className="flex items-center gap-4">
-            <div className="relative">
-              <Avatar className="h-14 w-14 bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg ring-2 ring-background">
-                <div className="text-3xl animate-pulse">🏛️</div>
-              </Avatar>
-              <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-background"></div>
-            </div>
-            <div className="space-y-1">
-              <h3 className="text-xl font-bold text-foreground tracking-tight">
-                {coordinates ? `Location [${coordinates[0].toFixed(4)}, ${coordinates[1].toFixed(4)}]` : location?.name}
-              </h3>
-              <p className="text-xs text-muted-foreground flex items-center gap-1.5">
-                <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                AI Guide Active
-              </p>
-            </div>
-          </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onClose}
-            className="hover:bg-destructive/20 hover:text-destructive transition-all hover:rotate-90 duration-300"
-          >
-            <X className="h-5 w-5" />
-          </Button>
-        </div>
+def wait_for_run(client: OpenAI, thread_id: str, run_id: str, timeout_sec: int = 60):
+    start = time.time()
+    while time.time() - start < timeout_sec:
+        run = client.beta.threads.runs.retrieve(thread_id=thread_id, run_id=run_id)
+        if run.status in ("completed", "failed", "expired", "cancelled"):
+            return run
+        time.sleep(0.6)
+    return run
 
-        {/* Messages with improved spacing */}
-        <ScrollArea className="flex-1 h-[calc(90vh-280px)] max-h-[420px] p-6 bg-gradient-to-b from-muted/20 to-transparent">
-          <div className="space-y-5">
-            {messages.map((message, index) => (
-              <div
-                key={message.id}
-                className={`flex ${message.role === "user" ? "justify-end" : "justify-start"} animate-in slide-in-from-bottom-2 duration-300`}
-                style={{ animationDelay: `${index * 50}ms` }}
-              >
-                <div
-                  className={`max-w-[85%] rounded-2xl px-5 py-3.5 shadow-md transition-all hover:shadow-lg ${
-                    message.role === "user"
-                      ? "bg-gradient-to-br from-primary to-primary/90 text-primary-foreground rounded-br-sm"
-                      : "bg-card border border-border text-card-foreground rounded-bl-sm"
-                  }`}
-                >
-                  <p className="text-sm leading-relaxed">{message.content}</p>
-                </div>
-              </div>
-            ))}
-            {isLoading && (
-              <div className="flex justify-start animate-in fade-in-0 duration-300">
-                <div className="bg-card border border-border rounded-2xl rounded-bl-sm px-5 py-3.5 shadow-md">
-                  <div className="flex gap-1.5">
-                    <div
-                      className="w-2 h-2 bg-primary rounded-full animate-bounce"
-                      style={{ animationDelay: "0ms" }}
-                    ></div>
-                    <div
-                      className="w-2 h-2 bg-primary rounded-full animate-bounce"
-                      style={{ animationDelay: "150ms" }}
-                    ></div>
-                    <div
-                      className="w-2 h-2 bg-primary rounded-full animate-bounce"
-                      style={{ animationDelay: "300ms" }}
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </ScrollArea>
 
-        {/* Action Buttons with better layout */}
-        <div className="grid grid-cols-3 gap-2 px-6 py-4 border-t border-border/50 bg-muted/30">
-          <Button
-            variant="outline"
-            size="sm"
-            className="flex items-center justify-center gap-2 hover:bg-primary/10 hover:border-primary/50 transition-all"
-          >
-            <Info className="h-4 w-4" />
-            <span className="hidden sm:inline">Info</span>
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            className="flex items-center justify-center gap-2 hover:bg-primary/10 hover:border-primary/50 transition-all"
-          >
-            <Mic className="h-4 w-4" />
-            <span className="hidden sm:inline">Audio</span>
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            className="flex items-center justify-center gap-2 hover:bg-primary/10 hover:border-primary/50 transition-all"
-          >
-            <ImageIcon className="h-4 w-4" />
-            <span className="hidden sm:inline">Photo</span>
-          </Button>
-        </div>
+def handle_tool_calls(client: OpenAI, thread_id: str, run):
+    """если ассистент попросил get_geo_context — идём в твой main.py"""
+    tool_calls = run.required_action.submit_tool_outputs.tool_calls
+    outputs = []
 
-        {/* Enhanced Input Area */}
-        <div className="flex items-center gap-3 p-6 border-t border-border/50 bg-background/50 backdrop-blur-sm">
-          <Input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && !isLoading && handleSend()}
-            placeholder="Ask about history, culture, or significance..."
-            className="flex-1 border-2 focus:border-primary transition-all bg-background shadow-sm"
-            disabled={isLoading}
-          />
-          <Button
-            onClick={handleSend}
-            size="icon"
-            className="shrink-0 h-10 w-10 shadow-lg hover:shadow-xl transition-all hover:scale-105"
-            disabled={isLoading || !input.trim()}
-          >
-            <Send className="h-4 w-4" />
-          </Button>
-        </div>
-      </Card>
-    </div>
-  );
-};
+    BACKEND_URL = "https://bf7e4bdb3488.ngrok-free.app"
 
-export default ChatPopup;
+    for tc in tool_calls:
+        if tc.function.name == "get_geo_context":
+            args = json.loads(tc.function.arguments)
+            try:
+                resp = requests.post(
+                    BACKEND_URL,
+                    json={
+                        "lat": args["lat"],
+                        "lon": args["lon"],
+                        "country": args["country"],
+                    },
+                    timeout=10,
+                )
+                resp.raise_for_status()
+                payload = resp.json()
+            except Exception as e:
+                # если твой main.py не запущен — мы всё равно вернём ассистенту ошибку,
+                # но не урони́м весь /assistant/start
+                payload = {"error": f"geo-context call failed: {e}"}
+
+            outputs.append(
+                {
+                    "tool_call_id": tc.id,
+                    "output": json.dumps(payload),
+                }
+            )
+
+    run = client.beta.threads.runs.submit_tool_outputs(
+        thread_id=thread_id,
+        run_id=run.id,
+        tool_outputs=outputs,
+    )
+    return run
+
+
+def get_last_assistant_message(client: OpenAI, thread_id: str) -> str:
+    msgs = client.beta.threads.messages.list(thread_id=thread_id)
+    for m in reversed(msgs.data):
+        if m.role == "assistant":
+            parts = [p.text.value for p in m.content if p.type == "text"]
+            return "\n".join(parts)
+    return ""
+
+
+# ====== ROUTES ======
+@app.get("/")
+def root():
+    return {"status": "ok", "msg": "assistant bridge running"}
+
+
+@app.post("/assistant/start")
+def assistant_start(body: StartReq):
+    """
+    фронт прислал координаты → создаём thread → ассистент → (возможно) tool → ответ
+    """
+    try:
+        client = get_openai_client()
+    except RuntimeError as e:
+        # тут будет 500 и фронт это увидит
+        raise HTTPException(status_code=500, detail=str(e))
+
+    ASSISTANT_ID = os.getenv("ASSISTANT_ID")
+    if not ASSISTANT_ID:
+        raise HTTPException(status_code=500, detail="ASSISTANT_ID is not set in .env")
+
+    # собираем первый промпт
+    user_text = (
+        f"User clicked in {body.country.upper()} at coordinates ({body.lat}, {body.lon}). "
+        f"Describe this place for a museum touchscreen: geography, nature, minerals, history (if any). "
+        f"Answer in English, 3–5 sentences."
+    )
+    if body.location_name:
+      user_text += f" This point is shown on the map UI as '{body.location_name}'. Use it if helpful."
+
+    try:
+        # 1. создаём thread
+        thread = client.beta.threads.create()
+
+        # 2. кладём первое сообщение
+        client.beta.threads.messages.create(
+            thread_id=thread.id,
+            role="user",
+            content=user_text,
+        )
+
+        # 3. запускаем run
+        run = client.beta.threads.runs.create(
+            thread_id=thread.id,
+            assistant_id=ASSISTANT_ID,
+        )
+
+        # 4. смотрим, не нужно ли вызвать tool
+        run = client.beta.threads.runs.retrieve(thread_id=thread.id, run_id=run.id)
+        if run.status == "requires_action":
+            run = handle_tool_calls(client, thread.id, run)
+
+        # 5. ждём финала
+        run = wait_for_run(client, thread.id, run.id)
+
+        answer = get_last_assistant_message(client, thread.id)
+        if not answer:
+            answer = "I found this point but there is no detailed description in the database."
+
+        return {
+            "thread_id": thread.id,
+            "answer": answer,
+            "meta": {
+                "country": body.country,
+                "lat": body.lat,
+                "lon": body.lon,
+                "location_name": body.location_name,
+            },
+        }
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        # ЛЮБУЮ ошибку отдаём фронту — чтобы ты видел текст
+        print("❌ /assistant/start ERROR:", repr(e))
+        raise HTTPException(status_code=500, detail=f"/assistant/start failed: {e}")
+
+
+@app.post("/assistant/continue")
+def assistant_continue(body: ContinueReq):
+    try:
+        client = get_openai_client()
+    except RuntimeError as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+    ASSISTANT_ID = os.getenv("ASSISTANT_ID")
+    if not ASSISTANT_ID:
+        raise HTTPException(status_code=500, detail="ASSISTANT_ID is not set in .env")
+
+    try:
+        # 1. добавляем сообщение пользователя
+        client.beta.threads.messages.create(
+            thread_id=body.thread_id,
+            role="user",
+            content=body.message,
+        )
+
+        # 2. запускаем ассистента
+        run = client.beta.threads.runs.create(
+            thread_id=body.thread_id,
+            assistant_id=ASSISTANT_ID,
+        )
+
+        # 3. на всякий
+        run = client.beta.threads.runs.retrieve(thread_id=body.thread_id, run_id=run.id)
+        if run.status == "requires_action":
+            run = handle_tool_calls(client, body.thread_id, run)
+
+        # 4. ждём
+        run = wait_for_run(client, body.thread_id, run.id)
+
+        answer = get_last_assistant_message(client, body.thread_id)
+        if not answer:
+            answer = "I have no additional information."
+
+        return {"thread_id": body.thread_id, "answer": answer}
+
+    except Exception as e:
+        print("❌ /assistant/continue ERROR:", repr(e))
+        raise HTTPException(status_code=500, detail=f"/assistant/continue failed: {e}")
