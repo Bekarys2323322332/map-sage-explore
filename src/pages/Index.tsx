@@ -19,11 +19,11 @@ const Index = () => {
   };
 
   const countryPositions: Record<string, { x: number; y: number }> = {
-    kazakhstan: { x: 68, y: 48 },
-    uzbekistan: { x: 63, y: 41 },
-    kyrgyzstan: { x: 75, y: 41 },
-    tajikistan: { x: 70, y: 38.5 },
-    turkmenistan: { x: 59, y: 39 },
+    kazakhstan: { x: 68, y: 47 },
+    uzbekistan: { x: 62, y: 40.5 },
+    kyrgyzstan: { x: 75, y: 42 },
+    tajikistan: { x: 71, y: 39 },
+    turkmenistan: { x: 59, y: 40 },
   };
 
   return (
@@ -88,8 +88,8 @@ const Index = () => {
                 textAnchor="middle"
                 className="fill-foreground text-xs font-semibold pointer-events-none capitalize transition-all duration-300"
                 style={{
-                  fontSize: hoveredCountry === countryId ? "13px" : "11px",
-                  opacity: hoveredCountry === countryId ? 1 : 0.8,
+                  fontSize: hoveredCountry === countryId ? "14px" : "12px",
+                  opacity: hoveredCountry === countryId ? 1 : 0,
                 }}
               >
                 {countryId}
