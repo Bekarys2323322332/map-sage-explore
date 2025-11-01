@@ -17,6 +17,9 @@
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
+.map-container {
+  background-color: #f9f7f4; /* warm neutral background */
+}
 
 @keyframes logo-spin {
   from {
