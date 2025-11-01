@@ -2,40 +2,10 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { ComposableMap, Geographies, Geography, Marker } from "react-simple-maps";
 import { Sparkles, Globe, MapPin } from "lucide-react";
-import LanguageSelector from "@/components/LanguageSelector";
 
 const Index = () => {
   const navigate = useNavigate();
   const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
-  const [language, setLanguage] = useState("English");
-
-  const translations: Record<string, { title: string; subtitle: string; explore: string }> = {
-    English: {
-      title: "Central Asia Interactive Museum",
-      subtitle: "Select a country to explore its cultural heritage",
-      explore: "Explore the Silk Road",
-    },
-    Russian: {
-      title: "Интерактивный Музей Центральной Азии",
-      subtitle: "Выберите страну для изучения её культурного наследия",
-      explore: "Исследуйте Шёлковый путь",
-    },
-    Kazakh: {
-      title: "Орталық Азия интерактивті мұражайы",
-      subtitle: "Мәдени мұрасын зерттеу үшін елді таңдаңыз",
-      explore: "Жібек жолын зерттеңіз",
-    },
-    Uzbek: {
-      title: "Markaziy Osiyo interaktiv muzeyi",
-      subtitle: "Madaniy merosini o'rganish uchun mamlakatni tanlang",
-      explore: "Ipak yo'lini o'rganing",
-    },
-    Kyrgyz: {
-      title: "Борбордук Азия интерактивдүү музейи",
-      subtitle: "Маданий мурасын изилдөө үчүн өлкөнү тандаңыз",
-      explore: "Жибек жолун изилдеңиз",
-    },
-  };
 
   const countryColors: Record<string, string> = {
     kazakhstan: "hsl(210, 70%, 60%)",
@@ -67,29 +37,30 @@ const Index = () => {
       <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }} />
       <div className="absolute top-1/2 left-1/4 w-48 h-48 bg-secondary/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "2s" }} />
 
-      {/* Language selector in top right */}
-      <div className="absolute top-6 right-6 z-50 animate-fade-in">
-        <LanguageSelector language={language} onLanguageChange={setLanguage} />
-      </div>
-
       {/* Main content */}
       <div className="relative z-10 max-w-7xl w-full space-y-8 sm:space-y-12 animate-fade-in">
         {/* Header with decorative elements */}
         <div className="text-center space-y-6 px-4">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-sm animate-scale-in">
             <Sparkles className="w-5 h-5 text-primary animate-pulse" />
-            <span className="text-sm font-medium text-primary">{translations[language].explore}</span>
+            <span className="text-sm font-medium text-primary">Explore the Silk Road</span>
           </div>
           
           <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold text-foreground tracking-tight leading-tight">
             <span className="bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent animate-gradient bg-[length:200%_auto]">
-              {translations[language].title}
+              Central Asia Interactive Museum
             </span>
           </h1>
           
           <div className="flex items-center justify-center gap-3 text-lg sm:text-xl text-muted-foreground">
             <Globe className="w-5 h-5 text-primary" />
-            <p>{translations[language].subtitle}</p>
+            <p>Select a country to explore its cultural heritage</p>
+          </div>
+
+          {/* Helper text moved here */}
+          <div className="flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-background/90 backdrop-blur-sm border border-border shadow-lg animate-fade-in mt-4">
+            <MapPin className="w-5 h-5 text-primary" />
+            <span className="text-base font-medium text-foreground">Click a country to explore</span>
           </div>
         </div>
 
@@ -104,12 +75,6 @@ const Index = () => {
             <div className="absolute top-0 right-0 w-20 h-20 border-t-4 border-r-4 border-accent/40 rounded-tr-3xl" />
             <div className="absolute bottom-0 left-0 w-20 h-20 border-b-4 border-l-4 border-secondary/40 rounded-bl-3xl" />
             <div className="absolute bottom-0 right-0 w-20 h-20 border-b-4 border-r-4 border-primary/40 rounded-br-3xl" />
-            
-            {/* Helper text */}
-            <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 px-4 py-2 rounded-full bg-background/90 backdrop-blur-sm border border-border shadow-lg animate-fade-in">
-              <MapPin className="w-4 h-4 text-primary" />
-              <span className="text-sm font-medium text-foreground">Click a country to explore</span>
-            </div>
 
             <ComposableMap
             projection="geoMercator"
