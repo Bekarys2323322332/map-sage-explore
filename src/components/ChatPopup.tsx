@@ -93,82 +93,105 @@ const ChatPopup = ({ location, coordinates, onClose, language }: ChatPopupProps)
   };
 
   return (
-    <div className="fixed inset-0 z-[2000] flex items-center justify-center p-8 bg-foreground/20 backdrop-blur-sm">
-      <Card className="relative w-full max-w-2xl h-[600px] shadow-[var(--shadow-card)] animate-in fade-in-0 slide-in-from-bottom-4 duration-500">
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-border bg-gradient-to-r from-primary/10 to-accent/10">
+    <div className="fixed inset-0 z-[2000] flex items-center justify-center p-4 sm:p-8 bg-background/80 backdrop-blur-md animate-in fade-in-0 duration-300">
+      <Card className="relative w-full max-w-3xl h-[90vh] max-h-[700px] shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-8 duration-500 border-2 overflow-hidden">
+        {/* Header with enhanced gradient */}
+        <div className="flex items-center justify-between p-5 border-b border-border/50 bg-gradient-to-r from-primary/20 via-accent/15 to-primary/20 backdrop-blur-sm">
           <div className="flex items-center gap-4">
-            <Avatar className="h-12 w-12 bg-primary/20 flex items-center justify-center">
-              <div className="text-2xl">🏛️</div>
-            </Avatar>
-            <div>
-              <h3 className="text-xl font-bold text-foreground">
+            <div className="relative">
+              <Avatar className="h-14 w-14 bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg ring-2 ring-background">
+                <div className="text-3xl animate-pulse">🏛️</div>
+              </Avatar>
+              <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-background"></div>
+            </div>
+            <div className="space-y-1">
+              <h3 className="text-xl font-bold text-foreground tracking-tight">
                 {coordinates 
                   ? `Location [${coordinates[0].toFixed(4)}, ${coordinates[1].toFixed(4)}]`
                   : location?.name}
               </h3>
-              <p className="text-sm text-muted-foreground">AI Cultural Guide</p>
+              <p className="text-xs text-muted-foreground flex items-center gap-1.5">
+                <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                AI Guide Active
+              </p>
             </div>
           </div>
           <Button
             variant="ghost"
             size="icon"
             onClick={onClose}
-            className="hover:bg-destructive/10 hover:text-destructive"
+            className="hover:bg-destructive/20 hover:text-destructive transition-all hover:rotate-90 duration-300"
           >
             <X className="h-5 w-5" />
           </Button>
         </div>
 
-        {/* Messages */}
-        <ScrollArea className="h-[380px] p-6">
-          <div className="space-y-4">
-            {messages.map((message) => (
+        {/* Messages with improved spacing */}
+        <ScrollArea className="flex-1 h-[calc(90vh-280px)] max-h-[420px] p-6 bg-gradient-to-b from-muted/20 to-transparent">
+          <div className="space-y-5">
+            {messages.map((message, index) => (
               <div
                 key={message.id}
-                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} animate-in slide-in-from-bottom-2 duration-300`}
+                style={{ animationDelay: `${index * 50}ms` }}
               >
                 <div
-                  className={`max-w-[80%] rounded-2xl px-4 py-3 ${
+                  className={`max-w-[85%] rounded-2xl px-5 py-3.5 shadow-md transition-all hover:shadow-lg ${
                     message.role === 'user'
-                      ? 'bg-primary text-primary-foreground'
-                      : 'bg-secondary text-secondary-foreground'
+                      ? 'bg-gradient-to-br from-primary to-primary/90 text-primary-foreground rounded-br-sm'
+                      : 'bg-card border border-border text-card-foreground rounded-bl-sm'
                   }`}
                 >
-                  {message.content}
+                  <p className="text-sm leading-relaxed">{message.content}</p>
                 </div>
               </div>
             ))}
+            {isLoading && (
+              <div className="flex justify-start animate-in fade-in-0 duration-300">
+                <div className="bg-card border border-border rounded-2xl rounded-bl-sm px-5 py-3.5 shadow-md">
+                  <div className="flex gap-1.5">
+                    <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                    <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                    <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </ScrollArea>
 
-        {/* Action Buttons */}
-        <div className="flex gap-2 px-6 py-3 border-t border-b border-border">
-          <Button variant="outline" size="sm" className="flex-1">
-            <Info className="mr-2 h-4 w-4" />
-            More Info
+        {/* Action Buttons with better layout */}
+        <div className="grid grid-cols-3 gap-2 px-6 py-4 border-t border-border/50 bg-muted/30">
+          <Button variant="outline" size="sm" className="flex items-center justify-center gap-2 hover:bg-primary/10 hover:border-primary/50 transition-all">
+            <Info className="h-4 w-4" />
+            <span className="hidden sm:inline">Info</span>
           </Button>
-          <Button variant="outline" size="sm" className="flex-1">
-            <Mic className="mr-2 h-4 w-4" />
-            Audio Guide
+          <Button variant="outline" size="sm" className="flex items-center justify-center gap-2 hover:bg-primary/10 hover:border-primary/50 transition-all">
+            <Mic className="h-4 w-4" />
+            <span className="hidden sm:inline">Audio</span>
           </Button>
-          <Button variant="outline" size="sm" className="flex-1">
-            <ImageIcon className="mr-2 h-4 w-4" />
-            Generate Photo
+          <Button variant="outline" size="sm" className="flex items-center justify-center gap-2 hover:bg-primary/10 hover:border-primary/50 transition-all">
+            <ImageIcon className="h-4 w-4" />
+            <span className="hidden sm:inline">Photo</span>
           </Button>
         </div>
 
-        {/* Input */}
-        <div className="flex items-center gap-2 p-6">
+        {/* Enhanced Input Area */}
+        <div className="flex items-center gap-3 p-6 border-t border-border/50 bg-background/50 backdrop-blur-sm">
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && !isLoading && handleSend()}
-            placeholder="Ask about this location..."
-            className="flex-1"
+            placeholder="Ask about history, culture, or significance..."
+            className="flex-1 border-2 focus:border-primary transition-all bg-background shadow-sm"
             disabled={isLoading}
           />
-          <Button onClick={handleSend} size="icon" className="shrink-0" disabled={isLoading}>
+          <Button 
+            onClick={handleSend} 
+            size="icon" 
+            className="shrink-0 h-10 w-10 shadow-lg hover:shadow-xl transition-all hover:scale-105" 
+            disabled={isLoading || !input.trim()}
+          >
             <Send className="h-4 w-4" />
           </Button>
         </div>
