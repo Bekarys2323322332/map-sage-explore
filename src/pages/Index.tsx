@@ -27,14 +27,18 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-5 bg-background">
-      <div className="max-w-9xl w-full space-y-5">
-        <div className="text-center space-y-3">
-          <h1 className="text-4xl font-bold text-foreground">Central Asia Interactive Museum</h1>
-          <p className="text-muted-foreground">Select a country to explore its cultural heritage</p>
+    <div className="min-h-screen flex flex-col items-center justify-center p-5 bg-gradient-to-b from-background to-muted/30">
+      <div className="max-w-9xl w-full space-y-8 animate-fade-in">
+        <div className="text-center space-y-4">
+          <h1 className="text-5xl font-bold text-foreground tracking-tight">
+            Central Asia Interactive Museum
+          </h1>
+          <p className="text-lg text-muted-foreground">
+            Select a country to explore its cultural heritage
+          </p>
         </div>
 
-        <div className="relative">
+        <div className="relative rounded-2xl overflow-hidden shadow-2xl bg-card/50 backdrop-blur-sm border border-border/50">
           <ComposableMap
             projection="geoMercator"
             projectionConfig={{
@@ -62,7 +66,7 @@ const Index = () => {
                         fill={hoveredCountry === countryId ? baseColor : "hsl(var(--muted))"}
                         stroke="hsl(var(--border))"
                         strokeWidth={0.8}
-                        className="cursor-pointer transition-all duration-500 ease-out"
+                        className="cursor-pointer"
                         onMouseEnter={() => setHoveredCountry(countryId)}
                         onMouseLeave={() => setHoveredCountry(null)}
                         onClick={() => handleCountryClick(countryId)}
@@ -71,10 +75,11 @@ const Index = () => {
                             outline: "none",
                             filter:
                               hoveredCountry === countryId
-                                ? "brightness(1.1) drop-shadow(0 0 8px rgba(255,255,255,0.3))"
-                                : "none",
-                            transform: hoveredCountry === countryId ? "scale(1.01)" : "scale(1)",
+                                ? "brightness(1.15) drop-shadow(0 0 20px rgba(255,255,255,0.4)) drop-shadow(0 0 40px rgba(255,255,255,0.2))"
+                                : "brightness(1)",
+                            transform: hoveredCountry === countryId ? "scale(1.02)" : "scale(1)",
                             transformOrigin: "center",
+                            transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
                             WebkitTapHighlightColor: "transparent",
                           },
                           hover: { outline: "none" },
@@ -94,15 +99,17 @@ const Index = () => {
                   alignmentBaseline="middle"
                   className="fill-foreground font-bold pointer-events-none capitalize"
                   style={{
-                    fontSize: "26px",
+                    fontSize: "28px",
                     paintOrder: "stroke",
                     stroke: "hsl(var(--background))",
-                    strokeWidth: "3px",
+                    strokeWidth: "4px",
                     strokeLinecap: "round",
                     strokeLinejoin: "round",
                     opacity: hoveredCountry === countryId ? 1 : 0,
-                    transition: "opacity 0.3s ease-in-out",
+                    transform: hoveredCountry === countryId ? "scale(1)" : "scale(0.95)",
+                    transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
                     textTransform: "capitalize",
+                    filter: hoveredCountry === countryId ? "drop-shadow(0 2px 8px rgba(0,0,0,0.3))" : "none",
                   }}
                 >
                   {countryId}
