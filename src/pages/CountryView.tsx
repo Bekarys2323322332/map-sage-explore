@@ -70,6 +70,7 @@ const CountryView = () => {
   const navigate = useNavigate();
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
   const [chatOpen, setChatOpen] = useState(false);
+  const [droppedCoordinates, setDroppedCoordinates] = useState<[number, number] | null>(null);
   const [language, setLanguage] = useState('English');
 
   const data = country ? countryData[country] : null;
@@ -110,17 +111,25 @@ const CountryView = () => {
         locations={data.locations}
         onLocationClick={(id) => {
           setSelectedLocation(id);
+          setDroppedCoordinates(null);
+          setChatOpen(true);
+        }}
+        onCoordinatesDrop={(coords) => {
+          setDroppedCoordinates(coords);
+          setSelectedLocation(null);
           setChatOpen(true);
         }}
       />
 
       {/* Chat Popup */}
-      {chatOpen && selectedLocation && (
+      {chatOpen && (selectedLocation || droppedCoordinates) && (
         <ChatPopup
-          location={data.locations.find(l => l.id === selectedLocation)!}
+          location={selectedLocation ? data.locations.find((loc) => loc.id === selectedLocation)! : null}
+          coordinates={droppedCoordinates || undefined}
           onClose={() => {
             setChatOpen(false);
             setSelectedLocation(null);
+            setDroppedCoordinates(null);
           }}
           language={language}
         />

@@ -14,7 +14,8 @@ interface ChatPopupProps {
     name: string;
     position: [number, number];
     description: string;
-  };
+  } | null;
+  coordinates?: [number, number];
   onClose: () => void;
   language: string;
 }
@@ -25,13 +26,21 @@ interface Message {
   content: string;
 }
 
-const ChatPopup = ({ location, onClose, language }: ChatPopupProps) => {
+const ChatPopup = ({ location, coordinates, onClose, language }: ChatPopupProps) => {
   const { toast } = useToast();
+  
+  const getInitialMessage = () => {
+    if (coordinates) {
+      return `I'm your AI guide for the coordinates [${coordinates[0].toFixed(4)}, ${coordinates[1].toFixed(4)}]. Ask me anything about this location!`;
+    }
+    return `Welcome to ${location?.name}! ${location?.description}. I'm your AI guide. Ask me anything about this location's history, culture, or significance.`;
+  };
+
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
       role: 'assistant',
-      content: `Welcome to ${location.name}! ${location.description}. I'm your AI guide. Ask me anything about this location's history, culture, or significance.`,
+      content: getInitialMessage(),
     },
   ]);
   const [input, setInput] = useState('');
@@ -57,7 +66,8 @@ const ChatPopup = ({ location, onClose, language }: ChatPopupProps) => {
             role: m.role,
             content: m.content
           })),
-          locationName: location.name
+          locationName: location?.name,
+          coordinates: coordinates
         }
       });
 
@@ -92,7 +102,11 @@ const ChatPopup = ({ location, onClose, language }: ChatPopupProps) => {
               <div className="text-2xl">🏛️</div>
             </Avatar>
             <div>
-              <h3 className="text-xl font-bold text-foreground">{location.name}</h3>
+              <h3 className="text-xl font-bold text-foreground">
+                {coordinates 
+                  ? `Location [${coordinates[0].toFixed(4)}, ${coordinates[1].toFixed(4)}]`
+                  : location?.name}
+              </h3>
               <p className="text-sm text-muted-foreground">AI Cultural Guide</p>
             </div>
           </div>
