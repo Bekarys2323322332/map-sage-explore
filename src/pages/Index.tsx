@@ -1,14 +1,11 @@
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { ComposableMap, Geographies, Geography, Marker } from "react-simple-maps";
-import ChatPopup from "@/components/ChatPopup";
 
 const Index = () => {
+  const navigate = useNavigate();
   const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
-  const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
-  const [showChat, setShowChat] = useState(false);
-  const [selectedCoords, setSelectedCoords] = useState<[number, number] | undefined>(undefined);
 
-  // Цвета стран
   const countryColors: Record<string, string> = {
     kazakhstan: "hsl(210, 70%, 60%)",
     uzbekistan: "hsl(280, 70%, 65%)",
@@ -17,7 +14,6 @@ const Index = () => {
     turkmenistan: "hsl(35, 75%, 60%)",
   };
 
-  // Примерные координаты центров
   const countryPositions: Record<string, { x: number; y: number }> = {
     kazakhstan: { x: 68, y: 47 },
     uzbekistan: { x: 62, y: 40.5 },
@@ -26,39 +22,13 @@ const Index = () => {
     turkmenistan: { x: 59, y: 40 },
   };
 
-  // 👇 встроенный маппер без отдельного файла
-  const countryNameToCode = (name: string): string => {
-    const n = name.toLowerCase();
-    switch (n) {
-      case "kazakhstan":
-        return "kz";
-      case "uzbekistan":
-        return "uz";
-      case "kyrgyzstan":
-        return "kg";
-      case "tajikistan":
-        return "tj";
-      case "turkmenistan":
-        return "tm";
-      default:
-        return "kz";
-    }
-  };
-
   const handleCountryClick = (countryId: string) => {
-    setSelectedCountry(countryId); // 'kazakhstan'
-    const pos = countryPositions[countryId];
-    if (pos) {
-      setSelectedCoords([pos.y, pos.x]); // [lat, lon]
-    } else {
-      setSelectedCoords([43.25, 76.9]);
-    }
-    setShowChat(true);
+    navigate(`/country/${countryId}`); // 👈 переходим на CountryView
   };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-7 bg-gradient-to-b from-background to-muted/30">
-      <div className="max-w-9xl w-full space-y-8">
+      <div className="max-w-9xl w-full space-y-8 animate-fade-in">
         <div className="text-center space-y-4">
           <h1 className="text-5xl font-bold text-foreground tracking-tight">Central Asia Interactive Museum</h1>
           <p className="text-lg text-muted-foreground">Select a country to explore its cultural heritage</p>
@@ -97,7 +67,15 @@ const Index = () => {
                         onMouseLeave={() => setHoveredCountry(null)}
                         onClick={() => handleCountryClick(countryId)}
                         style={{
-                          default: { outline: "none", transition: "all 0.3s ease" },
+                          default: {
+                            outline: "none",
+                            filter:
+                              hoveredCountry === countryId
+                                ? "brightness(1.15) drop-shadow(0 0 20px rgba(255,255,255,0.4))"
+                                : "brightness(1)",
+                            transform: hoveredCountry === countryId ? "scale(1.02)" : "scale(1)",
+                            transition: "all 0.3s ease",
+                          },
                           hover: { outline: "none" },
                           pressed: { outline: "none" },
                         }}
@@ -115,10 +93,7 @@ const Index = () => {
                   className="fill-foreground font-bold pointer-events-none capitalize"
                   style={{
                     fontSize: "28px",
-                    paintOrder: "stroke",
-                    stroke: "hsl(var(--background))",
-                    strokeWidth: "4px",
-                    opacity: hoveredCountry === countryId ? 1 : 0,
+                    opacity: hoveredCountry === countryId ? 1 : 0.9,
                     transition: "all 0.3s ease",
                   }}
                 >
@@ -129,16 +104,6 @@ const Index = () => {
           </ComposableMap>
         </div>
       </div>
-
-      {showChat && selectedCountry && selectedCoords && (
-        <ChatPopup
-          location={null}
-          coordinates={selectedCoords}
-          onClose={() => setShowChat(false)}
-          language="en"
-          country={countryNameToCode(selectedCountry)} // 👈 вот сюда передаём
-        />
-      )}
     </div>
   );
 };
