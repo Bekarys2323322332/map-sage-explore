@@ -137,13 +137,28 @@ const CountryView = () => {
         />
       )}
 
-      {/* Bottom Bar */}
+      {/* Bottom Bar with Marker */}
       <div className="absolute bottom-0 left-0 right-0 z-[1000] px-8 py-4 bg-gradient-to-t from-card/95 to-transparent backdrop-blur-sm">
-        <div className="flex items-center justify-center">
-          <div className="text-center">
+        <div className="flex items-center justify-between">
+          {/* Marker Icon */}
+          <div className="flex items-center gap-3 px-4 py-2 bg-card/80 backdrop-blur-md rounded-full border border-border/50 shadow-lg">
+            <div className="flex flex-col items-center">
+              <div className="bg-[#FDD835] w-8 h-8 rounded-full border-2 border-white shadow-md flex items-center justify-center relative">
+                <div className="w-3 h-3 bg-white rounded-full absolute top-1.5"></div>
+                <div className="w-4 h-2 bg-white rounded-b-full absolute bottom-1.5"></div>
+              </div>
+            </div>
+            <span className="text-sm font-medium text-foreground">Click map to drop pin</span>
+          </div>
+
+          {/* Center Text */}
+          <div className="text-center flex-1">
             <p className="text-sm text-muted-foreground">Central Asia Interactive Museum</p>
             <div className="mt-2 h-1 w-48 mx-auto bg-gradient-to-r from-transparent via-primary to-transparent rounded-full" />
           </div>
+
+          {/* Spacer for balance */}
+          <div className="w-[200px]"></div>
         </div>
       </div>
     </div>

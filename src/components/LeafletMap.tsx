@@ -769,9 +769,8 @@ const LeafletMap = ({
   const mapRef = useRef<LeafletMapInstance | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const markersLayerRef = useRef<L.LayerGroup | null>(null);
-  const draggableMarkerRef = useRef<L.Marker | null>(null);
-  const initialMarkerPositionRef = useRef<[number, number] | null>(null);
   const boundariesLayerRef = useRef<L.GeoJSON | null>(null);
+  const droppedMarkerRef = useRef<L.Marker | null>(null);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -808,41 +807,38 @@ const LeafletMap = ({
         },
       }).addTo(mapRef.current);
 
+      // Add click handler to drop marker on map
+      mapRef.current.on("click", (e: L.LeafletMouseEvent) => {
+        const coords: [number, number] = [e.latlng.lat, e.latlng.lng];
+        
+        // Remove existing dropped marker
+        if (droppedMarkerRef.current) {
+          droppedMarkerRef.current.remove();
+        }
 
-      // Create Street View-style draggable marker
-      const customIcon = L.divIcon({
-        className: "custom-draggable-marker",
-        html: `<div style="display: flex; flex-direction: column; align-items: center; cursor: move;">
-          <div style="background: #FDD835; width: 32px; height: 32px; border-radius: 50%; border: 3px solid white; box-shadow: 0 4px 12px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; position: relative;">
-            <div style="width: 12px; height: 12px; background: white; border-radius: 50%; position: absolute; top: 8px;"></div>
-            <div style="width: 16px; height: 8px; background: white; border-radius: 0 0 8px 8px; position: absolute; bottom: 6px;"></div>
-          </div>
-          <div style="width: 2px; height: 16px; background: #FDD835; margin-top: -2px;"></div>
-          <div style="width: 8px; height: 8px; background: #FDD835; border-radius: 50%;"></div>
-        </div>`,
-        iconSize: [32, 56],
-        iconAnchor: [16, 56],
-      });
+        // Create marker icon
+        const markerIcon = L.divIcon({
+          className: "dropped-marker",
+          html: `<div style="display: flex; flex-direction: column; align-items: center;">
+            <div style="background: #FDD835; width: 32px; height: 32px; border-radius: 50%; border: 3px solid white; box-shadow: 0 4px 12px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; position: relative;">
+              <div style="width: 12px; height: 12px; background: white; border-radius: 50%; position: absolute; top: 8px;"></div>
+              <div style="width: 16px; height: 8px; background: white; border-radius: 0 0 8px 8px; position: absolute; bottom: 6px;"></div>
+            </div>
+            <div style="width: 2px; height: 16px; background: #FDD835; margin-top: -2px;"></div>
+            <div style="width: 8px; height: 8px; background: #FDD835; border-radius: 50%;"></div>
+          </div>`,
+          iconSize: [32, 56],
+          iconAnchor: [16, 56],
+        });
 
-      const bounds = mapRef.current.getBounds();
-      const bottomRight = bounds.getSouthEast();
-      const initialPosition: [number, number] = [
-        bottomRight.lat + (bounds.getNorth() - bottomRight.lat) * 0.15,
-        bottomRight.lng - (bounds.getEast() - bounds.getWest()) * 0.05,
-      ];
+        // Add new marker
+        droppedMarkerRef.current = L.marker(coords, {
+          icon: markerIcon,
+        }).addTo(mapRef.current!);
 
-      // Store initial position for reset
-      initialMarkerPositionRef.current = initialPosition;
-
-      draggableMarkerRef.current = L.marker(initialPosition, {
-        icon: customIcon,
-        draggable: true,
-      }).addTo(mapRef.current);
-
-      draggableMarkerRef.current.on("dragend", () => {
-        if (draggableMarkerRef.current && onCoordinatesDrop) {
-          const pos = draggableMarkerRef.current.getLatLng();
-          onCoordinatesDrop([pos.lat, pos.lng]);
+        // Notify parent
+        if (onCoordinatesDrop) {
+          onCoordinatesDrop(coords);
         }
       });
     } else {
@@ -891,18 +887,19 @@ const LeafletMap = ({
     });
   }, [locations, onLocationClick]);
 
-  // Reset marker position when resetMarker becomes true
+  // Remove dropped marker when resetMarker becomes true
   useEffect(() => {
-    if (resetMarker && draggableMarkerRef.current && initialMarkerPositionRef.current) {
-      draggableMarkerRef.current.setLatLng(initialMarkerPositionRef.current);
+    if (resetMarker && droppedMarkerRef.current) {
+      droppedMarkerRef.current.remove();
+      droppedMarkerRef.current = null;
     }
   }, [resetMarker]);
 
   useEffect(() => {
     return () => {
-      if (draggableMarkerRef.current) {
-        draggableMarkerRef.current.remove();
-        draggableMarkerRef.current = null;
+      if (droppedMarkerRef.current) {
+        droppedMarkerRef.current.remove();
+        droppedMarkerRef.current = null;
       }
       if (boundariesLayerRef.current) {
         boundariesLayerRef.current.remove();
