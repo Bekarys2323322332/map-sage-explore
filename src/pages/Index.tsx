@@ -30,19 +30,15 @@ const Index = () => {
     <div className="min-h-screen flex flex-col items-center justify-center p-7 bg-gradient-to-b from-background to-muted/30">
       <div className="max-w-9xl w-full space-y-8 animate-fade-in">
         <div className="text-center space-y-4">
-          <h1 className="text-5xl font-bold text-foreground tracking-tight">
-            Central Asia Interactive Museum
-          </h1>
-          <p className="text-lg text-muted-foreground">
-            Select a country to explore its cultural heritage
-          </p>
+          <h1 className="text-5xl font-bold text-foreground tracking-tight">Central Asia Interactive Museum</h1>
+          <p className="text-lg text-muted-foreground">Select a country to explore its cultural heritage</p>
         </div>
 
         <div className="relative rounded-2xl overflow-hidden shadow-2xl bg-card/50 backdrop-blur-sm border border-border/50">
           <ComposableMap
             projection="geoMercator"
             projectionConfig={{
-              center: [65, 48],
+              center: [65, 45],
               scale: 1100,
             }}
             className="w-full h-auto"
