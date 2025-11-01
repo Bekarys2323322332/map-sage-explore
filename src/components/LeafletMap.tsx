@@ -2,6 +2,101 @@ import { useEffect, useRef } from 'react';
 import L, { Map as LeafletMapInstance } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
+// Regional boundaries for Kazakhstan oblasts (simplified)
+const REGIONAL_BOUNDARIES = {
+  type: 'FeatureCollection' as const,
+  features: [
+    {
+      type: 'Feature' as const,
+      properties: { name: 'Almaty Region', country: 'Kazakhstan' },
+      geometry: {
+        type: 'Polygon' as const,
+        coordinates: [[[76.5, 42.5], [78.5, 42.5], [80.5, 43.5], [81.5, 45.0], [80.0, 46.0], [77.5, 46.0], [76.0, 44.5], [76.5, 42.5]]]
+      }
+    },
+    {
+      type: 'Feature' as const,
+      properties: { name: 'Astana Region', country: 'Kazakhstan' },
+      geometry: {
+        type: 'Polygon' as const,
+        coordinates: [[[68.0, 50.0], [72.0, 50.0], [72.0, 52.5], [68.0, 52.5], [68.0, 50.0]]]
+      }
+    },
+    {
+      type: 'Feature' as const,
+      properties: { name: 'East Kazakhstan Region', country: 'Kazakhstan' },
+      geometry: {
+        type: 'Polygon' as const,
+        coordinates: [[[78.0, 46.0], [82.0, 46.0], [85.5, 47.5], [85.5, 50.0], [82.0, 50.0], [78.0, 48.5], [78.0, 46.0]]]
+      }
+    },
+    {
+      type: 'Feature' as const,
+      properties: { name: 'West Kazakhstan Region', country: 'Kazakhstan' },
+      geometry: {
+        type: 'Polygon' as const,
+        coordinates: [[[48.0, 48.0], [53.0, 48.0], [53.0, 51.5], [48.0, 51.5], [48.0, 48.0]]]
+      }
+    },
+    {
+      type: 'Feature' as const,
+      properties: { name: 'North Kazakhstan Region', country: 'Kazakhstan' },
+      geometry: {
+        type: 'Polygon' as const,
+        coordinates: [[[63.0, 52.5], [69.0, 52.5], [69.5, 55.0], [63.5, 55.0], [63.0, 52.5]]]
+      }
+    },
+    {
+      type: 'Feature' as const,
+      properties: { name: 'South Kazakhstan Region', country: 'Kazakhstan' },
+      geometry: {
+        type: 'Polygon' as const,
+        coordinates: [[[66.0, 41.0], [70.0, 41.0], [70.0, 44.0], [66.0, 44.0], [66.0, 41.0]]]
+      }
+    },
+    {
+      type: 'Feature' as const,
+      properties: { name: 'Karaganda Region', country: 'Kazakhstan' },
+      geometry: {
+        type: 'Polygon' as const,
+        coordinates: [[[70.0, 46.5], [75.0, 46.5], [75.0, 50.0], [70.0, 50.0], [70.0, 46.5]]]
+      }
+    },
+    {
+      type: 'Feature' as const,
+      properties: { name: 'Samarkand Region', country: 'Uzbekistan' },
+      geometry: {
+        type: 'Polygon' as const,
+        coordinates: [[[65.5, 38.5], [68.0, 38.5], [68.0, 40.5], [65.5, 40.5], [65.5, 38.5]]]
+      }
+    },
+    {
+      type: 'Feature' as const,
+      properties: { name: 'Bukhara Region', country: 'Uzbekistan' },
+      geometry: {
+        type: 'Polygon' as const,
+        coordinates: [[[62.0, 38.5], [65.5, 38.5], [65.5, 41.0], [62.0, 41.0], [62.0, 38.5]]]
+      }
+    },
+    {
+      type: 'Feature' as const,
+      properties: { name: 'Issyk-Kul Region', country: 'Kyrgyzstan' },
+      geometry: {
+        type: 'Polygon' as const,
+        coordinates: [[[76.0, 41.5], [79.0, 41.5], [79.0, 43.0], [76.0, 43.0], [76.0, 41.5]]]
+      }
+    },
+    {
+      type: 'Feature' as const,
+      properties: { name: 'Chuy Region', country: 'Kyrgyzstan' },
+      geometry: {
+        type: 'Polygon' as const,
+        coordinates: [[[73.5, 42.0], [76.0, 42.0], [76.0, 43.5], [73.5, 43.5], [73.5, 42.0]]]
+      }
+    }
+  ]
+};
+
 // Accurate GeoJSON for Central Asian countries
 const COUNTRY_BOUNDARIES = {
   type: 'FeatureCollection' as const,
@@ -71,6 +166,7 @@ const LeafletMap = ({ center, zoom, locations, selectedCountry, onLocationClick,
   const markersLayerRef = useRef<L.LayerGroup | null>(null);
   const draggableMarkerRef = useRef<L.Marker | null>(null);
   const boundariesLayerRef = useRef<L.GeoJSON | null>(null);
+  const regionalBoundariesLayerRef = useRef<L.GeoJSON | null>(null);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -104,6 +200,29 @@ const LeafletMap = ({ center, zoom, locations, selectedCountry, onLocationClick,
             fillColor: isSelected ? '#FFD700' : 'transparent',
             fillOpacity: isSelected ? 0.1 : 0,
           };
+        }
+      }).addTo(mapRef.current);
+
+      // Add regional boundaries
+      regionalBoundariesLayerRef.current = L.geoJSON(REGIONAL_BOUNDARIES as any, {
+        style: (feature) => {
+          const isSelectedCountry = feature?.properties?.country === selectedCountry;
+          return {
+            color: isSelectedCountry ? '#FFD700' : '#666666',
+            weight: 1,
+            opacity: isSelectedCountry ? 0.6 : 0.2,
+            fill: false,
+            dashArray: '4, 6',
+          };
+        },
+        onEachFeature: (feature, layer) => {
+          if (feature.properties && feature.properties.name) {
+            layer.bindTooltip(feature.properties.name, {
+              permanent: false,
+              direction: 'center',
+              className: 'region-label',
+            });
+          }
         }
       }).addTo(mapRef.current);
 
@@ -160,6 +279,21 @@ const LeafletMap = ({ center, zoom, locations, selectedCountry, onLocationClick,
       });
     }
 
+    // Update regional boundaries
+    if (regionalBoundariesLayerRef.current) {
+      regionalBoundariesLayerRef.current.eachLayer((layer: any) => {
+        const feature = layer.feature;
+        const isSelectedCountry = feature?.properties?.country === selectedCountry;
+        layer.setStyle({
+          color: isSelectedCountry ? '#FFD700' : '#666666',
+          weight: 1,
+          opacity: isSelectedCountry ? 0.6 : 0.2,
+          fill: false,
+          dashArray: '4, 6',
+        });
+      });
+    }
+
     return () => {
       // Don't remove the map here to preserve across rerenders; cleanup on unmount handled below
     };
@@ -194,6 +328,10 @@ const LeafletMap = ({ center, zoom, locations, selectedCountry, onLocationClick,
       if (boundariesLayerRef.current) {
         boundariesLayerRef.current.remove();
         boundariesLayerRef.current = null;
+      }
+      if (regionalBoundariesLayerRef.current) {
+        regionalBoundariesLayerRef.current.remove();
+        regionalBoundariesLayerRef.current = null;
       }
       if (mapRef.current) {
         mapRef.current.remove();
