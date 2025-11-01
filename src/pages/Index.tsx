@@ -104,7 +104,7 @@ const Index = () => {
                     transition: "opacity 0.3s ease-in-out",
                   }}
                 >
-                  {countryId}
+                  Capitalize<{countryId}>
                 </text>
               </Marker>
             ))}
