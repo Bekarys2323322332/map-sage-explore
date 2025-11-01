@@ -1,10 +1,41 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { ComposableMap, Geographies, Geography, Marker } from "react-simple-maps";
+import { Sparkles, Globe, MapPin } from "lucide-react";
+import LanguageSelector from "@/components/LanguageSelector";
 
 const Index = () => {
   const navigate = useNavigate();
   const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
+  const [language, setLanguage] = useState("English");
+
+  const translations: Record<string, { title: string; subtitle: string; explore: string }> = {
+    English: {
+      title: "Central Asia Interactive Museum",
+      subtitle: "Select a country to explore its cultural heritage",
+      explore: "Explore the Silk Road",
+    },
+    Russian: {
+      title: "Интерактивный Музей Центральной Азии",
+      subtitle: "Выберите страну для изучения её культурного наследия",
+      explore: "Исследуйте Шёлковый путь",
+    },
+    Kazakh: {
+      title: "Орталық Азия интерактивті мұражайы",
+      subtitle: "Мәдени мұрасын зерттеу үшін елді таңдаңыз",
+      explore: "Жібек жолын зерттеңіз",
+    },
+    Uzbek: {
+      title: "Markaziy Osiyo interaktiv muzeyi",
+      subtitle: "Madaniy merosini o'rganish uchun mamlakatni tanlang",
+      explore: "Ipak yo'lini o'rganing",
+    },
+    Kyrgyz: {
+      title: "Борбордук Азия интерактивдүү музейи",
+      subtitle: "Маданий мурасын изилдөө үчүн өлкөнү тандаңыз",
+      explore: "Жибек жолун изилдеңиз",
+    },
+  };
 
   const countryColors: Record<string, string> = {
     kazakhstan: "hsl(210, 70%, 60%)",
@@ -27,21 +58,66 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-7 bg-gradient-to-b from-background to-muted/30">
-      <div className="max-w-9xl w-full space-y-8 animate-fade-in">
-        <div className="text-center space-y-4">
-          <h1 className="text-5xl font-bold text-foreground tracking-tight">Central Asia Interactive Museum</h1>
-          <p className="text-lg text-muted-foreground">Select a country to explore its cultural heritage</p>
+    <div className="relative min-h-screen flex flex-col items-center justify-center p-4 sm:p-7 overflow-hidden">
+      {/* Animated background with gradients */}
+      <div className="absolute inset-0 bg-gradient-to-br from-background via-card to-muted/40 animate-gradient bg-[length:400%_400%]" />
+      
+      {/* Floating decorative elements */}
+      <div className="absolute top-20 left-10 w-64 h-64 bg-primary/10 rounded-full blur-3xl animate-pulse" />
+      <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }} />
+      <div className="absolute top-1/2 left-1/4 w-48 h-48 bg-secondary/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "2s" }} />
+
+      {/* Language selector in top right */}
+      <div className="absolute top-6 right-6 z-50 animate-fade-in">
+        <LanguageSelector language={language} onLanguageChange={setLanguage} />
+      </div>
+
+      {/* Main content */}
+      <div className="relative z-10 max-w-7xl w-full space-y-8 sm:space-y-12 animate-fade-in">
+        {/* Header with decorative elements */}
+        <div className="text-center space-y-6 px-4">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-sm animate-scale-in">
+            <Sparkles className="w-5 h-5 text-primary animate-pulse" />
+            <span className="text-sm font-medium text-primary">{translations[language].explore}</span>
+          </div>
+          
+          <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold text-foreground tracking-tight leading-tight">
+            <span className="bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent animate-gradient bg-[length:200%_auto]">
+              {translations[language].title}
+            </span>
+          </h1>
+          
+          <div className="flex items-center justify-center gap-3 text-lg sm:text-xl text-muted-foreground">
+            <Globe className="w-5 h-5 text-primary" />
+            <p>{translations[language].subtitle}</p>
+          </div>
         </div>
 
-        <div className="relative rounded-2xl overflow-hidden shadow-2xl bg-card/50 backdrop-blur-sm border border-border/50">
-          <ComposableMap
+        {/* Map container with enhanced styling */}
+        <div className="relative group">
+          {/* Glow effect on hover */}
+          <div className="absolute -inset-1 bg-gradient-to-r from-primary via-accent to-secondary rounded-3xl blur-xl opacity-30 group-hover:opacity-60 transition-opacity duration-500" />
+          
+          <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-card/80 backdrop-blur-md border-2 border-border/50 hover:border-primary/30 transition-all duration-500">
+            {/* Decorative corner accents */}
+            <div className="absolute top-0 left-0 w-20 h-20 border-t-4 border-l-4 border-primary/40 rounded-tl-3xl" />
+            <div className="absolute top-0 right-0 w-20 h-20 border-t-4 border-r-4 border-accent/40 rounded-tr-3xl" />
+            <div className="absolute bottom-0 left-0 w-20 h-20 border-b-4 border-l-4 border-secondary/40 rounded-bl-3xl" />
+            <div className="absolute bottom-0 right-0 w-20 h-20 border-b-4 border-r-4 border-primary/40 rounded-br-3xl" />
+            
+            {/* Helper text */}
+            <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 px-4 py-2 rounded-full bg-background/90 backdrop-blur-sm border border-border shadow-lg animate-fade-in">
+              <MapPin className="w-4 h-4 text-primary" />
+              <span className="text-sm font-medium text-foreground">Click a country to explore</span>
+            </div>
+
+            <ComposableMap
             projection="geoMercator"
             projectionConfig={{
               center: [65, 46],
               scale: 1100,
             }}
-            className="w-full h-auto"
+            className="w-full h-auto transition-all duration-300"
             style={{ maxHeight: "70vh" }}
           >
             <Geographies geography="https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json">
@@ -60,9 +136,9 @@ const Index = () => {
                         key={geo.rsmKey}
                         geography={geo}
                         fill={hoveredCountry === countryId ? baseColor : "hsl(var(--muted))"}
-                        stroke="hsl(var(--border))"
-                        strokeWidth={0.8}
-                        className="cursor-pointer"
+                        stroke={hoveredCountry === countryId ? baseColor : "hsl(var(--border))"}
+                        strokeWidth={hoveredCountry === countryId ? 1.5 : 0.8}
+                        className="cursor-pointer transition-all duration-300"
                         onMouseEnter={() => setHoveredCountry(countryId)}
                         onMouseLeave={() => setHoveredCountry(null)}
                         onClick={() => handleCountryClick(countryId)}
@@ -71,10 +147,10 @@ const Index = () => {
                             outline: "none",
                             filter:
                               hoveredCountry === countryId
-                                ? "brightness(1.15) drop-shadow(0 0 20px rgba(255,255,255,0.4))"
+                                ? "brightness(1.3) drop-shadow(0 0 30px rgba(255,215,0,0.7))"
                                 : "brightness(1)",
-                            transform: hoveredCountry === countryId ? "scale(1.02)" : "scale(1)",
-                            transition: "all 0.3s ease",
+                            transform: hoveredCountry === countryId ? "scale(1.03)" : "scale(1)",
+                            transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
                           },
                           hover: { outline: "none" },
                           pressed: { outline: "none" },
@@ -87,22 +163,63 @@ const Index = () => {
 
             {Object.entries(countryPositions).map(([countryId, pos]) => (
               <Marker key={countryId} coordinates={[pos.x, pos.y + 1]}>
-                <text
-                  textAnchor="middle"
-                  alignmentBaseline="middle"
-                  className="fill-foreground font-bold pointer-events-none capitalize"
-                  style={{
-                    fontSize: "28px",
-                    opacity: hoveredCountry === countryId ? 1 : 0,
-                    transition: "all 0.3s ease",
-                    transform: hoveredCountry === countryId ? "scale(1.1)" : "scale(1)",
-                  }}
-                >
-                  {pos.animal} {countryId}
-                </text>
+                <g className="pointer-events-none">
+                  {/* Shadow for text */}
+                  <text
+                    textAnchor="middle"
+                    alignmentBaseline="middle"
+                    className="font-bold capitalize"
+                    style={{
+                      fontSize: "32px",
+                      opacity: hoveredCountry === countryId ? 0.3 : 0,
+                      transition: "all 0.4s ease",
+                      transform: hoveredCountry === countryId ? "scale(1.15)" : "scale(1)",
+                      fill: "#000",
+                      filter: "blur(4px)",
+                    }}
+                  >
+                    {pos.animal} {countryId}
+                  </text>
+                  
+                  {/* Main text */}
+                  <text
+                    textAnchor="middle"
+                    alignmentBaseline="middle"
+                    className="font-bold capitalize"
+                    style={{
+                      fontSize: "32px",
+                      opacity: hoveredCountry === countryId ? 1 : 0,
+                      transition: "all 0.4s ease",
+                      transform: hoveredCountry === countryId ? "scale(1.15)" : "scale(1)",
+                      fill: "hsl(var(--foreground))",
+                      filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.4))",
+                    }}
+                  >
+                    {pos.animal} {countryId}
+                  </text>
+                </g>
               </Marker>
             ))}
           </ComposableMap>
+          </div>
+        </div>
+
+        {/* Bottom decorative strip */}
+        <div className="flex items-center justify-center gap-8 px-4 py-6 rounded-2xl bg-gradient-to-r from-primary/10 via-accent/10 to-secondary/10 border border-border/50 backdrop-blur-sm animate-fade-in">
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded-full bg-primary animate-pulse" />
+            <span className="text-sm font-medium text-muted-foreground">5 Countries</span>
+          </div>
+          <div className="w-px h-6 bg-border" />
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-accent" />
+            <span className="text-sm font-medium text-muted-foreground">Interactive Experience</span>
+          </div>
+          <div className="w-px h-6 bg-border" />
+          <div className="flex items-center gap-2">
+            <Globe className="w-4 h-4 text-secondary" />
+            <span className="text-sm font-medium text-muted-foreground">Cultural Heritage</span>
+          </div>
         </div>
       </div>
     </div>
