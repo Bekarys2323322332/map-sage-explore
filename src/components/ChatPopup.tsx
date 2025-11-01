@@ -17,8 +17,8 @@ interface ChatPopupProps {
   coordinates?: [number, number];
   onClose: () => void;
   language: string;
-  /** например: 'kz' | 'uz' | 'kg' | 'tj' | 'tm' */
-  country: string;
+  /** 'kz' | 'uz' | 'kg' | 'tj' | 'tm' — может временно не прийти */
+  country?: string;
 }
 
 interface Message {
@@ -27,7 +27,7 @@ interface Message {
   content: string;
 }
 
-const API_BASE = "https://40a587c40a6f.ngrok-free.app"; // твой FastAPI за ngrok
+const API_BASE = "https://40a587c40a6f.ngrok-free.app"; // твой FastAPI
 
 const ChatPopup = ({ location, coordinates, onClose, language, country }: ChatPopupProps) => {
   const { toast } = useToast();
@@ -35,11 +35,14 @@ const ChatPopup = ({ location, coordinates, onClose, language, country }: ChatPo
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  // 1. при первом открытии и если кликнули по карте — сразу запрос к бэку
+  // 👇 если пропса нет — считаем Казахстан
+  const effectiveCountry = (country || "kz").toLowerCase();
+
+  // первый запрос — когда открыли попап и есть координаты
   useEffect(() => {
     const fetchInitial = async () => {
-      // если попап открыт без карты (например, из списка)
       if (!coordinates) {
+        // открыли по готовой локации
         if (location) {
           setMessages([
             {
@@ -58,7 +61,7 @@ const ChatPopup = ({ location, coordinates, onClose, language, country }: ChatPo
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            country: country, // ⚡ берём из пропса
+            country: effectiveCountry, // ✅ уже нормальная страна
             lat: coordinates[0],
             lon: coordinates[1],
             location_name: location?.name ?? null,
@@ -100,25 +103,29 @@ const ChatPopup = ({ location, coordinates, onClose, language, country }: ChatPo
       }
     };
 
-    // вызов только когда есть координаты ИЛИ поменяли страну
+    // вызываем только если есть координаты
     if (coordinates) {
       fetchInitial();
     }
-  }, [coordinates, country, location, toast]);
+  }, [coordinates, effectiveCountry, location, toast]);
 
-  // 2. отправка дальнейших сообщений
   const handleSend = async () => {
     if (!input.trim()) return;
 
-    // если вообще нет координат (например, открыли по списку) — можно просто не звать бэк
+    // если координат нет — просто чатимся локально
     if (!coordinates) {
+      const userMsg: Message = {
+        id: Date.now().toString(),
+        role: "user",
+        content: input,
+      };
       setMessages((prev) => [
         ...prev,
-        { id: Date.now().toString(), role: "user", content: input },
+        userMsg,
         {
           id: (Date.now() + 1).toString(),
           role: "assistant",
-          content: "This location was opened without coordinates. Please select a point on the map.",
+          content: "This location was opened without coordinates. Please tap on the map.",
         },
       ]);
       setInput("");
@@ -130,7 +137,6 @@ const ChatPopup = ({ location, coordinates, onClose, language, country }: ChatPo
       role: "user",
       content: input,
     };
-
     const newMessages = [...messages, userMsg];
     setMessages(newMessages);
     setInput("");
@@ -141,7 +147,7 @@ const ChatPopup = ({ location, coordinates, onClose, language, country }: ChatPo
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          country: country, // ⚡ снова берём из пропса
+          country: effectiveCountry, // ✅ снова нормальная страна
           lat: coordinates[0],
           lon: coordinates[1],
           location_name: location?.name ?? null,
@@ -188,7 +194,7 @@ const ChatPopup = ({ location, coordinates, onClose, language, country }: ChatPo
               <h3 className="text-xl font-bold">{location?.name || "Selected location"}</h3>
               {coordinates && (
                 <p className="text-xs text-muted-foreground">
-                  {coordinates[0].toFixed(4)}, {coordinates[1].toFixed(4)} · {country.toUpperCase()}
+                  {coordinates[0].toFixed(4)}, {coordinates[1].toFixed(4)} · {effectiveCountry.toUpperCase()}
                 </p>
               )}
             </div>
