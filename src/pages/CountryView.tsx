@@ -192,7 +192,7 @@ const CountryView = () => {
         <div
           draggable
           onDragStart={(e) => {
-            e.dataTransfer.setData("marker", "true");
+            e.dataTransfer.setData("text/plain", "marker");
             e.currentTarget.style.cursor = 'pointer';
           }}
           onDragEnd={(e) => {
