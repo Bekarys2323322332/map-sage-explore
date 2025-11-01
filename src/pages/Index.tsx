@@ -42,7 +42,7 @@ const Index = () => {
               scale: 1100,
             }}
             className="w-full h-auto"
-            style={{ maxHeight: "60vh" }}
+            style={{ maxHeight: "70vh" }}
           >
             <Geographies geography="https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json">
               {({ geographies }) =>
