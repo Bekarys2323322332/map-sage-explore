@@ -91,16 +91,16 @@ const CountryView = () => {
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-background">
       {/* Top Bar */}
-      <div className="absolute top-0 left-0 right-0 z-[1000] flex items-center justify-between px-8 py-6 bg-gradient-to-b from-card/95 to-transparent backdrop-blur-sm">
+      <div className="absolute top-0 left-0 right-0 z-[1000] flex items-center justify-between px-8 py-6 bg-gradient-to-b from-card/95 via-card/60 to-transparent backdrop-blur-md border-b border-border/30">
         <Button
           onClick={() => navigate('/')}
           variant="outline"
           size="lg"
-          className="text-lg"
+          className="text-base font-semibold shadow-lg"
         >
-          <ArrowLeft className="mr-2 h-5 w-5" /> Back
+          <ArrowLeft className="h-5 w-5" /> Back
         </Button>
-        <h1 className="text-3xl font-bold text-foreground">{data.name}</h1>
+        <h1 className="text-4xl font-bold text-foreground tracking-tight drop-shadow-sm">{data.name}</h1>
         <LanguageSelector language={language} onLanguageChange={setLanguage} />
       </div>
 

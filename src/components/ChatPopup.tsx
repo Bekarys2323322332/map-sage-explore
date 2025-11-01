@@ -151,7 +151,7 @@ const ChatPopup = ({ location, coordinates, onClose, language }: ChatPopupProps)
             variant="ghost"
             size="icon"
             onClick={onClose}
-            className="hover:bg-destructive/20 hover:text-destructive transition-all hover:rotate-90 duration-300"
+            className="hover:bg-destructive/20 hover:text-destructive transition-all hover:rotate-90 duration-300 rounded-full h-10 w-10"
           >
             <X className="h-5 w-5" />
           </Button>
@@ -192,38 +192,39 @@ const ChatPopup = ({ location, coordinates, onClose, language }: ChatPopupProps)
         </ScrollArea>
 
         {/* Action Buttons with better layout */}
-        <div className="grid grid-cols-3 gap-2 px-6 py-4 border-t border-border/50 bg-muted/30">
-          <Button variant="outline" size="sm" className="flex items-center justify-center gap-2 hover:bg-primary/10 hover:border-primary/50 transition-all">
+        <div className="grid grid-cols-3 gap-3 px-6 py-4 border-t border-border/50 bg-muted/20 backdrop-blur-sm">
+          <Button variant="outline" size="sm" className="flex items-center justify-center gap-2 font-medium">
             <Info className="h-4 w-4" />
             <span className="hidden sm:inline">Info</span>
           </Button>
-          <Button variant="outline" size="sm" className="flex items-center justify-center gap-2 hover:bg-primary/10 hover:border-primary/50 transition-all">
+          <Button variant="outline" size="sm" className="flex items-center justify-center gap-2 font-medium">
             <Mic className="h-4 w-4" />
             <span className="hidden sm:inline">Audio</span>
           </Button>
-          <Button variant="outline" size="sm" className="flex items-center justify-center gap-2 hover:bg-primary/10 hover:border-primary/50 transition-all">
+          <Button variant="outline" size="sm" className="flex items-center justify-center gap-2 font-medium">
             <ImageIcon className="h-4 w-4" />
             <span className="hidden sm:inline">Photo</span>
           </Button>
         </div>
 
         {/* Enhanced Input Area */}
-        <div className="flex items-center gap-3 p-6 border-t border-border/50 bg-background/50 backdrop-blur-sm">
+        <div className="flex items-center gap-3 p-6 border-t border-border/50 bg-gradient-to-t from-card/50 to-background/30 backdrop-blur-md">
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && !isLoading && handleSend()}
             placeholder="Ask about history, culture, or significance..."
-            className="flex-1 border-2 focus:border-primary transition-all bg-background shadow-sm"
+            className="flex-1 h-12 border-2 focus:border-primary transition-all bg-card shadow-sm rounded-xl px-4 text-base"
             disabled={isLoading}
           />
           <Button 
-            onClick={handleSend} 
+            onClick={handleSend}
+            variant="default"
             size="icon" 
-            className="shrink-0 h-10 w-10 shadow-lg hover:shadow-xl transition-all hover:scale-105" 
+            className="shrink-0 h-12 w-12 rounded-xl" 
             disabled={isLoading || !input.trim()}
           >
-            <Send className="h-4 w-4" />
+            <Send className="h-5 w-5" />
           </Button>
         </div>
       </Card>
