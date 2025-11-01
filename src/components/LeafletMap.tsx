@@ -814,7 +814,7 @@ const LeafletMap = ({
             color: isSelectedCountry ? "#FFD700" : "#666666",
             weight: 1,
             opacity: isSelectedCountry ? 0.6 : 0.2,
-            fill: false,
+            fill: true,
             dashArray: "4, 6",
           };
         },
