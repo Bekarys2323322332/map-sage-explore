@@ -19,7 +19,7 @@ const MainMapView = ({ onCountryClick, hoveredCountry, setHoveredCountry }: Main
     features: [
       {
         type: "Feature",
-        properties: { name: "Kazakhstan", id: "kazkahstan" },
+        properties: { name: "Kazakhstan", id: "kazakhstan" },
         geometry: {
           type: "Polygon",
           coordinates: [
