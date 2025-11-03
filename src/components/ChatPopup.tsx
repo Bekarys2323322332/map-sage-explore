@@ -34,6 +34,7 @@ const ChatPopup = ({ location, coordinates, onClose, language, country, derivedC
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isInvalidLocation, setIsInvalidLocation] = useState(false);
 
   // 2. когда попап открылся и есть координаты — сразу запросим описание
   useEffect(() => {
@@ -54,6 +55,7 @@ const ChatPopup = ({ location, coordinates, onClose, language, country, derivedC
 
       // Check if coordinates are out of bounds
       if (derivedCountryName === "Out of Bounds") {
+        setIsInvalidLocation(true);
         setMessages([
           {
             id: "out-of-bounds",
@@ -65,6 +67,8 @@ const ChatPopup = ({ location, coordinates, onClose, language, country, derivedC
         ]);
         return;
       }
+
+      setIsInvalidLocation(false);
 
       setIsLoading(true);
       try {
@@ -248,15 +252,15 @@ const ChatPopup = ({ location, coordinates, onClose, language, country, derivedC
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && !isLoading && handleSend()}
+            onKeyDown={(e) => e.key === "Enter" && !isLoading && !isInvalidLocation && handleSend()}
             placeholder={
               language === "Қазақша" 
                 ? "Тарих, табиғат, шайқастар, минералдар туралы сұраңыз..."
                 : "Ask about history, nature, battles, minerals..."
             }
-            disabled={isLoading}
+            disabled={isLoading || isInvalidLocation}
           />
-          <Button onClick={handleSend} disabled={isLoading || !input.trim()} size="icon">
+          <Button onClick={handleSend} disabled={isLoading || !input.trim() || isInvalidLocation} size="icon">
             <Send className="h-4 w-4" />
           </Button>
         </div>
