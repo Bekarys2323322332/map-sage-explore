@@ -63,7 +63,7 @@ const Resources = () => {
     <div className="relative min-h-screen flex flex-col">
       <Header language={language} onLanguageChange={setLanguage} mapStyle={mapStyle} onMapStyleChange={setMapStyle} />
 
-      <div className="flex-1 flex flex-col pt-24 pb-16 px-3 sm:px-6 lg:px-8">
+      <div className="flex-1 flex flex-col pt-24 pb-16 px-4 sm:px-6 lg:px-7">
         <div className="absolute inset-0 bg-gradient-to-br from-background via-card to-muted/40 animate-gradient bg-[length:400%_400%]" />
 
         <div className="relative z-10 max-w-6xl mx-auto w-full space-y-12 animate-fade-in">
@@ -95,7 +95,7 @@ const Resources = () => {
                       <li key={item.name}>
                         <Button
                           variant="ghost"
-                          className="w-full justify-between h-auto py-3 px-3 text-left hover:bg-primary/10"
+                          className="w-full justify-between h-auto py-3 px-4 text-left hover:bg-primary/10"
                           asChild
                         >
                           <a href={item.url} target="_blank" rel="noopener noreferrer">
