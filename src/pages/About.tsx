@@ -9,24 +9,17 @@ const About = () => {
 
   return (
     <div className="relative min-h-screen flex flex-col">
-      <Header 
-        language={language} 
-        onLanguageChange={setLanguage}
-        mapStyle={mapStyle}
-        onMapStyleChange={setMapStyle}
-      />
-      
+      <Header language={language} onLanguageChange={setLanguage} mapStyle={mapStyle} onMapStyleChange={setMapStyle} />
+
       <div className="flex-1 flex flex-col pt-24 pb-16 px-4 sm:px-6 lg:px-8">
         <div className="absolute inset-0 bg-gradient-to-br from-background via-card to-muted/40 animate-gradient bg-[length:400%_400%]" />
-        
+
         <div className="relative z-10 max-w-4xl mx-auto w-full space-y-12 animate-fade-in">
           <div className="text-center space-y-4">
-            <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent">
+            <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent overflow-visible">
               About TengriMap
             </h1>
-            <p className="text-xl text-muted-foreground">
-              Exploring the Rich Cultural Heritage of Central Asia
-            </p>
+            <p className="text-xl text-muted-foreground">Exploring the Rich Cultural Heritage of Central Asia</p>
           </div>
 
           <div className="grid gap-8 md:grid-cols-2">
@@ -38,7 +31,8 @@ const About = () => {
                 <h2 className="text-2xl font-bold">Our Mission</h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                TengriMap is dedicated to showcasing the diverse cultural heritage, history, and traditions of Central Asia's five nations: Kazakhstan, Uzbekistan, Kyrgyzstan, Tajikistan, and Turkmenistan.
+                TengriMap is dedicated to showcasing the diverse cultural heritage, history, and traditions of Central
+                Asia's five nations: Kazakhstan, Uzbekistan, Kyrgyzstan, Tajikistan, and Turkmenistan.
               </p>
             </div>
 
@@ -50,7 +44,8 @@ const About = () => {
                 <h2 className="text-2xl font-bold">Interactive Experience</h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Explore each country through an interactive map, discovering historical sites, cultural landmarks, and the rich traditions that have shaped this fascinating region.
+                Explore each country through an interactive map, discovering historical sites, cultural landmarks, and
+                the rich traditions that have shaped this fascinating region.
               </p>
             </div>
 
@@ -62,7 +57,8 @@ const About = () => {
                 <h2 className="text-2xl font-bold">Cultural Connection</h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Connect with the stories, people, and heritage of the Silk Road, understanding how these nations have contributed to global culture and history.
+                Connect with the stories, people, and heritage of the Silk Road, understanding how these nations have
+                contributed to global culture and history.
               </p>
             </div>
 
@@ -74,13 +70,14 @@ const About = () => {
                 <h2 className="text-2xl font-bold">Educational Resource</h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Learn about the unique characteristics of each country, from ancient civilizations to modern-day cultural practices, through our AI-powered chatbot and comprehensive information.
+                Learn about the unique characteristics of each country, from ancient civilizations to modern-day
+                cultural practices, through our AI-powered chatbot and comprehensive information.
               </p>
             </div>
           </div>
         </div>
       </div>
-      
+
       <Footer />
     </div>
   );
