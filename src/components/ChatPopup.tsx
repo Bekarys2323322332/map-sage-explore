@@ -58,7 +58,9 @@ const ChatPopup = ({ location, coordinates, onClose, language, country, derivedC
           {
             id: "out-of-bounds",
             role: "assistant",
-            content: "This location is out of bounds. Please pick another point on the map.",
+            content: language === "Қазақша" 
+              ? "Бұл орын шектен тыс. Картадан басқа нүктені таңдаңыз." 
+              : "This location is out of bounds. Please pick another point on the map.",
           },
         ]);
         return;
@@ -66,6 +68,10 @@ const ChatPopup = ({ location, coordinates, onClose, language, country, derivedC
 
       setIsLoading(true);
       try {
+        const initialPrompt = language === "Қазақша"
+          ? "Бұл орынды келушілер үшін сипаттаңыз."
+          : "Describe this location for a visitor.";
+
         const res = await fetch(`${API_BASE}/location-chat`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -78,7 +84,7 @@ const ChatPopup = ({ location, coordinates, onClose, language, country, derivedC
             messages: [
               {
                 role: "user",
-                content: "Describe this location for a visitor.",
+                content: initialPrompt,
               },
             ],
           }),
