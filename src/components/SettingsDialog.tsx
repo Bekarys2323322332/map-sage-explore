@@ -66,20 +66,19 @@ const SettingsDialog = ({ language, onLanguageChange, mapStyle, onMapStyleChange
               <Map className="h-6 w-6 text-primary" />
               <Label className="text-lg font-medium">Map Style</Label>
             </div>
-            <div className="flex items-center space-x-3 py-2">
-              <RadioGroupItem value="satellite" id="satellite" className="h-5 w-5" />
-              <Label htmlFor="satellite" className="cursor-pointer text-base">
-                Satellite
-              </Label>
-            </div>
             <RadioGroup value={mapStyle} onValueChange={onMapStyleChange}>
+              <div className="flex items-center space-x-3 py-2">
+                <RadioGroupItem value="satellite" id="satellite" className="h-5 w-5" />
+                <Label htmlFor="satellite" className="cursor-pointer text-base">
+                  Satellite
+                </Label>
+              </div>
               <div className="flex items-center space-x-3 py-2">
                 <RadioGroupItem value="political" id="political" className="h-5 w-5" />
                 <Label htmlFor="political" className="cursor-pointer text-base">
                   Political
                 </Label>
               </div>
-
               <div className="flex items-center space-x-3 py-2">
                 <RadioGroupItem value="topographical" id="topographical" className="h-5 w-5" />
                 <Label htmlFor="topographical" className="cursor-pointer text-base">
