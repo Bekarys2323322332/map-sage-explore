@@ -32,7 +32,7 @@ const Header = ({ language, onLanguageChange, mapStyle, onMapStyleChange }: Head
           <div className="flex items-center gap-2 sm:gap-4">
             <nav className="hidden md:flex items-center gap-2">
               <Button variant="ghost" size="lg" asChild>
-                <Link to="/">{t("about")}</Link>
+                <Link to="/">{t("home")}</Link>
               </Button>
               <Button variant="ghost" size="lg" asChild>
                 <Link to="/about">{t("about")}</Link>
