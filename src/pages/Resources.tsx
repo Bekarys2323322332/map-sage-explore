@@ -61,16 +61,11 @@ const Resources = () => {
 
   return (
     <div className="relative min-h-screen flex flex-col">
-      <Header 
-        language={language} 
-        onLanguageChange={setLanguage}
-        mapStyle={mapStyle}
-        onMapStyleChange={setMapStyle}
-      />
-      
-      <div className="flex-1 flex flex-col pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+      <Header language={language} onLanguageChange={setLanguage} mapStyle={mapStyle} onMapStyleChange={setMapStyle} />
+
+      <div className="flex-1 flex flex-col pt-24 pb-16 px-3 sm:px-6 lg:px-8">
         <div className="absolute inset-0 bg-gradient-to-br from-background via-card to-muted/40 animate-gradient bg-[length:400%_400%]" />
-        
+
         <div className="relative z-10 max-w-6xl mx-auto w-full space-y-12 animate-fade-in">
           <div className="text-center space-y-4">
             <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent">
@@ -100,7 +95,7 @@ const Resources = () => {
                       <li key={item.name}>
                         <Button
                           variant="ghost"
-                          className="w-full justify-between h-auto py-3 px-4 text-left hover:bg-primary/10"
+                          className="w-full justify-between h-auto py-3 px-3 text-left hover:bg-primary/10"
                           asChild
                         >
                           <a href={item.url} target="_blank" rel="noopener noreferrer">
@@ -119,8 +114,7 @@ const Resources = () => {
           <div className="bg-card/80 backdrop-blur-md rounded-2xl p-8 border border-border/50 text-center space-y-4">
             <h3 className="text-2xl font-bold">Want to Contribute?</h3>
             <p className="text-muted-foreground">
-              If you have resources or information to share about Central Asian culture, 
-              we'd love to hear from you.
+              If you have resources or information to share about Central Asian culture, we'd love to hear from you.
             </p>
             <Button size="lg" className="shadow-lg">
               Contact Us
@@ -128,7 +122,7 @@ const Resources = () => {
           </div>
         </div>
       </div>
-      
+
       <Footer language={language} />
     </div>
   );
