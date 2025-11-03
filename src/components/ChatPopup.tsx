@@ -66,7 +66,7 @@ const ChatPopup = ({ location, coordinates, onClose, language, country, derivedC
 
       setIsLoading(true);
       try {
-        const res = await fetch(`${API_BASE}location-chat`, {
+        const res = await fetch(`${API_BASE}/location-chat`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
