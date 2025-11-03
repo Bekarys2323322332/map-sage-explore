@@ -781,8 +781,13 @@ const LeafletMap = ({
         zoom,
         zoomControl: false,
         attributionControl: false,
-        minZoom: 3,
+        minZoom: 4,
         maxZoom: 18,
+        maxBounds: [
+          [30, 40],  // Southwest corner (lat, lng)
+          [65, 95]   // Northeast corner (lat, lng)
+        ],
+        maxBoundsViscosity: 0.8,
       });
 
       L.tileLayer(
