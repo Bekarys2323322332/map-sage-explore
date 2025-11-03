@@ -45,15 +45,6 @@ const Footer = ({ language = "English" }: FooterProps) => {
           <div className="space-y-3">
             <h3 className="text-lg font-semibold text-foreground">{t("connect")}</h3>
             <div className="flex items-center gap-4">
-              <a href="#" className="p-2 rounded-lg bg-muted/50 hover:bg-primary/10 transition-colors">
-                <Github className="w-5 h-5 text-muted-foreground hover:text-primary transition-colors" />
-              </a>
-              <a
-                href="mailto:centralasiamapper@gmail.com"
-                className="p-2 rounded-lg bg-muted/50 hover:bg-primary/10 transition-colors"
-              >
-                <Mail className="w-5 h-5 text-muted-foreground hover:text-primary transition-colors" />
-              </a>
               <a
                 href="https://www.youtube.com/watch?v=h8DeZSB2o-c&list=RDX6yOnaeOXns&index=17"
                 rel="noopener noreferrer"
@@ -61,6 +52,9 @@ const Footer = ({ language = "English" }: FooterProps) => {
                 className="p-2 rounded-lg bg-muted/50 hover:bg-primary/10 transition-colors"
               >
                 <Instagram className="w-5 h-5 text-muted-foreground hover:text-primary transition-colors" />
+              </a>
+              <a href="#" className="p-2 rounded-lg bg-muted/50 hover:bg-primary/10 transition-colors">
+                <Mail className="w-5 h-5 text-muted-foreground hover:text-primary transition-colors" />
               </a>
             </div>
           </div>
