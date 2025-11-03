@@ -5,6 +5,7 @@ import ChatPopup from "@/components/ChatPopup";
 import SettingsDialog from "@/components/SettingsDialog";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, MapPin } from "lucide-react";
+import { useTranslation } from "@/hooks/useTranslation";
 
 // Derive country from coordinates with more accurate boundaries
 const getCountryFromCoordinates = (lat: number, lon: number): string => {
@@ -163,6 +164,7 @@ const CountryView = () => {
   const [droppedCoordinates, setDroppedCoordinates] = useState<[number, number] | null>(null);
   const [derivedCountry, setDerivedCountry] = useState<string | null>(null);
   const [language, setLanguage] = useState("English");
+  const { t } = useTranslation(language);
   const [mapStyle, setMapStyle] = useState(() => {
     return localStorage.getItem("mapStyle") || "satellite";
   });
@@ -205,9 +207,9 @@ const CountryView = () => {
           <div className="flex items-center justify-between h-14 sm:h-16">
             <Button onClick={() => navigate("/")} variant="ghost" size="sm" className="text-base sm:text-lg font-semibold px-2 sm:px-6 h-10 sm:h-12 gap-1">
               <ArrowLeft className="h-5 w-5 sm:h-6 sm:w-6" />
-              <span className="hidden sm:inline">Back</span>
+              <span className="hidden sm:inline">{t("back")}</span>
             </Button>
-            <h1 className="text-lg sm:text-2xl md:text-3xl font-bold text-foreground tracking-tight truncate px-2">{data.name}</h1>
+            <h1 className="text-lg sm:text-2xl md:text-3xl font-bold text-foreground tracking-tight truncate px-2">{t(data.name.toLowerCase())}</h1>
             <div className="flex items-center gap-2 sm:gap-4">
               <SettingsDialog
                 language={language}
@@ -261,7 +263,7 @@ const CountryView = () => {
 
       {/* Draggable Marker Footer */}
       <div className="absolute bottom-4 sm:bottom-8 right-4 sm:right-8 z-[1000] flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3 bg-card/95 backdrop-blur-md rounded-lg border border-border shadow-lg">
-        <span className="text-xs sm:text-sm font-medium text-muted-foreground hidden sm:inline">Drop a pin:</span>
+        <span className="text-xs sm:text-sm font-medium text-muted-foreground hidden sm:inline">{t("drop_pin")}</span>
         <div
           draggable
           onDragStart={(e) => {

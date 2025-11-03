@@ -4,11 +4,13 @@ import { ComposableMap, Geographies, Geography, Marker } from "react-simple-maps
 import { Sparkles, Globe, MapPin } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { useTranslation } from "@/hooks/useTranslation";
 
 const Index = () => {
   const navigate = useNavigate();
   const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
   const [language, setLanguage] = useState("English");
+  const { t } = useTranslation(language);
   const [mapStyle, setMapStyle] = useState(() => {
     return localStorage.getItem("mapStyle") || "satellite";
   });
@@ -62,24 +64,24 @@ const Index = () => {
           <div className="text-center space-y-4 sm:space-y-6 px-4">
             <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-sm animate-scale-in">
               <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-primary animate-pulse" />
-              <span className="text-xs sm:text-sm font-medium text-primary">Explore the Silk Road</span>
+              <span className="text-xs sm:text-sm font-medium text-primary">{t("explore_silk_road")}</span>
             </div>
 
             <h2 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-foreground tracking-tight leading-tight px-2">
               <span className="bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent animate-gradient bg-[length:200%_auto]">
-                Central Asia Interactive Museum
+                {t("central_asia_museum")}
               </span>
             </h2>
 
             <div className="flex items-center justify-center gap-2 sm:gap-3 text-sm sm:text-lg md:text-xl text-muted-foreground px-2">
               <Globe className="w-4 h-4 sm:w-5 sm:h-5 text-primary shrink-0" />
-              <p className="text-center">Select a country to explore its cultural heritage</p>
+              <p className="text-center">{t("select_country")}</p>
             </div>
 
             {/* Helper text */}
             <div className="inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-full bg-background/90 backdrop-blur-sm border border-border shadow-lg animate-fade-in mt-4">
               <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
-              <span className="text-sm sm:text-base font-medium text-foreground">Click a country to explore</span>
+              <span className="text-sm sm:text-base font-medium text-foreground">{t("click_country")}</span>
             </div>
           </div>
 
@@ -190,7 +192,7 @@ const Index = () => {
         </div>
       </div>
 
-      <Footer />
+      <Footer language={language} />
     </div>
   );
 };

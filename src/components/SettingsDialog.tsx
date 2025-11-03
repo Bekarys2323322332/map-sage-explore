@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useTheme } from "next-themes";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface SettingsDialogProps {
   language: string;
@@ -22,6 +23,7 @@ interface SettingsDialogProps {
 
 const SettingsDialog = ({ language, onLanguageChange, mapStyle, onMapStyleChange }: SettingsDialogProps) => {
   const { theme, setTheme } = useTheme();
+  const { t } = useTranslation(language);
 
   const languages = [
     { code: "en", name: "English" },
@@ -39,9 +41,9 @@ const SettingsDialog = ({ language, onLanguageChange, mapStyle, onMapStyleChange
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Settings className="h-5 w-5" />
-            Settings
+            {t("settings")}
           </DialogTitle>
-          <DialogDescription>Customize your TengriMap experience</DialogDescription>
+          <DialogDescription>{t("customize")}</DialogDescription>
         </DialogHeader>
         <div className="space-y-6 py-4">
           {/* Dark/Light Mode Toggle */}
@@ -49,7 +51,7 @@ const SettingsDialog = ({ language, onLanguageChange, mapStyle, onMapStyleChange
             <div className="flex items-center gap-3">
               {theme === "dark" ? <Moon className="h-6 w-6 text-primary" /> : <Sun className="h-6 w-6 text-primary" />}
               <Label htmlFor="theme-toggle" className="text-lg font-medium cursor-pointer">
-                Dark Mode
+                {t("dark_mode")}
               </Label>
             </div>
             <Switch
@@ -64,25 +66,25 @@ const SettingsDialog = ({ language, onLanguageChange, mapStyle, onMapStyleChange
           <div className="space-y-3">
             <div className="flex items-center gap-3">
               <Map className="h-6 w-6 text-primary" />
-              <Label className="text-lg font-medium">Map Style</Label>
+              <Label className="text-lg font-medium">{t("map_style")}</Label>
             </div>
             <RadioGroup value={mapStyle} onValueChange={onMapStyleChange}>
               <div className="flex items-center space-x-3 py-2">
                 <RadioGroupItem value="satellite" id="satellite" className="h-5 w-5" />
                 <Label htmlFor="satellite" className="cursor-pointer text-base">
-                  Satellite
+                  {t("satellite")}
                 </Label>
               </div>
               <div className="flex items-center space-x-3 py-2">
                 <RadioGroupItem value="political" id="political" className="h-5 w-5" />
                 <Label htmlFor="political" className="cursor-pointer text-base">
-                  Political
+                  {t("political")}
                 </Label>
               </div>
               <div className="flex items-center space-x-3 py-2">
                 <RadioGroupItem value="topographical" id="topographical" className="h-5 w-5" />
                 <Label htmlFor="topographical" className="cursor-pointer text-base">
-                  Topographical
+                  {t("topographical")}
                 </Label>
               </div>
             </RadioGroup>
@@ -92,7 +94,7 @@ const SettingsDialog = ({ language, onLanguageChange, mapStyle, onMapStyleChange
           <div className="space-y-3">
             <div className="flex items-center gap-3">
               <Globe className="h-6 w-6 text-primary" />
-              <Label className="text-lg font-medium">Language</Label>
+              <Label className="text-lg font-medium">{t("language")}</Label>
             </div>
             <RadioGroup value={language} onValueChange={onLanguageChange}>
               {languages.map((lang) => (
