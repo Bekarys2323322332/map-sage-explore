@@ -95,12 +95,12 @@ const Resources = () => {
                       <li key={item.name}>
                         <Button
                           variant="ghost"
-                          className="w-full justify-between h-auto py-3 px-4 text-left hover:bg-primary/10"
+                          className="w-full justify-between h-auto py-3 px-4 text-left hover:bg-primary/10 gap-3"
                           asChild
                         >
-                          <a href={item.url} target="_blank" rel="noopener noreferrer">
-                            <span className="text-foreground">{item.name}</span>
-                            <ExternalLink className="w-4 h-4 text-muted-foreground" />
+                          <a href={item.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between gap-3">
+                            <span className="text-foreground break-words flex-1 min-w-0">{item.name}</span>
+                            <ExternalLink className="w-4 h-4 text-muted-foreground flex-shrink-0" />
                           </a>
                         </Button>
                       </li>
