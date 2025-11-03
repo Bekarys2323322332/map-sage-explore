@@ -12,7 +12,7 @@ const Resources = () => {
   const [mapStyle, setMapStyle] = useState(() => {
     return localStorage.getItem("mapStyle") || "political";
   });
-  const { handleClick, isHovered } = useTouchHover('resources');
+  const { handleClick, isHovered } = useTouchHover("resources");
 
   useEffect(() => {
     localStorage.setItem("language", language);
@@ -98,11 +98,13 @@ const Resources = () => {
                         <Button
                           variant="ghost"
                           className={`w-full justify-between h-auto py-3 px-4 text-left hover:bg-primary/10 gap-3 ${
-                            isHovered(`${section.category}-${item.name}`) ? 'bg-primary/10' : ''
+                            isHovered(`${section.category}-${item.name}`) ? "bg-primary/10" : ""
                           }`}
-                          onClick={(e) => handleClick(e, `${section.category}-${item.name}`, () => {
-                            window.open(item.url, '_blank', 'noopener,noreferrer');
-                          })}
+                          onClick={(e) =>
+                            handleClick(e, `${section.category}-${item.name}`, () => {
+                              window.open(item.url, "_blank", "noopener,noreferrer");
+                            })
+                          }
                         >
                           <span className="text-foreground break-words flex-1 min-w-0">{item.name}</span>
                           <ExternalLink className="w-4 h-4 text-muted-foreground flex-shrink-0" />
@@ -121,7 +123,7 @@ const Resources = () => {
               If you have resources or information to share about Central Asian culture, we'd love to hear from you.
             </p>
             <Button size="lg" className="shadow-lg">
-              Contact Us
+              <a href="mailto:centralasiamapper@gmail.com">Send Email</a>
             </Button>
           </div>
         </div>
