@@ -188,9 +188,9 @@ const ChatPopup = ({ location, coordinates, onClose, language, country, derivedC
         {/* header */}
         <div className="flex items-center justify-between p-5 border-b bg-gradient-to-r from-primary/20 via-accent/15 to-primary/20">
           <div className="flex items-center gap-4">
-            <Avatar className="h-14 w-14 bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-              <span className="text-3xl">🏛️</span>
-            </Avatar>
+            <div className="p-3 rounded-lg bg-primary/10 border border-primary/20">
+              <Landmark className="w-6 h-6 text-primary" />
+            </div>
             <div>
               <h3 className="text-xl font-bold">
                 {location?.name || (language === "Қазақша" ? "Таңдалған орын" : "Selected location")}
