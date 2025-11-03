@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import LeafletMap from "@/components/LeafletMap";
 import ChatPopup from "@/components/ChatPopup";
-import Header from "@/components/Header";
+import SettingsDialog from "@/components/SettingsDialog";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, MapPin } from "lucide-react";
 
@@ -125,7 +125,7 @@ const CountryView = () => {
   const [droppedCoordinates, setDroppedCoordinates] = useState<[number, number] | null>(null);
   const [language, setLanguage] = useState("English");
   const [mapStyle, setMapStyle] = useState(() => {
-    return localStorage.getItem("mapStyle") || "political";
+    return localStorage.getItem("mapStyle") || "satellite";
   });
 
   useEffect(() => {
@@ -160,23 +160,24 @@ const CountryView = () => {
 
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-background">
-      {/* Header with Settings */}
-      <div className="absolute top-0 left-0 right-0 z-[1000]">
-        <Header 
-          language={language} 
-          onLanguageChange={setLanguage}
-          mapStyle={mapStyle}
-          onMapStyleChange={setMapStyle}
-        />
-      </div>
-
-      {/* Back button and country title */}
-      <div className="absolute top-20 left-0 right-0 z-[999] flex items-center justify-between px-8 py-4 bg-gradient-to-b from-card/50 to-transparent backdrop-blur-sm">
-        <Button onClick={() => navigate("/")} variant="outline" size="lg" className="text-base font-semibold shadow-lg">
-          <ArrowLeft className="h-5 w-5" /> Back
-        </Button>
-        <h1 className="text-3xl font-bold text-foreground tracking-tight drop-shadow-sm">{data.name}</h1>
-        <div className="w-[140px]" /> {/* Spacer for centering */}
+      {/* Header with integrated back button and settings */}
+      <div className="absolute top-0 left-0 right-0 z-[1000] border-b border-border/50 bg-background/80 backdrop-blur-lg">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <Button onClick={() => navigate("/")} variant="ghost" size="lg" className="text-base font-semibold">
+              <ArrowLeft className="h-5 w-5" /> Back
+            </Button>
+            <h1 className="text-2xl font-bold text-foreground tracking-tight">{data.name}</h1>
+            <div className="flex items-center gap-4">
+              <SettingsDialog
+                language={language}
+                onLanguageChange={setLanguage}
+                mapStyle={mapStyle}
+                onMapStyleChange={setMapStyle}
+              />
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Map */}

@@ -10,7 +10,7 @@ const Index = () => {
   const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
   const [language, setLanguage] = useState("English");
   const [mapStyle, setMapStyle] = useState(() => {
-    return localStorage.getItem("mapStyle") || "political";
+    return localStorage.getItem("mapStyle") || "satellite";
   });
 
   useEffect(() => {

@@ -766,7 +766,7 @@ const LeafletMap = ({
   onLocationClick,
   onCoordinatesDrop,
   resetMarker = false,
-  mapStyle = "political",
+  mapStyle = "satellite",
 }: LeafletMapProps) => {
   const mapRef = useRef<LeafletMapInstance | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
