@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { MapPin, Globe, Users, BookOpen } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { useTranslation } from "@/hooks/useTranslation";
 
 const About = () => {
   const [language, setLanguage] = useState(() => {
@@ -10,6 +11,7 @@ const About = () => {
   const [mapStyle, setMapStyle] = useState(() => {
     return localStorage.getItem("mapStyle") || "political";
   });
+  const { t } = useTranslation(language);
 
   useEffect(() => {
     localStorage.setItem("language", language);
@@ -29,12 +31,10 @@ const About = () => {
         <div className="relative z-10 max-w-4xl mx-auto w-full space-y-12 animate-fade-in">
           <div className="text-center space-y-4">
             <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent overflow-visible">
-              About Nomadland
+              {t("about_nomadland")}
             </h1>
             <p className="text-xl text-muted-foreground">
-              Discover the rich cultural heritage of Central Asia like never before. TengriMap brings the history,
-              traditions, and stories of Kazakhstan, Uzbekistan, Kyrgyzstan, Tajikistan, and Turkmenistan to life
-              through an interactive and immersive platform.
+              {t("about_description")}
             </p>
           </div>
 
@@ -44,11 +44,10 @@ const About = () => {
                 <div className="p-3 rounded-lg bg-primary/10 border border-primary/20">
                   <Globe className="w-6 h-6 text-primary" />
                 </div>
-                <h2 className="text-2xl font-bold">Our Mission</h2>
+                <h2 className="text-2xl font-bold">{t("our_mission")}</h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Celebrate and preserve the diverse cultures, history, and traditions of Central Asia, sharing the unique
-                narratives that have shaped this region.
+                {t("mission_description")}
               </p>
             </div>
 
@@ -57,11 +56,10 @@ const About = () => {
                 <div className="p-3 rounded-lg bg-accent/10 border border-accent/20">
                   <MapPin className="w-6 h-6 text-accent" />
                 </div>
-                <h2 className="text-2xl font-bold">Interactive Experience</h2>
+                <h2 className="text-2xl font-bold">{t("interactive_experience")}</h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Navigate each country with our interactive map to uncover historical sites, cultural landmarks, and
-                traditions that define Central Asia.
+                {t("interactive_description")}
               </p>
             </div>
 
@@ -70,11 +68,10 @@ const About = () => {
                 <div className="p-3 rounded-lg bg-secondary/10 border border-secondary/20">
                   <Users className="w-6 h-6 text-secondary" />
                 </div>
-                <h2 className="text-2xl font-bold">Cultural Connection</h2>
+                <h2 className="text-2xl font-bold">{t("cultural_connection")}</h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Engage with the stories, people, and heritage along the Silk Road, understanding how these nations have
-                influenced global culture and history.
+                {t("cultural_description")}
               </p>
             </div>
 
@@ -83,11 +80,10 @@ const About = () => {
                 <div className="p-3 rounded-lg bg-primary/10 border border-primary/20">
                   <BookOpen className="w-6 h-6 text-primary" />
                 </div>
-                <h2 className="text-2xl font-bold">Educational Insight</h2>
+                <h2 className="text-2xl font-bold">{t("educational_insight")}</h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Learn from ancient civilizations to modern practices with our AI-powered resources and comprehensive
-                guides, making cultural knowledge accessible to
+                {t("educational_description")}
               </p>
             </div>
           </div>
