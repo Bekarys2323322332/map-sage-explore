@@ -781,8 +781,8 @@ const LeafletMap = ({
         zoom,
         zoomControl: false,
         attributionControl: false,
-        minZoom: 4,
-        maxZoom: 18,
+        minZoom: 5,
+        maxZoom: 16,
         maxBounds: [
           [30, 40],  // Southwest corner (lat, lng)
           [65, 95]   // Northeast corner (lat, lng)
