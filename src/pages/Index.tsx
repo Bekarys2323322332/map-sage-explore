@@ -88,7 +88,7 @@ const Index = () => {
 
             {/* Helper text */}
             <div className="inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-full bg-background/90 backdrop-blur-sm border border-border shadow-lg animate-fade-in mt-4">
-              <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+              <MousePointer2 className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
               <span className="text-sm sm:text-base font-medium text-foreground">{t("click_country")}</span>
             </div>
           </div>
