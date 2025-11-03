@@ -5,6 +5,7 @@ import { Sparkles, Globe, MapPin } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useTouchHover } from "@/hooks/useTouchHover";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ const Index = () => {
   const [mapStyle, setMapStyle] = useState(() => {
     return localStorage.getItem("mapStyle") || "satellite";
   });
+  const { handleClick, isHovered, isTouch } = useTouchHover('map');
 
   useEffect(() => {
     localStorage.setItem("language", language);
@@ -123,25 +125,33 @@ const Index = () => {
                       .map((geo) => {
                         const countryId = geo.properties.name.toLowerCase();
                         const baseColor = countryColors[countryId];
+                        const isCountryHovered = hoveredCountry === countryId || isHovered(countryId);
+                        
                         return (
                           <Geography
                             key={geo.rsmKey}
                             geography={geo}
-                            fill={hoveredCountry === countryId ? baseColor : "hsl(var(--muted))"}
-                            stroke={hoveredCountry === countryId ? baseColor : "hsl(var(--border))"}
-                            strokeWidth={hoveredCountry === countryId ? 1.5 : 0.8}
+                            fill={isCountryHovered ? baseColor : "hsl(var(--muted))"}
+                            stroke={isCountryHovered ? baseColor : "hsl(var(--border))"}
+                            strokeWidth={isCountryHovered ? 1.5 : 0.8}
                             className="cursor-pointer transition-all duration-300"
-                            onMouseEnter={() => setHoveredCountry(countryId)}
-                            onMouseLeave={() => setHoveredCountry(null)}
-                            onClick={() => handleCountryClick(countryId)}
+                            onMouseEnter={() => !isTouch && setHoveredCountry(countryId)}
+                            onMouseLeave={() => !isTouch && setHoveredCountry(null)}
+                            onClick={(e) => {
+                              if (isTouch) {
+                                handleClick(e, countryId, () => handleCountryClick(countryId));
+                              } else {
+                                handleCountryClick(countryId);
+                              }
+                            }}
                             style={{
                               default: {
                                 outline: "none",
                                 filter:
-                                  hoveredCountry === countryId
+                                  isCountryHovered
                                     ? "brightness(1.3) drop-shadow(0 0 30px rgba(255,215,0,0.7))"
                                     : "brightness(1)",
-                                transform: hoveredCountry === countryId ? "scale(1.03)" : "scale(1)",
+                                transform: isCountryHovered ? "scale(1.03)" : "scale(1)",
                                 transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
                               },
                               hover: { outline: "none" },
@@ -153,45 +163,48 @@ const Index = () => {
                   }
                 </Geographies>
 
-                {Object.entries(countryPositions).map(([countryId, pos]) => (
-                  <Marker key={countryId} coordinates={[pos.x, pos.y + 1]}>
-                    <g className="pointer-events-none">
-                      {/* Shadow for text */}
-                      <text
-                        textAnchor="middle"
-                        alignmentBaseline="middle"
-                        className="font-bold capitalize"
-                        style={{
-                          fontSize: "32px",
-                          opacity: hoveredCountry === countryId ? 0.3 : 0,
-                          transition: "all 0.4s ease",
-                          transform: hoveredCountry === countryId ? "scale(1.15)" : "scale(1)",
-                          fill: "#000",
-                          filter: "blur(4px)",
-                        }}
-                      >
-                        {pos.animal} {countryId}
-                      </text>
+                {Object.entries(countryPositions).map(([countryId, pos]) => {
+                  const isCountryHovered = hoveredCountry === countryId || isHovered(countryId);
+                  return (
+                    <Marker key={countryId} coordinates={[pos.x, pos.y + 1]}>
+                      <g className="pointer-events-none">
+                        {/* Shadow for text */}
+                        <text
+                          textAnchor="middle"
+                          alignmentBaseline="middle"
+                          className="font-bold capitalize"
+                          style={{
+                            fontSize: "32px",
+                            opacity: isCountryHovered ? 0.3 : 0,
+                            transition: "all 0.4s ease",
+                            transform: isCountryHovered ? "scale(1.15)" : "scale(1)",
+                            fill: "#000",
+                            filter: "blur(4px)",
+                          }}
+                        >
+                          {pos.animal} {countryId}
+                        </text>
 
-                      {/* Main text */}
-                      <text
-                        textAnchor="middle"
-                        alignmentBaseline="middle"
-                        className="font-bold capitalize"
-                        style={{
-                          fontSize: "28px",
-                          opacity: hoveredCountry === countryId ? 1 : 0,
-                          transition: "all 0.4s ease",
-                          transform: hoveredCountry === countryId ? "scale(1.15)" : "scale(1)",
-                          fill: "hsl(var(--foreground))",
-                          filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.4))",
-                        }}
-                      >
-                        {pos.animal} {countryId}
-                      </text>
-                    </g>
-                  </Marker>
-                ))}
+                        {/* Main text */}
+                        <text
+                          textAnchor="middle"
+                          alignmentBaseline="middle"
+                          className="font-bold capitalize"
+                          style={{
+                            fontSize: "28px",
+                            opacity: isCountryHovered ? 1 : 0,
+                            transition: "all 0.4s ease",
+                            transform: isCountryHovered ? "scale(1.15)" : "scale(1)",
+                            fill: "hsl(var(--foreground))",
+                            filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.4))",
+                          }}
+                        >
+                          {pos.animal} {countryId}
+                        </text>
+                      </g>
+                    </Marker>
+                  );
+                })}
               </ComposableMap>
             </div>
           </div>
