@@ -12,8 +12,14 @@ const Footer = () => {
             <p className="text-sm text-muted-foreground">
               Explore the rich cultural heritage of Central Asia through interactive storytelling
             </p>
-            <Link to="/about">About</Link>
-            <Link to="/resources">Resources</Link>
+            <div className="space-y-3">
+              <Link to="/about">About</Link>
+            </div>
+            <div className="space-y-3">
+              <Link className="p-2 rounded-lg bg-muted/50 hover:bg-primary/10 transition-colors" to="/resources">
+                Resources
+              </Link>
+            </div>
           </div>
 
           {/* Quick links */}
