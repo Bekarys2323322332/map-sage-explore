@@ -3,6 +3,7 @@ import { ExternalLink, BookOpen, Video, FileText, Globe } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
+import { useTouchHover } from "@/hooks/useTouchHover";
 
 const Resources = () => {
   const [language, setLanguage] = useState(() => {
@@ -11,6 +12,7 @@ const Resources = () => {
   const [mapStyle, setMapStyle] = useState(() => {
     return localStorage.getItem("mapStyle") || "political";
   });
+  const { handleClick, isHovered } = useTouchHover('resources');
 
   useEffect(() => {
     localStorage.setItem("language", language);
@@ -95,13 +97,15 @@ const Resources = () => {
                       <li key={item.name}>
                         <Button
                           variant="ghost"
-                          className="w-full justify-between h-auto py-3 px-4 text-left hover:bg-primary/10 gap-3"
-                          asChild
+                          className={`w-full justify-between h-auto py-3 px-4 text-left hover:bg-primary/10 gap-3 ${
+                            isHovered(`${section.category}-${item.name}`) ? 'bg-primary/10' : ''
+                          }`}
+                          onClick={(e) => handleClick(e, `${section.category}-${item.name}`, () => {
+                            window.open(item.url, '_blank', 'noopener,noreferrer');
+                          })}
                         >
-                          <a href={item.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between gap-3">
-                            <span className="text-foreground break-words flex-1 min-w-0">{item.name}</span>
-                            <ExternalLink className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-                          </a>
+                          <span className="text-foreground break-words flex-1 min-w-0">{item.name}</span>
+                          <ExternalLink className="w-4 h-4 text-muted-foreground flex-shrink-0" />
                         </Button>
                       </li>
                     ))}

@@ -1,8 +1,9 @@
 import { Map } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 import SettingsDialog from "./SettingsDialog";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useTouchHover } from "@/hooks/useTouchHover";
 
 interface HeaderProps {
   language: string;
@@ -13,6 +14,8 @@ interface HeaderProps {
 
 const Header = ({ language, onLanguageChange, mapStyle, onMapStyleChange }: HeaderProps) => {
   const { t } = useTranslation(language);
+  const navigate = useNavigate();
+  const { handleClick, isHovered } = useTouchHover('header');
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-lg">
@@ -31,14 +34,29 @@ const Header = ({ language, onLanguageChange, mapStyle, onMapStyleChange }: Head
           {/* Navigation and Settings */}
           <div className="flex items-center gap-2 sm:gap-4">
             <nav className="hidden md:flex items-center gap-2">
-              <Button variant="ghost" size="lg" asChild>
-                <Link to="/">{t("home")}</Link>
+              <Button 
+                variant="ghost" 
+                size="lg"
+                className={isHovered('nav-home') ? 'bg-accent/10' : ''}
+                onClick={(e) => handleClick(e, 'nav-home', () => navigate('/'))}
+              >
+                {t("home")}
               </Button>
-              <Button variant="ghost" size="lg" asChild>
-                <Link to="/about">{t("about")}</Link>
+              <Button 
+                variant="ghost" 
+                size="lg"
+                className={isHovered('nav-about') ? 'bg-accent/10' : ''}
+                onClick={(e) => handleClick(e, 'nav-about', () => navigate('/about'))}
+              >
+                {t("about")}
               </Button>
-              <Button variant="ghost" size="lg" asChild>
-                <Link to="/resources">{t("resources")}</Link>
+              <Button 
+                variant="ghost" 
+                size="lg"
+                className={isHovered('nav-resources') ? 'bg-accent/10' : ''}
+                onClick={(e) => handleClick(e, 'nav-resources', () => navigate('/resources'))}
+              >
+                {t("resources")}
               </Button>
             </nav>
             <SettingsDialog
