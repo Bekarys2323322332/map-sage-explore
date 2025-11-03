@@ -161,7 +161,7 @@ const CountryView = () => {
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-background">
       {/* Header with integrated back button and settings */}
-      <div className="absolute top-0 left-0 right-0 z-[1000] border-b border-border/50 bg-background/80 backdrop-blur-lg">
+      <div className="absolute top-0 left-0 right-0 z-40 border-b border-border/50 bg-background/80 backdrop-blur-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Button onClick={() => navigate("/")} variant="ghost" size="lg" className="text-lg font-semibold px-6 h-12">

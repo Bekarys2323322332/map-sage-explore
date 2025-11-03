@@ -40,7 +40,7 @@ const SettingsDialog = ({
           <Settings className="h-6 w-6" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="z-[2001] sm:max-w-[480px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Settings className="h-5 w-5" />
