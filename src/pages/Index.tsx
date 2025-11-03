@@ -169,7 +169,9 @@ const Index = () => {
                           fill: "#000",
                           filter: "blur(4px)",
                         }}
-                      ></text>
+                      >
+                        {pos.animal} {countryId}
+                      </text>
 
                       {/* Main text */}
                       <text
@@ -184,9 +186,7 @@ const Index = () => {
                           fill: "hsl(var(--foreground))",
                           filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.4))",
                         }}
-                      >
-                        {pos.animal} {countryId}
-                      </text>
+                      ></text>
                     </g>
                   </Marker>
                 ))}
