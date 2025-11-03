@@ -123,7 +123,7 @@ const Resources = () => {
               If you have resources or information to share about Central Asian culture, we'd love to hear from you.
             </p>
             <Button size="lg" className="shadow-lg" asChild>
-              Contact Us
+              <a href="mailto:centralasiamapper@gmail.com">Contact Us</a>
             </Button>
           </div>
         </div>
