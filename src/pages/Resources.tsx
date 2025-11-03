@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ExternalLink, BookOpen, Video, FileText, Globe } from "lucide-react";
+import { ExternalLink, BookOpen, Video, FileText, BookImage, MountainSnow } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -25,7 +25,7 @@ const Resources = () => {
   const resources = [
     {
       category: "Historical Sites",
-      icon: BookOpen,
+      icon: MountainSnow,
       items: [
         { name: "UNESCO World Heritage Sites in Central Asia", url: "#" },
         { name: "Ancient Silk Road Trading Posts", url: "#" },
@@ -34,7 +34,7 @@ const Resources = () => {
     },
     {
       category: "Cultural Resources",
-      icon: Globe,
+      icon: BookImage,
       items: [
         { name: "Traditional Music and Dance", url: "#" },
         { name: "Nomadic Heritage and Lifestyle", url: "#" },
