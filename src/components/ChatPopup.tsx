@@ -110,7 +110,9 @@ const ChatPopup = ({ location, coordinates, onClose, language, country, derivedC
           {
             id: "err",
             role: "assistant",
-            content: "Could not load info about this point.",
+            content: language === "Қазақша"
+            ?"Бұл жер тұралы ақпарат таба алмадым"
+              :"Could not load info about this point.";
           },
         ]);
         toast({
