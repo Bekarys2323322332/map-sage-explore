@@ -18,6 +18,7 @@ interface ChatPopupProps {
   onClose: () => void;
   language: string;
   country: string;
+  derivedCountryName?: string | null;
 }
 
 interface Message {
@@ -28,7 +29,7 @@ interface Message {
 
 const API_BASE = "https://73914f615f22.ngrok-free.app"; // наш main.py
 
-const ChatPopup = ({ location, coordinates, onClose, language, country }: ChatPopupProps) => {
+const ChatPopup = ({ location, coordinates, onClose, language, country, derivedCountryName }: ChatPopupProps) => {
   const { toast } = useToast();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -48,6 +49,18 @@ const ChatPopup = ({ location, coordinates, onClose, language, country }: ChatPo
             },
           ]);
         }
+        return;
+      }
+
+      // Check if coordinates are out of bounds
+      if (derivedCountryName === "Out of Bounds") {
+        setMessages([
+          {
+            id: "out-of-bounds",
+            role: "assistant",
+            content: "This location is out of bounds. Please pick another point on the map.",
+          },
+        ]);
         return;
       }
 
@@ -101,7 +114,7 @@ const ChatPopup = ({ location, coordinates, onClose, language, country }: ChatPo
     };
 
     fetchInitial();
-  }, [coordinates, country, location, toast, language]);
+  }, [coordinates, country, location, toast, language, derivedCountryName]);
 
   // 3. отправка последующих сообщений
   const handleSend = async () => {
@@ -160,7 +173,7 @@ const ChatPopup = ({ location, coordinates, onClose, language, country }: ChatPo
 
   return (
     <div className="fixed inset-0 z-[2000] flex items-center justify-center p-4 bg-background/80 backdrop-blur-md">
-      <Card className="relative w-full max-w-3xl h-[90vh] max-h-[700px] border-2 overflow-hidden shadow-2xl">
+      <Card className="relative w-full max-w-3xl h-[90vh] max-h-[600px] border-2 overflow-hidden shadow-2xl">
         {/* header */}
         <div className="flex items-center justify-between p-5 border-b bg-gradient-to-r from-primary/20 via-accent/15 to-primary/20">
           <div className="flex items-center gap-4">
@@ -171,7 +184,8 @@ const ChatPopup = ({ location, coordinates, onClose, language, country }: ChatPo
               <h3 className="text-xl font-bold">{location?.name || "Selected location"}</h3>
               {coordinates && (
                 <p className="text-xs text-muted-foreground">
-                  {coordinates[0].toFixed(4)}, {coordinates[1].toFixed(4)} · {country.toUpperCase()}
+                  {coordinates[0].toFixed(4)}, {coordinates[1].toFixed(4)}
+                  {derivedCountryName && ` · ${derivedCountryName}`}
                 </p>
               )}
             </div>

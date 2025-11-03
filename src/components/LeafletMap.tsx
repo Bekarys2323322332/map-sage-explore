@@ -755,6 +755,7 @@ interface LeafletMapProps {
   onLocationClick: (id: string) => void;
   onCoordinatesDrop?: (coords: [number, number]) => void;
   resetMarker?: boolean;
+  mapStyle?: string;
 }
 
 const LeafletMap = ({
@@ -765,12 +766,34 @@ const LeafletMap = ({
   onLocationClick,
   onCoordinatesDrop,
   resetMarker = false,
+  mapStyle = "satellite",
 }: LeafletMapProps) => {
   const mapRef = useRef<LeafletMapInstance | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const markersLayerRef = useRef<L.LayerGroup | null>(null);
   const boundariesLayerRef = useRef<L.GeoJSON | null>(null);
   const droppedMarkerRef = useRef<L.Marker | null>(null);
+  const tileLayerRef = useRef<L.TileLayer | null>(null);
+
+  // Map style tile layer URLs
+  const getTileLayerUrl = (style: string) => {
+    switch (style) {
+      case "satellite":
+        return "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
+      case "topographical":
+        return "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png";
+      case "political":
+      default:
+        return "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+    }
+  };
+
+  // Update tile layer when mapStyle changes
+  useEffect(() => {
+    if (mapRef.current && tileLayerRef.current) {
+      tileLayerRef.current.setUrl(getTileLayerUrl(mapStyle));
+    }
+  }, [mapStyle]);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -781,14 +804,17 @@ const LeafletMap = ({
         zoom,
         zoomControl: false,
         attributionControl: false,
-        minZoom: 3,
-        maxZoom: 18,
+        minZoom: 5,
+        maxZoom: 16,
+        maxBounds: [
+          [30, 40],  // Southwest corner (lat, lng)
+          [65, 95]   // Northeast corner (lat, lng)
+        ],
+        maxBoundsViscosity: 0.8,
       });
 
-      L.tileLayer(
-        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-        {},
-      ).addTo(mapRef.current);
+      // Create tile layer and store reference
+      tileLayerRef.current = L.tileLayer(getTileLayerUrl(mapStyle), {}).addTo(mapRef.current);
 
       markersLayerRef.current = L.layerGroup().addTo(mapRef.current);
 
