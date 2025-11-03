@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { ComposableMap, Geographies, Geography, Marker } from "react-simple-maps";
-import { Sparkles, Globe, MapPin } from "lucide-react";
+import { Sparkles, Globe, MapPin, mouse-pointer-2 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useTranslation } from "@/hooks/useTranslation";
