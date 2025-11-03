@@ -8,7 +8,7 @@ interface FooterProps {
 
 const Footer = ({ language = "English" }: FooterProps) => {
   const { t } = useTranslation(language);
-  
+
   return (
     <footer className="relative z-10 border-t border-border/50 bg-background/80 backdrop-blur-lg mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -16,9 +16,7 @@ const Footer = ({ language = "English" }: FooterProps) => {
           {/* Brand section */}
           <div className="space-y-3">
             <h3 className="text-lg font-semibold text-foreground">{t("tengrimap")}</h3>
-            <p className="text-sm text-muted-foreground">
-              {t("explore_heritage")}
-            </p>
+            <p className="text-sm text-muted-foreground">{t("explore_heritage")}</p>
             <div className="space-y-3">
               <Link className="hover:text-primary transition-colors cursor-pointer" to="/about">
                 {t("about")}
@@ -54,7 +52,7 @@ const Footer = ({ language = "English" }: FooterProps) => {
                 <Mail className="w-5 h-5 text-muted-foreground hover:text-primary transition-colors" />
               </a>
               <a
-                href="https://www.youtube.com/watch?v=h8DeZSB2o-c&list=RDX6yOnaeOXns&index=17"
+                href="https://www.instagram.com/nomaadland/"
                 rel="noopener noreferrer"
                 target="_blank"
                 className="p-2 rounded-lg bg-muted/50 hover:bg-primary/10 transition-colors"
