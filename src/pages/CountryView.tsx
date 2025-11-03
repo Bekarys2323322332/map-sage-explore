@@ -6,7 +6,21 @@ import SettingsDialog from "@/components/SettingsDialog";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, MapPin } from "lucide-react";
 
-// 👇 маппинг внутри, без отдельного файла
+// Derive country from coordinates
+const getCountryFromCoordinates = (lat: number, lon: number): string => {
+  // Kazakhstan: roughly 40-55°N, 46-87°E
+  if (lat >= 40 && lat <= 55 && lon >= 46 && lon <= 87) return "Kazakhstan";
+  // Uzbekistan: roughly 37-46°N, 56-73°E
+  if (lat >= 37 && lat <= 46 && lon >= 56 && lon <= 73) return "Uzbekistan";
+  // Kyrgyzstan: roughly 39-43°N, 69-80°E
+  if (lat >= 39 && lat <= 43 && lon >= 69 && lon <= 80) return "Kyrgyzstan";
+  // Tajikistan: roughly 36-41°N, 67-75°E
+  if (lat >= 36 && lat <= 41 && lon >= 67 && lon <= 75) return "Tajikistan";
+  // Turkmenistan: roughly 35-43°N, 52-67°E
+  if (lat >= 35 && lat <= 43 && lon >= 52 && lon <= 67) return "Turkmenistan";
+  return "Unknown";
+};
+
 const countryNameToCode = (name: string): string => {
   const n = name.toLowerCase();
   switch (n) {
@@ -123,6 +137,7 @@ const CountryView = () => {
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
   const [chatOpen, setChatOpen] = useState(false);
   const [droppedCoordinates, setDroppedCoordinates] = useState<[number, number] | null>(null);
+  const [derivedCountry, setDerivedCountry] = useState<string | null>(null);
   const [language, setLanguage] = useState("English");
   const [mapStyle, setMapStyle] = useState(() => {
     return localStorage.getItem("mapStyle") || "satellite";
@@ -196,6 +211,8 @@ const CountryView = () => {
         onCoordinatesDrop={(coords) => {
           setDroppedCoordinates(coords);
           setSelectedLocation(null);
+          const detectedCountry = getCountryFromCoordinates(coords[0], coords[1]);
+          setDerivedCountry(detectedCountry);
           setChatOpen(true);
         }}
       />
@@ -209,9 +226,11 @@ const CountryView = () => {
             setChatOpen(false);
             setSelectedLocation(null);
             setDroppedCoordinates(null);
+            setDerivedCountry(null);
           }}
           language={language}
-          country={countryCode}
+          country={countryNameToCode(derivedCountry || data.name)}
+          derivedCountryName={derivedCountry}
         />
       )}
 

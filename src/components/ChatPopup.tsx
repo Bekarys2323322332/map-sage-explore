@@ -18,6 +18,7 @@ interface ChatPopupProps {
   onClose: () => void;
   language: string;
   country: string;
+  derivedCountryName?: string | null;
 }
 
 interface Message {
@@ -28,7 +29,7 @@ interface Message {
 
 const API_BASE = "https://73914f615f22.ngrok-free.app"; // наш main.py
 
-const ChatPopup = ({ location, coordinates, onClose, language, country }: ChatPopupProps) => {
+const ChatPopup = ({ location, coordinates, onClose, language, country, derivedCountryName }: ChatPopupProps) => {
   const { toast } = useToast();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -171,7 +172,8 @@ const ChatPopup = ({ location, coordinates, onClose, language, country }: ChatPo
               <h3 className="text-xl font-bold">{location?.name || "Selected location"}</h3>
               {coordinates && (
                 <p className="text-xs text-muted-foreground">
-                  {coordinates[0].toFixed(4)}, {coordinates[1].toFixed(4)} · {country.toUpperCase()}
+                  {coordinates[0].toFixed(4)}, {coordinates[1].toFixed(4)}
+                  {derivedCountryName && ` · ${derivedCountryName}`}
                 </p>
               )}
             </div>
