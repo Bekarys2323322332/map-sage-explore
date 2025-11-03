@@ -122,8 +122,8 @@ const Resources = () => {
             <p className="text-muted-foreground">
               If you have resources or information to share about Central Asian culture, we'd love to hear from you.
             </p>
-            <Button size="lg" className="shadow-lg">
-              <a href="mailto:centralasiamapper@gmail.com">Send Email</a>
+            <Button size="lg" className="shadow-lg" asChild>
+              Contact Us
             </Button>
           </div>
         </div>
