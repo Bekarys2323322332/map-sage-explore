@@ -35,7 +35,7 @@ const Index = () => {
 
   const handleCountryClick = (countryId: string) => {
     const pos = countryPositions[countryId];
-    navigate(`/?lat=${pos.y}&lon=${pos.x}`, { state: { language, mapStyle } });
+    navigate(`/country?lat=${pos.y}&lon=${pos.x}`, { state: { language, mapStyle } });
   };
 
   return (
