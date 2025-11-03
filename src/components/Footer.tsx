@@ -53,7 +53,10 @@ const Footer = ({ language = "English" }: FooterProps) => {
               >
                 <Instagram className="w-5 h-5 text-muted-foreground hover:text-primary transition-colors" />
               </a>
-              <a href="#" className="p-2 rounded-lg bg-muted/50 hover:bg-primary/10 transition-colors">
+              <a
+                href="mailto:centralasiamapper@gmail.com"
+                className="p-2 rounded-lg bg-muted/50 hover:bg-primary/10 transition-colors"
+              >
                 <Mail className="w-5 h-5 text-muted-foreground hover:text-primary transition-colors" />
               </a>
             </div>
