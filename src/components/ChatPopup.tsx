@@ -188,7 +188,7 @@ const ChatPopup = ({ location, coordinates, onClose, language, country, derivedC
         {/* header */}
         <div className="flex items-center justify-between p-5 border-b bg-gradient-to-r from-primary/20 via-accent/15 to-primary/20">
           <div className="flex items-center gap-4">
-            <div className="p-3 rounded-100 bg-primary/10 border border-primary/20">
+            <div className="p-3 rounded-full bg-primary/10 border border-primary/20">
               <Landmark className="w-6 h-6 text-primary" />
             </div>
             <div>
