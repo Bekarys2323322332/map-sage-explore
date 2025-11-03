@@ -36,8 +36,8 @@ const SettingsDialog = ({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline" size="icon" className="shadow-lg">
-          <Settings className="h-5 w-5" />
+        <Button variant="outline" size="lg" className="shadow-lg h-12 w-12">
+          <Settings className="h-6 w-6" />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
@@ -55,11 +55,11 @@ const SettingsDialog = ({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               {theme === "dark" ? (
-                <Moon className="h-5 w-5 text-primary" />
+                <Moon className="h-6 w-6 text-primary" />
               ) : (
-                <Sun className="h-5 w-5 text-primary" />
+                <Sun className="h-6 w-6 text-primary" />
               )}
-              <Label htmlFor="theme-toggle" className="text-base font-medium">
+              <Label htmlFor="theme-toggle" className="text-lg font-medium cursor-pointer">
                 Dark Mode
               </Label>
             </div>
@@ -67,31 +67,32 @@ const SettingsDialog = ({
               id="theme-toggle"
               checked={theme === "dark"}
               onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")}
+              className="scale-125"
             />
           </div>
 
           {/* Map Style Selection */}
           <div className="space-y-3">
             <div className="flex items-center gap-3">
-              <Map className="h-5 w-5 text-primary" />
-              <Label className="text-base font-medium">Map Style</Label>
+              <Map className="h-6 w-6 text-primary" />
+              <Label className="text-lg font-medium">Map Style</Label>
             </div>
             <RadioGroup value={mapStyle} onValueChange={onMapStyleChange}>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="political" id="political" />
-                <Label htmlFor="political" className="cursor-pointer">
+              <div className="flex items-center space-x-3 py-2">
+                <RadioGroupItem value="political" id="political" className="h-5 w-5" />
+                <Label htmlFor="political" className="cursor-pointer text-base">
                   Political
                 </Label>
               </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="satellite" id="satellite" />
-                <Label htmlFor="satellite" className="cursor-pointer">
+              <div className="flex items-center space-x-3 py-2">
+                <RadioGroupItem value="satellite" id="satellite" className="h-5 w-5" />
+                <Label htmlFor="satellite" className="cursor-pointer text-base">
                   Satellite
                 </Label>
               </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="topographical" id="topographical" />
-                <Label htmlFor="topographical" className="cursor-pointer">
+              <div className="flex items-center space-x-3 py-2">
+                <RadioGroupItem value="topographical" id="topographical" className="h-5 w-5" />
+                <Label htmlFor="topographical" className="cursor-pointer text-base">
                   Topographical
                 </Label>
               </div>
@@ -101,14 +102,14 @@ const SettingsDialog = ({
           {/* Language Selection */}
           <div className="space-y-3">
             <div className="flex items-center gap-3">
-              <Globe className="h-5 w-5 text-primary" />
-              <Label className="text-base font-medium">Language</Label>
+              <Globe className="h-6 w-6 text-primary" />
+              <Label className="text-lg font-medium">Language</Label>
             </div>
             <RadioGroup value={language} onValueChange={onLanguageChange}>
               {languages.map((lang) => (
-                <div key={lang.code} className="flex items-center space-x-2">
-                  <RadioGroupItem value={lang.name} id={lang.code} />
-                  <Label htmlFor={lang.code} className="cursor-pointer">
+                <div key={lang.code} className="flex items-center space-x-3 py-2">
+                  <RadioGroupItem value={lang.name} id={lang.code} className="h-5 w-5" />
+                  <Label htmlFor={lang.code} className="cursor-pointer text-base">
                     {lang.name}
                   </Label>
                 </div>
