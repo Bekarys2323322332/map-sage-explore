@@ -17,28 +17,20 @@ export const useTouchHover = (identifier: string) => {
     };
   }, []);
 
-  const handleTouchStart = useCallback((id: string) => {
-    if (!isTouch) return;
-    setHoveredId(id);
-  }, [isTouch]);
-
   const handleClick = useCallback((e: React.MouseEvent | React.TouchEvent, id: string, callback: () => void) => {
     if (!isTouch) {
+      // Desktop: just activate
       callback();
       return;
     }
 
-    // On touch devices, first tap shows hover, second tap activates
-    if (hoveredId === id) {
+    // Touch devices: show brief hover feedback then activate
+    setHoveredId(id);
+    setTimeout(() => {
       callback();
       setHoveredId(null);
-    } else {
-      e.preventDefault();
-      setHoveredId(id);
-      // Auto-clear hover after 3 seconds
-      setTimeout(() => setHoveredId(null), 3000);
-    }
-  }, [hoveredId, isTouch]);
+    }, 150); // Brief visual feedback before activation
+  }, [isTouch]);
 
   const isHovered = useCallback((id: string) => {
     return hoveredId === id;
@@ -49,7 +41,6 @@ export const useTouchHover = (identifier: string) => {
   }, []);
 
   return {
-    handleTouchStart,
     handleClick,
     isHovered,
     clearHover,
