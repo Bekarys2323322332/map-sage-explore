@@ -20,17 +20,12 @@ interface SettingsDialogProps {
   onMapStyleChange: (style: string) => void;
 }
 
-const SettingsDialog = ({
-  language,
-  onLanguageChange,
-  mapStyle,
-  onMapStyleChange,
-}: SettingsDialogProps) => {
+const SettingsDialog = ({ language, onLanguageChange, mapStyle, onMapStyleChange }: SettingsDialogProps) => {
   const { theme, setTheme } = useTheme();
 
   const languages = [
-    { code: 'en', name: 'English' },
-    { code: 'kk', name: 'Қазақша' },
+    { code: "en", name: "English" },
+    { code: "kk", name: "Қазақша" },
   ];
 
   return (
@@ -46,19 +41,13 @@ const SettingsDialog = ({
             <Settings className="h-5 w-5" />
             Settings
           </DialogTitle>
-          <DialogDescription>
-            Customize your TengriMap experience
-          </DialogDescription>
+          <DialogDescription>Customize your TengriMap experience</DialogDescription>
         </DialogHeader>
         <div className="space-y-6 py-4">
           {/* Dark/Light Mode Toggle */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              {theme === "dark" ? (
-                <Moon className="h-6 w-6 text-primary" />
-              ) : (
-                <Sun className="h-6 w-6 text-primary" />
-              )}
+              {theme === "dark" ? <Moon className="h-6 w-6 text-primary" /> : <Sun className="h-6 w-6 text-primary" />}
               <Label htmlFor="theme-toggle" className="text-lg font-medium cursor-pointer">
                 Dark Mode
               </Label>
@@ -77,6 +66,12 @@ const SettingsDialog = ({
               <Map className="h-6 w-6 text-primary" />
               <Label className="text-lg font-medium">Map Style</Label>
             </div>
+            <div className="flex items-center space-x-3 py-2">
+              <RadioGroupItem value="satellite" id="satellite" className="h-5 w-5" />
+              <Label htmlFor="satellite" className="cursor-pointer text-base">
+                Satellite
+              </Label>
+            </div>
             <RadioGroup value={mapStyle} onValueChange={onMapStyleChange}>
               <div className="flex items-center space-x-3 py-2">
                 <RadioGroupItem value="political" id="political" className="h-5 w-5" />
@@ -84,12 +79,7 @@ const SettingsDialog = ({
                   Political
                 </Label>
               </div>
-              <div className="flex items-center space-x-3 py-2">
-                <RadioGroupItem value="satellite" id="satellite" className="h-5 w-5" />
-                <Label htmlFor="satellite" className="cursor-pointer text-base">
-                  Satellite
-                </Label>
-              </div>
+
               <div className="flex items-center space-x-3 py-2">
                 <RadioGroupItem value="topographical" id="topographical" className="h-5 w-5" />
                 <Label htmlFor="topographical" className="cursor-pointer text-base">
