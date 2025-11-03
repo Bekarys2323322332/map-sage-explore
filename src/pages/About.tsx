@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { MapPin, Globe, Users, BookOpen, HeartHandshake, CircleStar, Smile } from "lucide-react";
+import { MapPin, Globe, Users, BookOpen, HeartHandshake, Star, Smile } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -40,7 +40,7 @@ const About = () => {
             <div className="bg-card/80 backdrop-blur-md rounded-2xl p-6 border border-border/50 space-y-4">
               <div className="flex items-center gap-3">
                 <div className="p-3 rounded-lg bg-primary/10 border border-primary/20">
-                  <CircleStar className="w-6 h-6 text-primary" />
+                  <Star className="w-6 h-6 text-primary" />
                 </div>
                 <h2 className="text-2xl font-bold">{t("our_mission")}</h2>
               </div>
