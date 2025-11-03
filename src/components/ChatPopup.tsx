@@ -116,9 +116,11 @@ const ChatPopup = ({ location, coordinates, onClose, language, country, derivedC
     fetchInitial();
   }, [coordinates, country, location, toast, language, derivedCountryName]);
 
+  const isOutOfBounds = derivedCountryName === "Out of Bounds";
+
   // 3. отправка последующих сообщений
   const handleSend = async () => {
-    if (!input.trim() || !coordinates) return;
+    if (!input.trim() || !coordinates || isOutOfBounds) return;
 
     const newMsg: Message = {
       id: Date.now().toString(),
@@ -236,11 +238,11 @@ const ChatPopup = ({ location, coordinates, onClose, language, country, derivedC
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && !isLoading && handleSend()}
-            placeholder="Ask about history, nature, battles, minerals..."
-            disabled={isLoading}
+            onKeyDown={(e) => e.key === "Enter" && !isLoading && !isOutOfBounds && handleSend()}
+            placeholder={isOutOfBounds ? "Location out of bounds" : "Ask about history, nature, battles, minerals..."}
+            disabled={isLoading || isOutOfBounds}
           />
-          <Button onClick={handleSend} disabled={isLoading || !input.trim()} size="icon">
+          <Button onClick={handleSend} disabled={isLoading || !input.trim() || isOutOfBounds} size="icon">
             <Send className="h-4 w-4" />
           </Button>
         </div>
