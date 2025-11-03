@@ -1,12 +1,30 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import LeafletMap from "@/components/LeafletMap";
 import ChatPopup from "@/components/ChatPopup";
 import SettingsDialog from "@/components/SettingsDialog";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, MapPin } from "lucide-react";
 
-// 👇 маппинг внутри, без отдельного файла
+// Derive country from coordinates
+const getCountryFromCoordinates = (lat: number, lon: number): string | null => {
+  // Bounding boxes for Central Asian countries
+  const countryBounds: Record<string, { minLat: number; maxLat: number; minLon: number; maxLon: number }> = {
+    kazakhstan: { minLat: 40.5, maxLat: 55.5, minLon: 46, maxLon: 87 },
+    uzbekistan: { minLat: 37, maxLat: 45.5, minLon: 55.5, maxLon: 73.5 },
+    kyrgyzstan: { minLat: 39, maxLat: 43.5, minLon: 69.5, maxLon: 80.5 },
+    tajikistan: { minLat: 36.5, maxLat: 41, minLon: 67, maxLon: 75 },
+    turkmenistan: { minLat: 35, maxLat: 42.5, minLon: 52, maxLon: 66.5 },
+  };
+
+  for (const [country, bounds] of Object.entries(countryBounds)) {
+    if (lat >= bounds.minLat && lat <= bounds.maxLat && lon >= bounds.minLon && lon <= bounds.maxLon) {
+      return country;
+    }
+  }
+  return null;
+};
+
 const countryNameToCode = (name: string): string => {
   const n = name.toLowerCase();
   switch (n) {
@@ -117,9 +135,14 @@ const countryData: Record<string, {
 };
 
 const CountryView = () => {
-  const { country } = useParams<{ country: string }>();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const location = useLocation();
+  
+  // Get coordinates from URL params and derive country
+  const lat = parseFloat(searchParams.get("lat") || "0");
+  const lon = parseFloat(searchParams.get("lon") || "0");
+  const country = getCountryFromCoordinates(lat, lon);
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
   const [chatOpen, setChatOpen] = useState(false);
   const [droppedCoordinates, setDroppedCoordinates] = useState<[number, number] | null>(null);
