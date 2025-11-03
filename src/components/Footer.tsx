@@ -12,6 +12,13 @@ const Footer = () => {
               Explore the rich cultural heritage of Central Asia through interactive storytelling
             </p>
           </div>
+          <div className="space-y-3">
+            <ul className="space-y-2 text-sm text-muted-foreground">
+              <li className="hover:text-primary transition-colors cursor-pointer">Home</li>
+              <li className="hover:text-primary transition-colors cursor-pointer">About</li>
+              <li className="hover:text-primary transition-colors cursor-pointer">Resources</li>
+            </ul>
+          </div>
 
           {/* Quick links */}
           <div className="space-y-3">
@@ -35,15 +42,16 @@ const Footer = () => {
               <a href="#" className="p-2 rounded-lg bg-muted/50 hover:bg-primary/10 transition-colors">
                 <Mail className="w-5 h-5 text-muted-foreground hover:text-primary transition-colors" />
               </a>
+              <a href="#" className="p-2 rounded-lg bg-muted/50 hover:bg-primary/10 transition-colors">
+                <Instagram className="w-5 h-5 text-muted-foreground hover:text-primary transition-colors" />
+              </a>
             </div>
           </div>
         </div>
 
         {/* Bottom bar */}
         <div className="mt-8 pt-6 border-t border-border/50 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-muted-foreground">
-            © 2025 TengriMap. All rights reserved.
-          </p>
+          <p className="text-sm text-muted-foreground">© 2025 TengriMap. All rights reserved.</p>
           <div className="flex items-center gap-1 text-sm text-muted-foreground">
             <span>Made with</span>
             <Heart className="w-4 h-4 text-red-500 fill-red-500" />
