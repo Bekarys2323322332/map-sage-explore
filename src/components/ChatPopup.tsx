@@ -52,6 +52,18 @@ const ChatPopup = ({ location, coordinates, onClose, language, country, derivedC
         return;
       }
 
+      // Check if coordinates are out of bounds
+      if (derivedCountryName === "Out of Bounds") {
+        setMessages([
+          {
+            id: "out-of-bounds",
+            role: "assistant",
+            content: "This location is out of bounds. Please pick another point on the map.",
+          },
+        ]);
+        return;
+      }
+
       setIsLoading(true);
       try {
         const res = await fetch(`${API_BASE}/location-chat`, {
@@ -102,7 +114,7 @@ const ChatPopup = ({ location, coordinates, onClose, language, country, derivedC
     };
 
     fetchInitial();
-  }, [coordinates, country, location, toast, language]);
+  }, [coordinates, country, location, toast, language, derivedCountryName]);
 
   // 3. отправка последующих сообщений
   const handleSend = async () => {

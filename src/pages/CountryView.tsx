@@ -41,8 +41,8 @@ const getCountryFromCoordinates = (lat: number, lon: number): string => {
     return "Kazakhstan";
   }
   
-  console.log('Detected: Unknown');
-  return "Unknown";
+  console.log('Detected: Out of Bounds');
+  return "Out of Bounds";
 };
 
 const countryNameToCode = (name: string): string => {
