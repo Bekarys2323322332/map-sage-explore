@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { ComposableMap, Geographies, Geography, Marker } from "react-simple-maps";
-import { Sparkles, Globe, MapPin, mouse-pointer-2 } from "lucide-react";
+import { Sparkles, Globe, MapPin, MousePointer2 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -17,7 +17,7 @@ const Index = () => {
   const [mapStyle, setMapStyle] = useState(() => {
     return localStorage.getItem("mapStyle") || "satellite";
   });
-  const { handleClick, isHovered, isTouch } = useTouchHover('map');
+  const { handleClick, isHovered, isTouch } = useTouchHover("map");
 
   useEffect(() => {
     localStorage.setItem("language", language);
@@ -126,7 +126,7 @@ const Index = () => {
                         const countryId = geo.properties.name.toLowerCase();
                         const baseColor = countryColors[countryId];
                         const isCountryHovered = hoveredCountry === countryId || isHovered(countryId);
-                        
+
                         return (
                           <Geography
                             key={geo.rsmKey}
@@ -147,10 +147,9 @@ const Index = () => {
                             style={{
                               default: {
                                 outline: "none",
-                                filter:
-                                  isCountryHovered
-                                    ? "brightness(1.3) drop-shadow(0 0 30px rgba(255,215,0,0.7))"
-                                    : "brightness(1)",
+                                filter: isCountryHovered
+                                  ? "brightness(1.3) drop-shadow(0 0 30px rgba(255,215,0,0.7))"
+                                  : "brightness(1)",
                                 transform: isCountryHovered ? "scale(1.03)" : "scale(1)",
                                 transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
                               },
