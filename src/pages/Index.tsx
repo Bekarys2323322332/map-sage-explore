@@ -98,12 +98,6 @@ const Index = () => {
             <div className="absolute -inset-1 bg-gradient-to-r from-primary via-accent to-secondary rounded-3xl blur-xl opacity-30 group-hover:opacity-60 transition-opacity duration-500" />
 
             <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-card/80 backdrop-blur-md border-2 border-border/50 hover:border-primary/30 transition-all duration-500">
-              {/* Decorative corner accents */}
-              <div className="absolute top-0 left-0 w-20 h-20 border-t-4 border-l-4 border-primary/40 rounded-tl-3xl" />
-              <div className="absolute top-0 right-0 w-20 h-20 border-t-4 border-r-4 border-accent/40 rounded-tr-3xl" />
-              <div className="absolute bottom-0 left-0 w-20 h-20 border-b-4 border-l-4 border-secondary/40 rounded-bl-3xl" />
-              <div className="absolute bottom-0 right-0 w-20 h-20 border-b-4 border-r-4 border-primary/40 rounded-br-3xl" />
-
               <ComposableMap
                 projection="geoMercator"
                 projectionConfig={{
