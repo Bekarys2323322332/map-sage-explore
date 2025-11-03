@@ -27,7 +27,7 @@ interface Message {
   content: string;
 }
 
-const API_BASE = "https://73914f615f22.ngrok-free.app"; // наш main.py
+const API_BASE = "https://0ccda71cfb7c.ngrok-free.app/"; // наш main.py
 
 const ChatPopup = ({ location, coordinates, onClose, language, country, derivedCountryName }: ChatPopupProps) => {
   const { toast } = useToast();
