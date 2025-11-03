@@ -172,36 +172,36 @@ const ChatPopup = ({ location, coordinates, onClose, language, country, derivedC
   };
 
   return (
-    <div className="fixed inset-0 z-[2000] flex items-center justify-center sm:p-4 bg-background/80 backdrop-blur-md">
-      <Card className="relative w-full sm:max-w-3xl h-full sm:h-[90vh] sm:max-h-[700px] border-0 sm:border-2 overflow-hidden shadow-2xl sm:rounded-lg">
+    <div className="fixed inset-0 z-[2000] flex items-center justify-center p-4 bg-background/80 backdrop-blur-md">
+      <Card className="relative w-full max-w-3xl h-[90vh] max-h-[600px] border-2 overflow-hidden shadow-2xl">
         {/* header */}
-        <div className="flex items-center justify-between p-3 sm:p-5 border-b bg-gradient-to-r from-primary/20 via-accent/15 to-primary/20">
-          <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
-            <Avatar className="h-10 w-10 sm:h-14 sm:w-14 shrink-0 bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-              <span className="text-2xl sm:text-3xl">🏛️</span>
+        <div className="flex items-center justify-between p-5 border-b bg-gradient-to-r from-primary/20 via-accent/15 to-primary/20">
+          <div className="flex items-center gap-4">
+            <Avatar className="h-14 w-14 bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+              <span className="text-3xl">🏛️</span>
             </Avatar>
-            <div className="min-w-0 flex-1">
-              <h3 className="text-base sm:text-xl font-bold truncate">{location?.name || "Selected location"}</h3>
+            <div>
+              <h3 className="text-xl font-bold">{location?.name || "Selected location"}</h3>
               {coordinates && (
-                <p className="text-xs text-muted-foreground truncate">
+                <p className="text-xs text-muted-foreground">
                   {coordinates[0].toFixed(4)}, {coordinates[1].toFixed(4)}
                   {derivedCountryName && ` · ${derivedCountryName}`}
                 </p>
               )}
             </div>
           </div>
-          <Button variant="ghost" size="icon" onClick={onClose} className="shrink-0">
+          <Button variant="ghost" size="icon" onClick={onClose}>
             <X className="h-5 w-5" />
           </Button>
         </div>
 
         {/* messages */}
-        <ScrollArea className="flex-1 h-[calc(100vh-180px)] sm:h-[calc(90vh-280px)] sm:max-h-[420px] p-3 sm:p-6">
-          <div className="space-y-3 sm:space-y-4">
+        <ScrollArea className="flex-1 h-[calc(90vh-280px)] max-h-[420px] p-6">
+          <div className="space-y-4">
             {messages.map((m) => (
               <div key={m.id} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
                 <div
-                  className={`max-w-[85%] px-3 sm:px-4 py-2 sm:py-3 rounded-2xl text-sm sm:text-base ${
+                  className={`max-w-[85%] px-4 py-3 rounded-2xl ${
                     m.role === "user"
                       ? "bg-primary text-primary-foreground rounded-br-sm"
                       : "bg-card border rounded-bl-sm"
@@ -213,7 +213,7 @@ const ChatPopup = ({ location, coordinates, onClose, language, country, derivedC
             ))}
             {isLoading && (
               <div className="flex justify-start">
-                <div className="bg-card border rounded-2xl px-3 sm:px-4 py-2 sm:py-3">
+                <div className="bg-card border rounded-2xl px-4 py-3">
                   <div className="flex gap-1">
                     <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
                     <div
@@ -232,16 +232,15 @@ const ChatPopup = ({ location, coordinates, onClose, language, country, derivedC
         </ScrollArea>
 
         {/* input */}
-        <div className="flex items-center gap-2 sm:gap-3 p-3 sm:p-6 border-t bg-background/50">
+        <div className="flex items-center gap-3 p-6 border-t bg-background/50">
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && !isLoading && handleSend()}
-            placeholder="Ask about this location..."
+            placeholder="Ask about history, nature, battles, minerals..."
             disabled={isLoading}
-            className="text-sm sm:text-base"
           />
-          <Button onClick={handleSend} disabled={isLoading || !input.trim()} size="icon" className="shrink-0">
+          <Button onClick={handleSend} disabled={isLoading || !input.trim()} size="icon">
             <Send className="h-4 w-4" />
           </Button>
         </div>
