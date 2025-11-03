@@ -27,7 +27,7 @@ interface Message {
   content: string;
 }
 
-const API_BASE = "https://73914f615f22.ngrok-free.app"; // наш main.py
+const API_BASE = "https://0ccda71cfb7c.ngrok-free.app"; // наш main.py
 
 const ChatPopup = ({ location, coordinates, onClose, language, country, derivedCountryName }: ChatPopupProps) => {
   const { toast } = useToast();
@@ -66,7 +66,7 @@ const ChatPopup = ({ location, coordinates, onClose, language, country, derivedC
 
       setIsLoading(true);
       try {
-        const res = await fetch(`${API_BASE}location-chat`, {
+        const res = await fetch(`${API_BASE}/location-chat`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
