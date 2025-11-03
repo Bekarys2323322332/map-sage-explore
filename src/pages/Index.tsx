@@ -82,7 +82,6 @@ const Index = () => {
             </h2>
 
             <div className="flex items-center justify-center gap-2 sm:gap-3 text-sm sm:text-lg md:text-xl text-muted-foreground px-2">
-              <Globe className="w-4 h-4 sm:w-5 sm:h-5 text-primary shrink-0" />
               <p className="text-center">{t("select_country")}</p>
             </div>
 
