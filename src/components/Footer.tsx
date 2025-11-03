@@ -46,7 +46,7 @@ const Footer = ({ language = "English" }: FooterProps) => {
             <h3 className="text-lg font-semibold text-foreground">{t("connect")}</h3>
             <div className="flex items-center gap-4">
               <a
-                href="https://www.youtube.com/watch?v=h8DeZSB2o-c&list=RDX6yOnaeOXns&index=17"
+                href="https://www.instagram.com/nomaadland/"
                 rel="noopener noreferrer"
                 target="_blank"
                 className="p-2 rounded-lg bg-muted/50 hover:bg-primary/10 transition-colors"
