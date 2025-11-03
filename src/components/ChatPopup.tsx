@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { X, Send } from "lucide-react";
+import { X, Send, Landmark } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -188,9 +188,9 @@ const ChatPopup = ({ location, coordinates, onClose, language, country, derivedC
         {/* header */}
         <div className="flex items-center justify-between p-5 border-b bg-gradient-to-r from-primary/20 via-accent/15 to-primary/20">
           <div className="flex items-center gap-4">
-            <Avatar className="h-14 w-14 bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-              <span className="text-3xl">🏛️</span>
-            </Avatar>
+            <div className="h-14 w-14 bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+              <Landmark className ="h-4 w-4"
+            </div>
             <div>
               <h3 className="text-xl font-bold">
                 {location?.name || (language === "Қазақша" ? "Таңдалған орын" : "Selected location")}
