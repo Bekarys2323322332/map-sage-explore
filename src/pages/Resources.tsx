@@ -63,7 +63,7 @@ const Resources = () => {
     <div className="relative min-h-screen flex flex-col">
       <Header language={language} onLanguageChange={setLanguage} mapStyle={mapStyle} onMapStyleChange={setMapStyle} />
 
-      <div className="flex-1 flex flex-col pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+      <div className="flex-1 flex flex-col pt-24 pb-16 px-3 sm:px-6 lg:px-8">
         <div className="absolute inset-0 bg-gradient-to-br from-background via-card to-muted/40 animate-gradient bg-[length:400%_400%]" />
 
         <div className="relative z-10 max-w-6xl mx-auto w-full space-y-12 animate-fade-in">
@@ -82,7 +82,7 @@ const Resources = () => {
               return (
                 <div
                   key={section.category}
-                  className="bg-card/80 backdrop-blur-md rounded-2xl p-5 border border-border/50 space-y-4"
+                  className="bg-card/80 backdrop-blur-md rounded-2xl p-6 border border-border/50 space-y-4"
                 >
                   <div className="flex items-center gap-3">
                     <div className="p-3 rounded-lg bg-primary/10 border border-primary/20">
