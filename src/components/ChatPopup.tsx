@@ -45,7 +45,6 @@ const ChatPopup = ({ location, coordinates, onClose, language, country, derivedC
             {
               id: "welcome",
               role: "assistant",
-              language: language,
               content: `Welcome to ${location.name}. ${location.description}`,
             },
           ]);
