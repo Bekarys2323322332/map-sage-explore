@@ -13,7 +13,7 @@ interface HeaderProps {
 
 const Header = ({ language, onLanguageChange, mapStyle, onMapStyleChange }: HeaderProps) => {
   const { t } = useTranslation(language);
-  
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-lg">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
@@ -32,7 +32,7 @@ const Header = ({ language, onLanguageChange, mapStyle, onMapStyleChange }: Head
           <div className="flex items-center gap-2 sm:gap-4">
             <nav className="hidden md:flex items-center gap-2">
               <Button variant="ghost" size="lg" asChild>
-                <Link to="/">Home</Link>
+                <Link to="/">{t("about")}</Link>
               </Button>
               <Button variant="ghost" size="lg" asChild>
                 <Link to="/about">{t("about")}</Link>

@@ -16,6 +16,7 @@ export const useTranslation = (language: string) => {
       // Header
       "about": "About",
       "resources": "Resources",
+      "home": "Home"
       
       // Footer
       "tengrimap": "TengriMap",
