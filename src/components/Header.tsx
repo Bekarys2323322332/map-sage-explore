@@ -23,7 +23,7 @@ const Header = ({ language, onLanguageChange, mapStyle, onMapStyleChange }: Head
         <div className="flex items-center justify-between h-14 sm:h-16">
           {/* Logo and brand */}
           <Link to="/" className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity">
-            <h1 className="text-lg sm:text-2xl font-bold bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent">
+            <h1 className="text-lg sm:text-2xl font-bold text-foreground">
               NomadLand
             </h1>
           </Link>
