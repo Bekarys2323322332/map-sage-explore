@@ -13,10 +13,12 @@ const Footer = () => {
               Explore the rich cultural heritage of Central Asia through interactive storytelling
             </p>
             <div className="space-y-3">
-              <Link to="/about">About</Link>
+              <Link className="hover:text-primary transition-colors cursor-pointer" to="/about">
+                About
+              </Link>
             </div>
             <div className="space-y-3">
-              <Link className="p-2 rounded-lg bg-muted/50 hover:bg-primary/10 transition-colors" to="/resources">
+              <Link className="hover:text-primary transition-colors cursor-pointer" to="/resources">
                 Resources
               </Link>
             </div>
