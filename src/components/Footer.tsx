@@ -46,7 +46,10 @@ const Footer = () => {
               <a href="#" className="p-2 rounded-lg bg-muted/50 hover:bg-primary/10 transition-colors">
                 <Mail className="w-5 h-5 text-muted-foreground hover:text-primary transition-colors" />
               </a>
-              <a href="#" className="p-2 rounded-lg bg-muted/50 hover:bg-primary/10 transition-colors">
+              <a
+                href="#https://www.youtube.com/watch?v=h8DeZSB2o-c&list=RDX6yOnaeOXns&index=17"
+                className="p-2 rounded-lg bg-muted/50 hover:bg-primary/10 transition-colors"
+              >
                 <Instagram className="w-5 h-5 text-muted-foreground hover:text-primary transition-colors" />
               </a>
             </div>
