@@ -187,11 +187,17 @@ const ChatPopup = ({ location, coordinates, onClose, language, country, derivedC
               <span className="text-3xl">🏛️</span>
             </Avatar>
             <div>
-              <h3 className="text-xl font-bold">{location?.name || "Selected location"}</h3>
+              <h3 className="text-xl font-bold">
+                {location?.name || (language === "Қазақша" ? "Таңдалған орын" : "Selected location")}
+              </h3>
               {coordinates && (
                 <p className="text-xs text-muted-foreground">
                   {coordinates[0].toFixed(4)}, {coordinates[1].toFixed(4)}
-                  {derivedCountryName && ` · ${derivedCountryName}`}
+                  {derivedCountryName && ` · ${
+                    derivedCountryName === "Out of Bounds" 
+                      ? (language === "Қазақша" ? "Шектен тыс" : "Out of Bounds")
+                      : derivedCountryName
+                  }`}
                 </p>
               )}
             </div>
@@ -243,7 +249,11 @@ const ChatPopup = ({ location, coordinates, onClose, language, country, derivedC
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && !isLoading && handleSend()}
-            placeholder="Ask about history, nature, battles, minerals..."
+            placeholder={
+              language === "Қазақша" 
+                ? "Тарих, табиғат, шайқастар, минералдар туралы сұраңыз..."
+                : "Ask about history, nature, battles, minerals..."
+            }
             disabled={isLoading}
           />
           <Button onClick={handleSend} disabled={isLoading || !input.trim()} size="icon">
