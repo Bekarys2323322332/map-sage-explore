@@ -6,18 +6,42 @@ import SettingsDialog from "@/components/SettingsDialog";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, MapPin } from "lucide-react";
 
-// Derive country from coordinates
+// Derive country from coordinates with more accurate boundaries
 const getCountryFromCoordinates = (lat: number, lon: number): string => {
-  // Kazakhstan: roughly 40-55°N, 46-87°E
-  if (lat >= 40 && lat <= 55 && lon >= 46 && lon <= 87) return "Kazakhstan";
-  // Uzbekistan: roughly 37-46°N, 56-73°E
-  if (lat >= 37 && lat <= 46 && lon >= 56 && lon <= 73) return "Uzbekistan";
-  // Kyrgyzstan: roughly 39-43°N, 69-80°E
-  if (lat >= 39 && lat <= 43 && lon >= 69 && lon <= 80) return "Kyrgyzstan";
-  // Tajikistan: roughly 36-41°N, 67-75°E
-  if (lat >= 36 && lat <= 41 && lon >= 67 && lon <= 75) return "Tajikistan";
-  // Turkmenistan: roughly 35-43°N, 52-67°E
-  if (lat >= 35 && lat <= 43 && lon >= 52 && lon <= 67) return "Turkmenistan";
+  console.log('Detecting country for coordinates:', lat, lon);
+  
+  // Check in order of specificity to avoid overlaps
+  // Tajikistan: 36.7-41.1°N, 67.4-75.2°E
+  if (lat >= 36.7 && lat <= 41.1 && lon >= 67.4 && lon <= 75.2) {
+    console.log('Detected: Tajikistan');
+    return "Tajikistan";
+  }
+  
+  // Kyrgyzstan: 39.2-43.2°N, 69.3-80.3°E
+  if (lat >= 39.2 && lat <= 43.2 && lon >= 69.3 && lon <= 80.3) {
+    console.log('Detected: Kyrgyzstan');
+    return "Kyrgyzstan";
+  }
+  
+  // Turkmenistan: 35.1-42.8°N, 52.5-66.7°E
+  if (lat >= 35.1 && lat <= 42.8 && lon >= 52.5 && lon <= 66.7) {
+    console.log('Detected: Turkmenistan');
+    return "Turkmenistan";
+  }
+  
+  // Uzbekistan: 37.2-45.6°N, 56.0-73.2°E
+  if (lat >= 37.2 && lat <= 45.6 && lon >= 56.0 && lon <= 73.2) {
+    console.log('Detected: Uzbekistan');
+    return "Uzbekistan";
+  }
+  
+  // Kazakhstan: 40.6-55.4°N, 46.5-87.3°E (largest, check last)
+  if (lat >= 40.6 && lat <= 55.4 && lon >= 46.5 && lon <= 87.3) {
+    console.log('Detected: Kazakhstan');
+    return "Kazakhstan";
+  }
+  
+  console.log('Detected: Unknown');
   return "Unknown";
 };
 
