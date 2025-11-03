@@ -29,9 +29,13 @@ const About = () => {
         <div className="relative z-10 max-w-4xl mx-auto w-full space-y-12 animate-fade-in">
           <div className="text-center space-y-4">
             <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent overflow-visible">
-              About TengriMap
+              About Nomadland
             </h1>
-            <p className="text-xl text-muted-foreground">Exploring the Rich Cultural Heritage of Central Asia</p>
+            <p className="text-xl text-muted-foreground">
+              Discover the rich cultural heritage of Central Asia like never before. TengriMap brings the history,
+              traditions, and stories of Kazakhstan, Uzbekistan, Kyrgyzstan, Tajikistan, and Turkmenistan to life
+              through an interactive and immersive platform.
+            </p>
           </div>
 
           <div className="grid gap-8 md:grid-cols-2">
@@ -43,8 +47,8 @@ const About = () => {
                 <h2 className="text-2xl font-bold">Our Mission</h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                TengriMap is dedicated to showcasing the diverse cultural heritage, history, and traditions of Central
-                Asia's five nations: Kazakhstan, Uzbekistan, Kyrgyzstan, Tajikistan, and Turkmenistan.
+                Celebrate and preserve the diverse cultures, history, and traditions of Central Asia, sharing the unique
+                narratives that have shaped this region.
               </p>
             </div>
 
@@ -56,8 +60,8 @@ const About = () => {
                 <h2 className="text-2xl font-bold">Interactive Experience</h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Explore each country through an interactive map, discovering historical sites, cultural landmarks, and
-                the rich traditions that have shaped this fascinating region.
+                Navigate each country with our interactive map to uncover historical sites, cultural landmarks, and
+                traditions that define Central Asia.
               </p>
             </div>
 
@@ -69,8 +73,8 @@ const About = () => {
                 <h2 className="text-2xl font-bold">Cultural Connection</h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Connect with the stories, people, and heritage of the Silk Road, understanding how these nations have
-                contributed to global culture and history.
+                Engage with the stories, people, and heritage along the Silk Road, understanding how these nations have
+                influenced global culture and history.
               </p>
             </div>
 
@@ -79,11 +83,11 @@ const About = () => {
                 <div className="p-3 rounded-lg bg-primary/10 border border-primary/20">
                   <BookOpen className="w-6 h-6 text-primary" />
                 </div>
-                <h2 className="text-2xl font-bold">Educational Resource</h2>
+                <h2 className="text-2xl font-bold">Educational Insight</h2>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Learn about the unique characteristics of each country, from ancient civilizations to modern-day
-                cultural practices, through our AI-powered chatbot and comprehensive information.
+                Learn from ancient civilizations to modern practices with our AI-powered resources and comprehensive
+                guides, making cultural knowledge accessible to
               </p>
             </div>
           </div>
