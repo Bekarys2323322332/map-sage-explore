@@ -234,7 +234,6 @@ const CountryView = () => {
             setDroppedCoordinates(null);
           }}
           language={language}
-          country={countryCode}
         />
       )}
 

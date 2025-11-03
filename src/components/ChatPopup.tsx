@@ -17,7 +17,6 @@ interface ChatPopupProps {
   coordinates?: [number, number];
   onClose: () => void;
   language: string;
-  country: string;
 }
 
 interface Message {
@@ -26,9 +25,7 @@ interface Message {
   content: string;
 }
 
-const API_BASE = "https://73914f615f22.ngrok-free.app"; // наш main.py
-
-const ChatPopup = ({ location, coordinates, onClose, language, country }: ChatPopupProps) => {
+const ChatPopup = ({ location, coordinates, onClose, language }: ChatPopupProps) => {
   const { toast } = useToast();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -53,14 +50,15 @@ const ChatPopup = ({ location, coordinates, onClose, language, country }: ChatPo
 
       setIsLoading(true);
       try {
-        const res = await fetch(`${API_BASE}/location-chat`, {
+        const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { 
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
+          },
           body: JSON.stringify({
-            country: country,
-            lat: coordinates[0],
-            lon: coordinates[1],
-            location_name: location?.name ?? null,
+            coordinates: coordinates,
+            locationName: location?.name ?? null,
             language: language,
             messages: [
               {
@@ -72,13 +70,13 @@ const ChatPopup = ({ location, coordinates, onClose, language, country }: ChatPo
         });
 
         const data = await res.json();
-        if (!res.ok) throw new Error(data.detail || "location-chat failed");
+        if (!res.ok) throw new Error(data.error || "Chat request failed");
 
         setMessages([
           {
             id: "assistant-1",
             role: "assistant",
-            content: data.answer,
+            content: data.message,
           },
         ]);
       } catch (err: any) {
@@ -92,7 +90,7 @@ const ChatPopup = ({ location, coordinates, onClose, language, country }: ChatPo
         ]);
         toast({
           title: "Error",
-          description: err?.message || "location-chat failed",
+          description: err?.message || "Chat request failed",
           variant: "destructive",
         });
       } finally {
@@ -101,7 +99,7 @@ const ChatPopup = ({ location, coordinates, onClose, language, country }: ChatPo
     };
 
     fetchInitial();
-  }, [coordinates, country, location, toast, language]);
+  }, [coordinates, location, toast, language]);
 
   // 3. отправка последующих сообщений
   const handleSend = async () => {
@@ -119,14 +117,15 @@ const ChatPopup = ({ location, coordinates, onClose, language, country }: ChatPo
     setIsLoading(true);
 
     try {
-      const res = await fetch(`${API_BASE}/location-chat`, {
+      const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
+        },
         body: JSON.stringify({
-          country: country,
-          lat: coordinates[0],
-          lon: coordinates[1],
-          location_name: location?.name ?? null,
+          coordinates: coordinates,
+          locationName: location?.name ?? null,
           language: language,
           messages: newMessages.map((m) => ({
             role: m.role,
@@ -136,21 +135,21 @@ const ChatPopup = ({ location, coordinates, onClose, language, country }: ChatPo
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.detail || "location-chat failed");
+      if (!res.ok) throw new Error(data.error || "Chat request failed");
 
       setMessages((prev) => [
         ...prev,
         {
           id: (Date.now() + 1).toString(),
           role: "assistant",
-          content: data.answer,
+          content: data.message,
         },
       ]);
     } catch (err: any) {
       console.error(err);
       toast({
         title: "Error",
-        description: err?.message || "location-chat failed",
+        description: err?.message || "Chat request failed",
         variant: "destructive",
       });
     } finally {
@@ -171,7 +170,7 @@ const ChatPopup = ({ location, coordinates, onClose, language, country }: ChatPo
               <h3 className="text-xl font-bold">{location?.name || "Selected location"}</h3>
               {coordinates && (
                 <p className="text-xs text-muted-foreground">
-                  {coordinates[0].toFixed(4)}, {coordinates[1].toFixed(4)} · {country.toUpperCase()}
+                  {coordinates[0].toFixed(4)}, {coordinates[1].toFixed(4)}
                 </p>
               )}
             </div>
