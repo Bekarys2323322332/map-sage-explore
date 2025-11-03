@@ -1,11 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MapPin, Globe, Users, BookOpen } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 const About = () => {
-  const [language, setLanguage] = useState("English");
-  const [mapStyle, setMapStyle] = useState("political");
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem("language") || "English";
+  });
+  const [mapStyle, setMapStyle] = useState(() => {
+    return localStorage.getItem("mapStyle") || "political";
+  });
+
+  useEffect(() => {
+    localStorage.setItem("language", language);
+  }, [language]);
+
+  useEffect(() => {
+    localStorage.setItem("mapStyle", mapStyle);
+  }, [mapStyle]);
 
   return (
     <div className="relative min-h-screen flex flex-col">

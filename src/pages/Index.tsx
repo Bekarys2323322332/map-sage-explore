@@ -9,11 +9,17 @@ import { useTranslation } from "@/hooks/useTranslation";
 const Index = () => {
   const navigate = useNavigate();
   const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
-  const [language, setLanguage] = useState("English");
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem("language") || "English";
+  });
   const { t } = useTranslation(language);
   const [mapStyle, setMapStyle] = useState(() => {
     return localStorage.getItem("mapStyle") || "satellite";
   });
+
+  useEffect(() => {
+    localStorage.setItem("language", language);
+  }, [language]);
 
   useEffect(() => {
     localStorage.setItem("mapStyle", mapStyle);

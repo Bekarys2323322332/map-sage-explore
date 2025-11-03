@@ -163,7 +163,9 @@ const CountryView = () => {
   const [chatOpen, setChatOpen] = useState(false);
   const [droppedCoordinates, setDroppedCoordinates] = useState<[number, number] | null>(null);
   const [derivedCountry, setDerivedCountry] = useState<string | null>(null);
-  const [language, setLanguage] = useState("English");
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem("language") || "English";
+  });
   const { t } = useTranslation(language);
   const [mapStyle, setMapStyle] = useState(() => {
     return localStorage.getItem("mapStyle") || "satellite";
@@ -177,6 +179,10 @@ const CountryView = () => {
       setMapStyle(location.state.mapStyle);
     }
   }, [location.state]);
+
+  useEffect(() => {
+    localStorage.setItem("language", language);
+  }, [language]);
 
   useEffect(() => {
     localStorage.setItem("mapStyle", mapStyle);
