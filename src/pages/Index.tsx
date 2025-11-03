@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ComposableMap, Geographies, Geography, Marker } from "react-simple-maps";
 import { Sparkles, Globe, MapPin } from "lucide-react";
 import Header from "@/components/Header";
@@ -9,6 +9,13 @@ const Index = () => {
   const navigate = useNavigate();
   const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
   const [language, setLanguage] = useState("English");
+  const [mapStyle, setMapStyle] = useState(() => {
+    return localStorage.getItem("mapStyle") || "political";
+  });
+
+  useEffect(() => {
+    localStorage.setItem("mapStyle", mapStyle);
+  }, [mapStyle]);
 
   const countryColors: Record<string, string> = {
     kazakhstan: "hsl(210, 70%, 60%)",
@@ -27,12 +34,17 @@ const Index = () => {
   };
 
   const handleCountryClick = (countryId: string) => {
-    navigate(`/country/${countryId}`, { state: { language } });
+    navigate(`/country/${countryId}`, { state: { language, mapStyle } });
   };
 
   return (
     <div className="relative min-h-screen flex flex-col">
-      <Header language={language} onLanguageChange={setLanguage} />
+      <Header 
+        language={language} 
+        onLanguageChange={setLanguage}
+        mapStyle={mapStyle}
+        onMapStyleChange={setMapStyle}
+      />
       
       <div className="flex-1 flex flex-col items-center justify-center p-4 sm:p-7 pt-24 overflow-hidden">
         {/* Animated background with gradients */}
