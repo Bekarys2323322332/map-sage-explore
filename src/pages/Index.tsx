@@ -2,7 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { ComposableMap, Geographies, Geography, Marker } from "react-simple-maps";
 import { Sparkles, Globe, MapPin } from "lucide-react";
-import LanguageSelector from "@/components/LanguageSelector";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -30,58 +31,58 @@ const Index = () => {
   };
 
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-center p-4 sm:p-7 overflow-hidden">
-      {/* Animated background with gradients */}
-      <div className="absolute inset-0 bg-gradient-to-br from-background via-card to-muted/40 animate-gradient bg-[length:400%_400%]" />
+    <div className="relative min-h-screen flex flex-col">
+      <Header language={language} onLanguageChange={setLanguage} />
       
-      {/* Floating decorative elements */}
-      <div className="absolute top-20 left-10 w-64 h-64 bg-primary/10 rounded-full blur-3xl animate-pulse" />
-      <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }} />
-      <div className="absolute top-1/2 left-1/4 w-48 h-48 bg-secondary/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "2s" }} />
+      <div className="flex-1 flex flex-col items-center justify-center p-4 sm:p-7 pt-24 overflow-hidden">
+        {/* Animated background with gradients */}
+        <div className="absolute inset-0 bg-gradient-to-br from-background via-card to-muted/40 animate-gradient bg-[length:400%_400%]" />
+        
+        {/* Floating decorative elements */}
+        <div className="absolute top-20 left-10 w-64 h-64 bg-primary/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }} />
+        <div className="absolute top-1/2 left-1/4 w-48 h-48 bg-secondary/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "2s" }} />
 
-      {/* Main content */}
-      <div className="relative z-10 max-w-7xl w-full space-y-8 sm:space-y-12 animate-fade-in">
-        {/* Header with decorative elements */}
-        <div className="text-center space-y-6 px-4">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-sm animate-scale-in">
-            <Sparkles className="w-5 h-5 text-primary animate-pulse" />
-            <span className="text-sm font-medium text-primary">Explore the Silk Road</span>
-          </div>
-          
-          <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold text-foreground tracking-tight leading-tight">
-            <span className="bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent animate-gradient bg-[length:200%_auto]">
-              Central Asia Interactive Museum
-            </span>
-          </h1>
-          
-          <div className="flex items-center justify-center gap-3 text-lg sm:text-xl text-muted-foreground">
-            <Globe className="w-5 h-5 text-primary" />
-            <p>Select a country to explore its cultural heritage</p>
-          </div>
+        {/* Main content */}
+        <div className="relative z-10 max-w-7xl w-full space-y-8 sm:space-y-12 animate-fade-in">
+          {/* Hero section */}
+          <div className="text-center space-y-6 px-4">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-sm animate-scale-in">
+              <Sparkles className="w-5 h-5 text-primary animate-pulse" />
+              <span className="text-sm font-medium text-primary">Explore the Silk Road</span>
+            </div>
+            
+            <h2 className="text-4xl sm:text-6xl md:text-7xl font-bold text-foreground tracking-tight leading-tight">
+              <span className="bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent animate-gradient bg-[length:200%_auto]">
+                Central Asia Interactive Museum
+              </span>
+            </h2>
+            
+            <div className="flex items-center justify-center gap-3 text-lg sm:text-xl text-muted-foreground">
+              <Globe className="w-5 h-5 text-primary" />
+              <p>Select a country to explore its cultural heritage</p>
+            </div>
 
-          {/* Helper text moved here */}
-          <div className="flex items-center justify-center gap-4 mt-4">
-            <div className="flex items-center gap-2 px-6 py-3 rounded-full bg-background/90 backdrop-blur-sm border border-border shadow-lg animate-fade-in">
+            {/* Helper text */}
+            <div className="flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-background/90 backdrop-blur-sm border border-border shadow-lg animate-fade-in mt-4">
               <MapPin className="w-5 h-5 text-primary" />
               <span className="text-base font-medium text-foreground">Click a country to explore</span>
             </div>
-            <LanguageSelector language={language} onLanguageChange={setLanguage} />
           </div>
-        </div>
 
-        {/* Map container with enhanced styling */}
-        <div className="relative group">
-          {/* Glow effect on hover */}
-          <div className="absolute -inset-1 bg-gradient-to-r from-primary via-accent to-secondary rounded-3xl blur-xl opacity-30 group-hover:opacity-60 transition-opacity duration-500" />
-          
-          <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-card/80 backdrop-blur-md border-2 border-border/50 hover:border-primary/30 transition-all duration-500">
-            {/* Decorative corner accents */}
-            <div className="absolute top-0 left-0 w-20 h-20 border-t-4 border-l-4 border-primary/40 rounded-tl-3xl" />
-            <div className="absolute top-0 right-0 w-20 h-20 border-t-4 border-r-4 border-accent/40 rounded-tr-3xl" />
-            <div className="absolute bottom-0 left-0 w-20 h-20 border-b-4 border-l-4 border-secondary/40 rounded-bl-3xl" />
-            <div className="absolute bottom-0 right-0 w-20 h-20 border-b-4 border-r-4 border-primary/40 rounded-br-3xl" />
+          {/* Map container with enhanced styling */}
+          <div className="relative group">
+            {/* Glow effect on hover */}
+            <div className="absolute -inset-1 bg-gradient-to-r from-primary via-accent to-secondary rounded-3xl blur-xl opacity-30 group-hover:opacity-60 transition-opacity duration-500" />
+            
+            <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-card/80 backdrop-blur-md border-2 border-border/50 hover:border-primary/30 transition-all duration-500">
+              {/* Decorative corner accents */}
+              <div className="absolute top-0 left-0 w-20 h-20 border-t-4 border-l-4 border-primary/40 rounded-tl-3xl" />
+              <div className="absolute top-0 right-0 w-20 h-20 border-t-4 border-r-4 border-accent/40 rounded-tr-3xl" />
+              <div className="absolute bottom-0 left-0 w-20 h-20 border-b-4 border-l-4 border-secondary/40 rounded-bl-3xl" />
+              <div className="absolute bottom-0 right-0 w-20 h-20 border-b-4 border-r-4 border-primary/40 rounded-br-3xl" />
 
-            <ComposableMap
+              <ComposableMap
             projection="geoMercator"
             projectionConfig={{
               center: [65, 46],
@@ -170,28 +171,13 @@ const Index = () => {
                 </g>
               </Marker>
             ))}
-          </ComposableMap>
-          </div>
-        </div>
-
-        {/* Bottom decorative strip */}
-        <div className="flex items-center justify-center gap-8 px-4 py-6 rounded-2xl bg-gradient-to-r from-primary/10 via-accent/10 to-secondary/10 border border-border/50 backdrop-blur-sm animate-fade-in">
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-primary animate-pulse" />
-            <span className="text-sm font-medium text-muted-foreground">5 Countries</span>
-          </div>
-          <div className="w-px h-6 bg-border" />
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-accent" />
-            <span className="text-sm font-medium text-muted-foreground">Interactive Experience</span>
-          </div>
-          <div className="w-px h-6 bg-border" />
-          <div className="flex items-center gap-2">
-            <Globe className="w-4 h-4 text-secondary" />
-            <span className="text-sm font-medium text-muted-foreground">Cultural Heritage</span>
+            </ComposableMap>
+            </div>
           </div>
         </div>
       </div>
+      
+      <Footer />
     </div>
   );
 };
