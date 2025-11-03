@@ -14,10 +14,7 @@ interface LanguageSelectorProps {
 
 const languages = [
   { code: 'en', name: 'English' },
-  { code: 'ru', name: 'Русский' },
   { code: 'kk', name: 'Қазақша' },
-  { code: 'uz', name: 'O\'zbek' },
-  { code: 'ky', name: 'Кыргызча' },
 ];
 
 const LanguageSelector = ({ language, onLanguageChange }: LanguageSelectorProps) => {

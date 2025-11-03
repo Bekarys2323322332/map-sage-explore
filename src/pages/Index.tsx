@@ -2,10 +2,12 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { ComposableMap, Geographies, Geography, Marker } from "react-simple-maps";
 import { Sparkles, Globe, MapPin } from "lucide-react";
+import LanguageSelector from "@/components/LanguageSelector";
 
 const Index = () => {
   const navigate = useNavigate();
   const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
+  const [language, setLanguage] = useState("English");
 
   const countryColors: Record<string, string> = {
     kazakhstan: "hsl(210, 70%, 60%)",
@@ -24,7 +26,7 @@ const Index = () => {
   };
 
   const handleCountryClick = (countryId: string) => {
-    navigate(`/country/${countryId}`);
+    navigate(`/country/${countryId}`, { state: { language } });
   };
 
   return (
@@ -58,9 +60,12 @@ const Index = () => {
           </div>
 
           {/* Helper text moved here */}
-          <div className="flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-background/90 backdrop-blur-sm border border-border shadow-lg animate-fade-in mt-4">
-            <MapPin className="w-5 h-5 text-primary" />
-            <span className="text-base font-medium text-foreground">Click a country to explore</span>
+          <div className="flex items-center justify-center gap-4 mt-4">
+            <div className="flex items-center gap-2 px-6 py-3 rounded-full bg-background/90 backdrop-blur-sm border border-border shadow-lg animate-fade-in">
+              <MapPin className="w-5 h-5 text-primary" />
+              <span className="text-base font-medium text-foreground">Click a country to explore</span>
+            </div>
+            <LanguageSelector language={language} onLanguageChange={setLanguage} />
           </div>
         </div>
 

@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import LeafletMap from "@/components/LeafletMap";
 import ChatPopup from "@/components/ChatPopup";
 import LanguageSelector from "@/components/LanguageSelector";
@@ -119,10 +119,17 @@ const countryData: Record<string, {
 const CountryView = () => {
   const { country } = useParams<{ country: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
   const [chatOpen, setChatOpen] = useState(false);
   const [droppedCoordinates, setDroppedCoordinates] = useState<[number, number] | null>(null);
   const [language, setLanguage] = useState("English");
+
+  useEffect(() => {
+    if (location.state?.language) {
+      setLanguage(location.state.language);
+    }
+  }, [location.state]);
 
   const data = country ? countryData[country] : null;
 
