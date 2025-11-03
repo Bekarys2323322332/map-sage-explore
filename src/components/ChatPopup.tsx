@@ -60,9 +60,10 @@ const ChatPopup = ({ location, coordinates, onClose, language, country, derivedC
           {
             id: "out-of-bounds",
             role: "assistant",
-            content: language === "Қазақша" 
-              ? "Бұл орын шектен тыс. Картадан басқа нүктені таңдаңыз." 
-              : "This location is out of bounds. Please pick another point on the map.",
+            content:
+              language === "Қазақша"
+                ? "Бұл орын шектен тыс. Картадан басқа нүктені таңдаңыз."
+                : "This location is out of bounds. Please pick another point on the map.",
           },
         ]);
         return;
@@ -72,9 +73,8 @@ const ChatPopup = ({ location, coordinates, onClose, language, country, derivedC
 
       setIsLoading(true);
       try {
-        const initialPrompt = language === "Қазақша"
-          ? "Бұл орынды келушілер үшін сипаттаңыз."
-          : "Describe this location for a visitor.";
+        const initialPrompt =
+          language === "Қазақша" ? "Бұл орынды келушілер үшін сипаттаңыз." : "Describe this location for a visitor.";
 
         const res = await fetch(`${API_BASE}/location-chat`, {
           method: "POST",
@@ -110,9 +110,8 @@ const ChatPopup = ({ location, coordinates, onClose, language, country, derivedC
           {
             id: "err",
             role: "assistant",
-            content: language === "Қазақша"
-            ?"Бұл жер тұралы ақпарат таба алмадым"
-              :"Could not load info about this point.";
+            content:
+              language === "Қазақша" ? "Бұл жер тұралы ақпарат таба алмадым" : "Could not load info about this point.",
           },
         ]);
         toast({
@@ -199,11 +198,14 @@ const ChatPopup = ({ location, coordinates, onClose, language, country, derivedC
               {coordinates && (
                 <p className="text-xs text-muted-foreground">
                   {coordinates[0].toFixed(4)}, {coordinates[1].toFixed(4)}
-                  {derivedCountryName && ` · ${
-                    derivedCountryName === "Out of Bounds" 
-                      ? (language === "Қазақша" ? "Шектен тыс" : "Out of Bounds")
-                      : derivedCountryName
-                  }`}
+                  {derivedCountryName &&
+                    ` · ${
+                      derivedCountryName === "Out of Bounds"
+                        ? language === "Қазақша"
+                          ? "Шектен тыс"
+                          : "Out of Bounds"
+                        : derivedCountryName
+                    }`}
                 </p>
               )}
             </div>
@@ -256,7 +258,7 @@ const ChatPopup = ({ location, coordinates, onClose, language, country, derivedC
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && !isLoading && !isInvalidLocation && handleSend()}
             placeholder={
-              language === "Қазақша" 
+              language === "Қазақша"
                 ? "Тарих, табиғат, шайқастар, минералдар туралы сұраңыз..."
                 : "Ask about history, nature, battles, minerals..."
             }
