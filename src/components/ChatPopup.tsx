@@ -189,7 +189,7 @@ const ChatPopup = ({ location, coordinates, onClose, language, country, derivedC
         <div className="flex items-center justify-between p-5 border-b bg-gradient-to-r from-primary/20 via-accent/15 to-primary/20">
           <div className="flex items-center gap-4">
             <Avatar className="h-14 w-14 bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-              <Landmark className ="h-4 w-4"
+              <span className="text-3xl">🏛️</span>
             </Avatar>
             <div>
               <h3 className="text-xl font-bold">
