@@ -15,7 +15,7 @@ const Footer = ({ language = "English" }: FooterProps) => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Brand section */}
           <div className="space-y-3">
-            <h3 className="text-lg font-semibold text-foreground">{t("tengrimap")}</h3>
+            <h3 className="text-lg font-semibold text-foreground">NomadLand</h3>
             <p className="text-sm text-muted-foreground">{t("explore_heritage")}</p>
             <div className="space-y-3">
               <Link className="hover:text-primary transition-colors cursor-pointer" to="/about">
