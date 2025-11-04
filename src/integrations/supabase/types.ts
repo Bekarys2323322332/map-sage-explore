@@ -14,24 +14,7 @@ export type Database = {
   }
   public: {
     Tables: {
-      visitors: {
-        Row: {
-          count: number
-          id: number
-          updated_at: string | null
-        }
-        Insert: {
-          count?: number
-          id?: number
-          updated_at?: string | null
-        }
-        Update: {
-          count?: number
-          id?: number
-          updated_at?: string | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Views: {
       [_ in never]: never
