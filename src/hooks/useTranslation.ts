@@ -14,11 +14,11 @@ export const useTranslation = (language: string) => {
     home: "Home",
 
     // Footer
-    tengrimap: "TengriMap",
+    nomadland: "NomadLand",
     explore_heritage: "Explore the rich cultural heritage of Central Asia through interactive storytelling",
     explore: "Explore",
     connect: "Connect",
-    rights_reserved: "© 2025 TengriMap. All rights reserved.",
+    rights_reserved: "© 2025 NomadLand. All rights reserved.",
     made_with: "Made with",
     for_central_asia: "for Central Asia",
 
@@ -28,7 +28,7 @@ export const useTranslation = (language: string) => {
 
     // Settings
     settings: "Settings",
-    customize: "Customize your TengriMap experience",
+    customize: "Customize your NomadLand experience",
     dark_mode: "Dark Mode",
     map_style: "Map Style",
     language: "Language",
@@ -46,7 +46,7 @@ export const useTranslation = (language: string) => {
     // About page
     about_nomadland: "About Nomadland",
     about_description:
-      "Discover the rich cultural heritage of Central Asia like never before. TengriMap brings the history, traditions, and stories of Kazakhstan, Uzbekistan, Kyrgyzstan, Tajikistan, and Turkmenistan to life through an interactive and immersive platform.",
+      "Discover the rich cultural heritage of Central Asia like never before. NomadLand brings the history, traditions, and stories of Kazakhstan, Uzbekistan, Kyrgyzstan, Tajikistan, and Turkmenistan to life through an interactive and immersive platform.",
     our_mission: "Our Mission",
     mission_description:
       "Celebrate and preserve the diverse cultures, history, and traditions of Central Asia, sharing the unique narratives that have shaped this region.",
@@ -74,11 +74,11 @@ export const useTranslation = (language: string) => {
     home: "Басты бет",
 
     // Footer
-    tengrimap: "TengriMap",
+    nomadland: "NomadLand",
     explore_heritage: "Интерактивті форматта Орталық Азияның бай мәдени мұрасын зерттеңіз",
     explore: "Зерттеу",
     connect: "Байланыс",
-    rights_reserved: "© 2025 TengriMap. Барлық құқықтар қорғалған.",
+    rights_reserved: "© 2025 NomadLand. Барлық құқықтар қорғалған.",
     made_with: "Орталық Азия үшін",
     for_central_asia: "Махаббатпен жасалған",
 
@@ -88,7 +88,7 @@ export const useTranslation = (language: string) => {
 
     // Settings
     settings: "Баптаулар",
-    customize: "TengriMap тәжірибеңізді баптаңыз",
+    customize: "NomadLand тәжірибеңізді баптаңыз",
     dark_mode: "Қараңғы режим",
     map_style: "Карта стилі",
     language: "Тіл",
