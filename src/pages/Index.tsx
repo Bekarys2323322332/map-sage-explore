@@ -19,31 +19,6 @@ const Index = () => {
   });
   const { handleClick, isHovered, isTouch } = useTouchHover("map");
 
-  // Track unique visitors
-  useEffect(() => {
-    const hasVisited = localStorage.getItem("visited");
-    
-    if (!hasVisited) {
-      // Mark as visited in localStorage
-      localStorage.setItem("visited", "true");
-      
-      // Call backend to increment visitor count
-      fetch('https://gviyxornnwspgyxmpdmt.supabase.co/functions/v1/track-visitor', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-        .then(res => res.json())
-        .then(data => {
-          console.log('Visitor tracked:', data.count);
-        })
-        .catch(error => {
-          console.error('Error tracking visitor:', error);
-        });
-    }
-  }, []);
-
   useEffect(() => {
     localStorage.setItem("language", language);
   }, [language]);
