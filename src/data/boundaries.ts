@@ -1,8 +1,8 @@
-import kazakhstanBoundary from "@/assets/boundaries/kazakhstan.geojson";
-import kyrgyzstanBoundary from "@/assets/boundaries/kyrgyzstan.geojson";
-import tajikistanBoundary from "@/assets/boundaries/tajikistan.geojson";
-import turkmenistanBoundary from "@/assets/boundaries/turkmenistan.geojson";
-import uzbekistanBoundary from "@/assets/boundaries/uzbekistan.geojson";
+import kazakhstanBoundary from "@/assets/boundaries/kazakhstan.json";
+import kyrgyzstanBoundary from "@/assets/boundaries/kyrgyzstan.json";
+import tajikistanBoundary from "@/assets/boundaries/tajikistan.json";
+import turkmenistanBoundary from "@/assets/boundaries/turkmenistan.json";
+import uzbekistanBoundary from "@/assets/boundaries/uzbekistan.json";
 
 // Combine all country boundaries into a single FeatureCollection
 export const COUNTRY_BOUNDARIES = {
