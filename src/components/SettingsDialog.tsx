@@ -37,7 +37,7 @@ const SettingsDialog = ({ language, onLanguageChange, mapStyle, onMapStyleChange
           <Settings className="h-6 w-6" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="z-[10000] sm:max-w-[480px]">
+      <DialogContent className="round-lg z-[10000] sm:max-w-[480px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Settings className="h-5 w-5" />
