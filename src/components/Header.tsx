@@ -28,13 +28,16 @@ const Header = ({ language, onLanguageChange, mapStyle, onMapStyleChange }: Head
             <img 
               src={logoDark} 
               alt="NomadLand" 
-              className="h-8 sm:h-10 w-auto hidden dark:block"
+              className="h-8 sm:h-10 w-8 sm:w-10 rounded-full hidden dark:block"
             />
             <img 
               src={logoLight} 
               alt="NomadLand" 
-              className="h-8 sm:h-10 w-auto block dark:hidden"
+              className="h-8 sm:h-10 w-8 sm:w-10 rounded-full block dark:hidden"
             />
+            <h1 className="text-lg sm:text-2xl font-bold text-foreground">
+              NomadLand
+            </h1>
           </Link>
 
           {/* Navigation and Settings */}
