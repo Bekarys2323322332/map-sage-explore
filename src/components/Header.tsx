@@ -4,6 +4,8 @@ import { Button } from "./ui/button";
 import SettingsDialog from "./SettingsDialog";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useTouchHover } from "@/hooks/useTouchHover";
+import logoDark from "@/assets/logo-dark.png";
+import logoLight from "@/assets/logo-light.png";
 
 interface HeaderProps {
   language: string;
@@ -23,9 +25,16 @@ const Header = ({ language, onLanguageChange, mapStyle, onMapStyleChange }: Head
         <div className="flex items-center justify-between h-14 sm:h-16">
           {/* Logo and brand */}
           <Link to="/" className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity">
-            <h1 className="text-lg sm:text-2xl font-bold text-foreground">
-              NomadLand
-            </h1>
+            <img 
+              src={logoDark} 
+              alt="NomadLand" 
+              className="h-8 sm:h-10 w-auto hidden dark:block"
+            />
+            <img 
+              src={logoLight} 
+              alt="NomadLand" 
+              className="h-8 sm:h-10 w-auto block dark:hidden"
+            />
           </Link>
 
           {/* Navigation and Settings */}
