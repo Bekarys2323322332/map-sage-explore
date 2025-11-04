@@ -6,40 +6,51 @@ import SettingsDialog from "@/components/SettingsDialog";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, MapPin } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
+import { COUNTRY_BOUNDARIES } from "@/data/boundaries";
 
-// Derive country from coordinates with more accurate boundaries
+// Point-in-polygon detection using ray casting algorithm
+const pointInPolygon = (point: [number, number], polygon: number[][][]): boolean => {
+  const [lon, lat] = point;
+  let inside = false;
+
+  for (const ring of polygon) {
+    let j = ring.length - 1;
+    for (let i = 0; i < ring.length; i++) {
+      const xi = ring[i][0], yi = ring[i][1];
+      const xj = ring[j][0], yj = ring[j][1];
+      
+      const intersect = ((yi > lat) !== (yj > lat))
+        && (lon < (xj - xi) * (lat - yi) / (yj - yi) + xi);
+      if (intersect) inside = !inside;
+      
+      j = i;
+    }
+  }
+  return inside;
+};
+
+// Derive country from coordinates using actual GeoJSON boundaries
 const getCountryFromCoordinates = (lat: number, lon: number): string => {
   console.log('Detecting country for coordinates:', lat, lon);
   
-  // Check in order of specificity to avoid overlaps
-  // Tajikistan: 36.7-41.1°N, 67.4-75.2°E
-  if (lat >= 36.7 && lat <= 41.1 && lon >= 67.4 && lon <= 75.2) {
-    console.log('Detected: Tajikistan');
-    return "Tajikistan";
-  }
-  
-  // Kyrgyzstan: 39.2-43.2°N, 69.3-80.3°E
-  if (lat >= 39.2 && lat <= 43.2 && lon >= 69.3 && lon <= 80.3) {
-    console.log('Detected: Kyrgyzstan');
-    return "Kyrgyzstan";
-  }
-  
-  // Turkmenistan: 35.1-42.8°N, 52.5-66.7°E
-  if (lat >= 35.1 && lat <= 42.8 && lon >= 52.5 && lon <= 66.7) {
-    console.log('Detected: Turkmenistan');
-    return "Turkmenistan";
-  }
-  
-  // Uzbekistan: 37.2-45.6°N, 56.0-73.2°E
-  if (lat >= 37.2 && lat <= 45.6 && lon >= 56.0 && lon <= 73.2) {
-    console.log('Detected: Uzbekistan');
-    return "Uzbekistan";
-  }
-  
-  // Kazakhstan: 40.6-55.4°N, 46.5-87.3°E (largest, check last)
-  if (lat >= 40.6 && lat <= 55.4 && lon >= 46.5 && lon <= 87.3) {
-    console.log('Detected: Kazakhstan');
-    return "Kazakhstan";
+  for (const feature of COUNTRY_BOUNDARIES.features) {
+    const countryName = feature.properties?.name;
+    if (!countryName) continue;
+    
+    const geometry = feature.geometry;
+    if (geometry.type === "Polygon") {
+      if (pointInPolygon([lon, lat], geometry.coordinates)) {
+        console.log('Detected:', countryName);
+        return countryName;
+      }
+    } else if (geometry.type === "MultiPolygon") {
+      for (const polygon of geometry.coordinates) {
+        if (pointInPolygon([lon, lat], polygon)) {
+          console.log('Detected:', countryName);
+          return countryName;
+        }
+      }
+    }
   }
   
   console.log('Detected: Out of Bounds');
