@@ -197,7 +197,6 @@ const ChatPopup = ({ location, coordinates, onClose, language, country, derivedC
               </h3>
               {coordinates && (
                 <p className="text-xs text-muted-foreground">
-                  {coordinates[0].toFixed(4)}, {coordinates[1].toFixed(4)}
                   {derivedCountryName &&
                     ` · ${
                       derivedCountryName === "Out of Bounds"
