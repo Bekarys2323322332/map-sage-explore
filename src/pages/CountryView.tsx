@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, MapPin } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { COUNTRY_BOUNDARIES } from "@/data/boundaries";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 // Point-in-polygon detection using ray casting algorithm
 const pointInPolygon = (point: [number, number], polygon: number[][][]): boolean => {
@@ -181,6 +182,7 @@ const CountryView = () => {
   const [mapStyle, setMapStyle] = useState(() => {
     return localStorage.getItem("mapStyle") || "satellite";
   });
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     if (location.state?.language) {
@@ -282,18 +284,33 @@ const CountryView = () => {
       <div className="absolute top-20 left-4 z-[1000] max-w-xs bg-card/95 backdrop-blur-md rounded-lg border border-border shadow-lg p-4">
         <h3 className="text-sm font-semibold text-foreground mb-2">{t("how_to_use")}</h3>
         <ul className="space-y-1.5 text-xs text-muted-foreground">
-          <li className="flex items-start gap-2">
-            <span className="text-primary mt-0.5">•</span>
-            <span>{t("instruction_drag")}</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-primary mt-0.5">•</span>
-            <span>{t("instruction_drop")}</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-primary mt-0.5">•</span>
-            <span>{t("instruction_chat")}</span>
-          </li>
+          {isMobile ? (
+            <>
+              <li className="flex items-start gap-2">
+                <span className="text-primary mt-0.5">•</span>
+                <span>{t("instruction_click_map")}</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-primary mt-0.5">•</span>
+                <span>{t("instruction_chat")}</span>
+              </li>
+            </>
+          ) : (
+            <>
+              <li className="flex items-start gap-2">
+                <span className="text-primary mt-0.5">•</span>
+                <span>{t("instruction_drag")}</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-primary mt-0.5">•</span>
+                <span>{t("instruction_drop")}</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-primary mt-0.5">•</span>
+                <span>{t("instruction_chat")}</span>
+              </li>
+            </>
+          )}
         </ul>
       </div>
 

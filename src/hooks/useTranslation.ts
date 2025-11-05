@@ -30,6 +30,7 @@ export const useTranslation = (language: string) => {
     how_to_use: "How to Use",
     instruction_drag: "Drag the pin from the bottom right corner",
     instruction_drop: "Drop it anywhere on the map to explore",
+    instruction_click_map: "Tap anywhere on the map to explore",
     instruction_chat: "Ask questions about any location",
 
     // Settings
@@ -96,6 +97,7 @@ export const useTranslation = (language: string) => {
     how_to_use: "Қалай пайдалану керек",
     instruction_drag: "Төменгі оң жақ бұрыштағы белгішені сүйреңіз",
     instruction_drop: "Зерттеу үшін картаның кез келген жеріне тастаңыз",
+    instruction_click_map: "Зерттеу үшін картаның кез келген жеріне басыңыз",
     instruction_chat: "Кез келген орын туралы сұрақтар қойыңыз",
 
     // Settings
