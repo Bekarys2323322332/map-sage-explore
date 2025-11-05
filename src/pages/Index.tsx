@@ -115,18 +115,21 @@ const Index = () => {
                           geo.properties.name,
                         ),
                       )
-                      .map((geo) => {
+                  .map((geo, index) => {
                         const countryId = geo.properties.name.toLowerCase();
                         const baseColor = countryColors[countryId];
                         const isCountryHovered = hoveredCountry === countryId || isHovered(countryId);
+                        
+                        // Stagger wave animation delays for each country (0.6s apart)
+                        const waveDelay = `${index * 0.6}s`;
 
                         return (
                           <Geography
                             key={geo.rsmKey}
                             geography={geo}
-                            fill={isCountryHovered ? baseColor : "hsl(var(--muted))"}
-                            stroke={isCountryHovered ? baseColor : "hsl(var(--border))"}
-                            strokeWidth={isCountryHovered ? 1.5 : 0.8}
+                            fill={isTouch ? baseColor : (isCountryHovered ? baseColor : "hsl(var(--muted))")}
+                            stroke={isTouch ? baseColor : (isCountryHovered ? baseColor : "hsl(var(--border))")}
+                            strokeWidth={isTouch ? 1.2 : (isCountryHovered ? 1.5 : 0.8)}
                             className="cursor-pointer transition-all duration-300"
                             onMouseEnter={() => !isTouch && setHoveredCountry(countryId)}
                             onMouseLeave={() => !isTouch && setHoveredCountry(null)}
@@ -140,11 +143,16 @@ const Index = () => {
                             style={{
                               default: {
                                 outline: "none",
-                                filter: isCountryHovered
-                                  ? "brightness(1.3) drop-shadow(0 0 30px rgba(255,215,0,0.7))"
-                                  : "brightness(1)",
-                                transform: isCountryHovered ? "scale(1.03)" : "scale(1)",
-                                transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                                filter: isTouch 
+                                  ? undefined 
+                                  : (isCountryHovered
+                                    ? "brightness(1.3) drop-shadow(0 0 30px rgba(255,215,0,0.7))"
+                                    : "brightness(1)"),
+                                transform: isTouch 
+                                  ? undefined 
+                                  : (isCountryHovered ? "scale(1.03)" : "scale(1)"),
+                                transition: isTouch ? undefined : "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                                animation: isTouch ? `country-wave 3s ease-in-out infinite ${waveDelay}` : undefined,
                               },
                               hover: { outline: "none" },
                               pressed: { outline: "none" },

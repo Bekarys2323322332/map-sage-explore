@@ -163,3 +163,19 @@ All colors MUST be HSL.
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }
+
+/* Wave animation for map countries on mobile */
+@keyframes country-wave {
+  0%, 100% {
+    filter: brightness(1);
+    transform: scale(1);
+  }
+  50% {
+    filter: brightness(1.3) drop-shadow(0 0 30px rgba(255,215,0,0.7));
+    transform: scale(1.03);
+  }
+}
+
+.animate-country-wave {
+  animation: country-wave 3s ease-in-out infinite;
+}
