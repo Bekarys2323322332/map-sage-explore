@@ -120,13 +120,6 @@ const Index = () => {
                         const baseColor = countryColors[countryId];
                         const isCountryHovered = hoveredCountry === countryId || isHovered(countryId);
                         
-                        // Stagger wave animation delays going UP (from bottom to top based on Y position)
-                        // Lower Y values (southern countries) animate first
-                        const yPosition = countryPositions[countryId]?.y || 0;
-                        const sortedByY = Object.entries(countryPositions).sort((a, b) => a[1].y - b[1].y);
-                        const positionIndex = sortedByY.findIndex(([id]) => id === countryId);
-                        const waveDelay = `${positionIndex * 0.6}s`;
-
                         return (
                           <Geography
                             key={geo.rsmKey}
@@ -156,7 +149,6 @@ const Index = () => {
                                   ? undefined 
                                   : (isCountryHovered ? "scale(1.03)" : "scale(1)"),
                                 transition: isTouch ? undefined : "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-                                animation: isTouch ? `country-wave 3s ease-in-out infinite ${waveDelay}` : undefined,
                               },
                               hover: { outline: "none" },
                               pressed: { outline: "none" },
