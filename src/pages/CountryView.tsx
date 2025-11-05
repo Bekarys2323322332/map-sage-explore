@@ -4,7 +4,7 @@ import LeafletMap from "@/components/LeafletMap";
 import ChatPopup from "@/components/ChatPopup";
 import SettingsDialog from "@/components/SettingsDialog";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, MapPin } from "lucide-react";
+import { ArrowLeft, MapPin, X } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { COUNTRY_BOUNDARIES } from "@/data/boundaries";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -182,6 +182,7 @@ const CountryView = () => {
   const [mapStyle, setMapStyle] = useState(() => {
     return localStorage.getItem("mapStyle") || "satellite";
   });
+  const [showInstructions, setShowInstructions] = useState(true);
   const isMobile = useIsMobile();
 
   useEffect(() => {
@@ -281,38 +282,50 @@ const CountryView = () => {
       )}
 
       {/* Instructions Panel */}
-      <div className="absolute top-20 left-4 z-[1000] max-w-xs bg-card/95 backdrop-blur-md rounded-lg border border-border shadow-lg p-4">
-        <h3 className="text-sm font-semibold text-foreground mb-2">{t("how_to_use")}</h3>
-        <ul className="space-y-1.5 text-xs text-muted-foreground">
-          {isMobile ? (
-            <>
-              <li className="flex items-start gap-2">
-                <span className="text-primary mt-0.5">•</span>
-                <span>{t("instruction_click_map")}</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-primary mt-0.5">•</span>
-                <span>{t("instruction_chat")}</span>
-              </li>
-            </>
-          ) : (
-            <>
-              <li className="flex items-start gap-2">
-                <span className="text-primary mt-0.5">•</span>
-                <span>{t("instruction_drag")}</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-primary mt-0.5">•</span>
-                <span>{t("instruction_drop")}</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-primary mt-0.5">•</span>
-                <span>{t("instruction_chat")}</span>
-              </li>
-            </>
-          )}
-        </ul>
-      </div>
+      {showInstructions && (
+        <div className="absolute top-20 left-4 z-[1000] max-w-xs bg-card/95 backdrop-blur-md rounded-lg border border-border shadow-lg p-4">
+          <div className="flex items-start justify-between mb-2">
+            <h3 className="text-sm font-semibold text-foreground">{t("how_to_use")}</h3>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-5 w-5 -mt-1 -mr-1"
+              onClick={() => setShowInstructions(false)}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+          <ul className="space-y-1.5 text-xs text-muted-foreground">
+            {isMobile ? (
+              <>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-0.5">•</span>
+                  <span>{t("instruction_click_map")}</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-0.5">•</span>
+                  <span>{t("instruction_chat")}</span>
+                </li>
+              </>
+            ) : (
+              <>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-0.5">•</span>
+                  <span>{t("instruction_drag")}</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-0.5">•</span>
+                  <span>{t("instruction_drop")}</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-0.5">•</span>
+                  <span>{t("instruction_chat")}</span>
+                </li>
+              </>
+            )}
+          </ul>
+        </div>
+      )}
 
       {/* Draggable Marker Footer */}
       <div className="absolute bottom-4 sm:bottom-8 right-4 sm:right-8 z-[1000] flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3 bg-card/95 backdrop-blur-md rounded-lg border border-border shadow-lg">
