@@ -37,10 +37,10 @@ const Index = () => {
 
   const countryPositions: Record<string, { x: number; y: number; animal: string }> = {
     kazakhstan: { x: 68, y: 47, animal: "🇰🇿" },
-    uzbekistan: { x: 62, y: 40.5, animal: "🇺🇿" },
-    kyrgyzstan: { x: 75, y: 42, animal: "🇰🇬" },
+    uzbekistan: { x: 62, y: 41.5, animal: "🇺🇿" },
+    kyrgyzstan: { x: 75, y: 43, animal: "🇰🇬" },
     tajikistan: { x: 71, y: 39, animal: "🇹🇯" },
-    turkmenistan: { x: 59, y: 40, animal: "🇹🇲" },
+    turkmenistan: { x: 59, y: 41, animal: "🇹🇲" },
   };
 
   const handleCountryClick = (countryId: string) => {
