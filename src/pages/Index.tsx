@@ -170,11 +170,6 @@ const Index = () => {
                 {Object.entries(countryPositions).map(([countryId, pos]) => {
                   const isCountryHovered = hoveredCountry === countryId || isHovered(countryId);
                   
-                  // Calculate same wave delay as countries for synchronized animation
-                  const sortedByY = Object.entries(countryPositions).sort((a, b) => a[1].y - b[1].y);
-                  const positionIndex = sortedByY.findIndex(([id]) => id === countryId);
-                  const textWaveDelay = `${positionIndex * 0.6}s`;
-                  
                   return (
                     <Marker key={countryId} coordinates={[pos.x, pos.y + 1]}>
                       <g className="pointer-events-none">
@@ -185,12 +180,9 @@ const Index = () => {
                           className="font-bold capitalize"
                           style={{
                             fontSize: "32px",
-                            opacity: isTouch ? 0.3 : (isCountryHovered ? 0.3 : 0),
-                            transition: isTouch ? undefined : "all 0.4s ease",
-                            transform: isTouch ? undefined : (isCountryHovered ? "scale(1.15)" : "scale(1)"),
+                            opacity: 0.3,
                             fill: "#000",
                             filter: "blur(4px)",
-                            animation: isTouch ? `text-wave 3s ease-in-out infinite ${textWaveDelay}` : undefined,
                           }}
                         >
                           {pos.animal} {countryId}
@@ -203,12 +195,9 @@ const Index = () => {
                           className="font-bold capitalize"
                           style={{
                             fontSize: "28px",
-                            opacity: isTouch ? 1 : (isCountryHovered ? 1 : 0),
-                            transition: isTouch ? undefined : "all 0.4s ease",
-                            transform: isTouch ? undefined : (isCountryHovered ? "scale(1.15)" : "scale(1)"),
+                            opacity: 1,
                             fill: "hsl(var(--foreground))",
                             filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.4))",
-                            animation: isTouch ? `text-wave 3s ease-in-out infinite ${textWaveDelay}` : undefined,
                           }}
                         >
                           {pos.animal} {countryId}
