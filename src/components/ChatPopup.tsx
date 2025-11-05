@@ -217,6 +217,33 @@ const ChatPopup = ({ location, coordinates, onClose, language, country, derivedC
         {/* messages */}
         <ScrollArea className="flex-1 h-[calc(90vh-280px)] max-h-[420px] p-6">
           <div className="space-y-4">
+            {messages.length === 0 && !isLoading && (
+              <div className="space-y-4 text-sm text-muted-foreground">
+                <div className="p-4 bg-card border rounded-lg">
+                  <h4 className="font-semibold mb-2 text-foreground">
+                    {language === "Қазақша" ? "Не туралы сұрай аласыз:" : "What you can ask about:"}
+                  </h4>
+                  <ul className="space-y-2 list-disc list-inside">
+                    <li>{language === "Қазақша" ? "Тарихи оқиғалар мен шайқастар" : "Historical events and battles"}</li>
+                    <li>{language === "Қазақша" ? "Табиғи ерекшеліктер мен ландшафт" : "Natural features and landscape"}</li>
+                    <li>{language === "Қазақша" ? "Минералдар мен геология" : "Minerals and geology"}</li>
+                    <li>{language === "Қазақsha" ? "Мәдени орындар мен ескерткіштер" : "Cultural sites and monuments"}</li>
+                    <li>{language === "Қазақsha" ? "Жергілікті аңыздар мен әңгімелер" : "Local legends and stories"}</li>
+                    <li>{language === "Қазақsha" ? "Қоныстану тарихы" : "Settlement history"}</li>
+                  </ul>
+                </div>
+                <div className="p-4 bg-primary/5 border border-primary/20 rounded-lg">
+                  <p className="font-semibold mb-2 text-foreground">
+                    {language === "Қазақша" ? "💡 Кеңес:" : "💡 Tip:"}
+                  </p>
+                  <p>
+                    {language === "Қазақsha" 
+                      ? "Нақты сұрақтар қойыңыз: 'Бұл жерде қандай минералдар табылады?' немесе 'Осы аймақтың тарихы қандай?'"
+                      : "Ask specific questions like: 'What minerals are found here?' or 'What is the history of this area?'"}
+                  </p>
+                </div>
+              </div>
+            )}
             {messages.map((m) => (
               <div key={m.id} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
                 <div
@@ -251,21 +278,29 @@ const ChatPopup = ({ location, coordinates, onClose, language, country, derivedC
         </ScrollArea>
 
         {/* input */}
-        <div className="flex items-center gap-3 p-6 border-t bg-background/50">
-          <Input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && !isLoading && !isInvalidLocation && handleSend()}
-            placeholder={
-              language === "Қазақша"
-                ? "Тарих, табиғат, шайқастар, минералдар туралы сұраңыз..."
-                : "Ask about history, nature, battles, minerals..."
-            }
-            disabled={isLoading || isInvalidLocation}
-          />
-          <Button onClick={handleSend} disabled={isLoading || !input.trim() || isInvalidLocation} size="icon">
-            <Send className="h-4 w-4" />
-          </Button>
+        <div className="flex flex-col gap-2 p-4 sm:p-6 border-t bg-background/50">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && !isLoading && !isInvalidLocation && handleSend()}
+              placeholder={
+                language === "Қазақsha"
+                  ? "Сұрағыңызды жазыңыз..."
+                  : "Type your question..."
+              }
+              disabled={isLoading || isInvalidLocation}
+              className="text-sm"
+            />
+            <Button onClick={handleSend} disabled={isLoading || !input.trim() || isInvalidLocation} size="icon" className="shrink-0">
+              <Send className="h-4 w-4" />
+            </Button>
+          </div>
+          <p className="text-xs text-muted-foreground px-1">
+            {language === "Қазақsha"
+              ? "📱 Телефонда: Картадан нүкте таңдап, нақты сұрақтар қойыңыз"
+              : "📱 On mobile: Select a point on the map and ask specific questions"}
+          </p>
         </div>
       </Card>
     </div>
