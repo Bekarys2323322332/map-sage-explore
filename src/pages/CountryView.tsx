@@ -278,6 +278,25 @@ const CountryView = () => {
         />
       )}
 
+      {/* Instructions Panel */}
+      <div className="absolute top-20 left-4 z-[1000] max-w-xs bg-card/95 backdrop-blur-md rounded-lg border border-border shadow-lg p-4">
+        <h3 className="text-sm font-semibold text-foreground mb-2">{t("how_to_use")}</h3>
+        <ul className="space-y-1.5 text-xs text-muted-foreground">
+          <li className="flex items-start gap-2">
+            <span className="text-primary mt-0.5">•</span>
+            <span>{t("instruction_drag")}</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-primary mt-0.5">•</span>
+            <span>{t("instruction_drop")}</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-primary mt-0.5">•</span>
+            <span>{t("instruction_chat")}</span>
+          </li>
+        </ul>
+      </div>
+
       {/* Draggable Marker Footer */}
       <div className="absolute bottom-4 sm:bottom-8 right-4 sm:right-8 z-[1000] flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3 bg-card/95 backdrop-blur-md rounded-lg border border-border shadow-lg">
         <span className="text-xs sm:text-sm font-medium text-muted-foreground hidden sm:inline">{t("drop_pin")}</span>

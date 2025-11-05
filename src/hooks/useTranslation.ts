@@ -25,6 +25,12 @@ export const useTranslation = (language: string) => {
     // Country View
     back: "Back",
     drop_pin: "Drop a pin:",
+    
+    // Instructions
+    how_to_use: "How to Use",
+    instruction_drag: "Drag the pin from the bottom right corner",
+    instruction_drop: "Drop it anywhere on the map to explore",
+    instruction_chat: "Ask questions about any location",
 
     // Settings
     settings: "Settings",
@@ -85,6 +91,12 @@ export const useTranslation = (language: string) => {
     // Country View
     back: "Артқа",
     drop_pin: "Белгі қою:",
+    
+    // Instructions
+    how_to_use: "Қалай пайдалану керек",
+    instruction_drag: "Төменгі оң жақ бұрыштағы белгішені сүйреңіз",
+    instruction_drop: "Зерттеу үшін картаның кез келген жеріне тастаңыз",
+    instruction_chat: "Кез келген орын туралы сұрақтар қойыңыз",
 
     // Settings
     settings: "Баптаулар",
