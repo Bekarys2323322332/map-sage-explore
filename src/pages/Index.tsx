@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useTouchHover } from "@/hooks/useTouchHover";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -18,6 +19,24 @@ const Index = () => {
     return localStorage.getItem("mapStyle") || "satellite";
   });
   const { handleClick, isHovered, isTouch } = useTouchHover("map");
+  const isMobile = useIsMobile();
+  const [isLandscape, setIsLandscape] = useState(false);
+
+  // Detect orientation changes
+  useEffect(() => {
+    const checkOrientation = () => {
+      setIsLandscape(window.innerHeight < window.innerWidth && isMobile);
+    };
+    
+    checkOrientation();
+    window.addEventListener("resize", checkOrientation);
+    window.addEventListener("orientationchange", checkOrientation);
+    
+    return () => {
+      window.removeEventListener("resize", checkOrientation);
+      window.removeEventListener("orientationchange", checkOrientation);
+    };
+  }, [isMobile]);
 
   useEffect(() => {
     localStorage.setItem("language", language);
@@ -51,7 +70,7 @@ const Index = () => {
     <div className="relative min-h-screen flex flex-col">
       <Header language={language} onLanguageChange={setLanguage} mapStyle={mapStyle} onMapStyleChange={setMapStyle} />
 
-      <div className="flex-1 flex flex-col items-center justify-center p-4 sm:p-7 pt-24 overflow-hidden">
+      <div className={`flex-1 flex flex-col items-center justify-center p-4 sm:p-7 overflow-hidden ${isLandscape ? "pt-4" : "pt-24"}`}>
         {/* Animated background with gradients */}
         <div className="absolute inset-0 bg-gradient-to-br from-background via-card to-muted/40 animate-gradient bg-[length:400%_400%]" />
 
@@ -69,7 +88,7 @@ const Index = () => {
         {/* Main content */}
         <div className="relative z-10 max-w-7xl w-full space-y-8 sm:space-y-12 animate-fade-in">
           {/* Hero section */}
-          <div className="text-center space-y-4 sm:space-y-6 px-4">
+          <div className={`text-center space-y-4 sm:space-y-6 px-4 ${isLandscape ? "hidden" : ""}`}>
             <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-sm animate-scale-in">
               <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-primary animate-pulse" />
               <span className="text-xs sm:text-sm font-medium text-primary">{t("explore_silk_road")}</span>
@@ -105,7 +124,7 @@ const Index = () => {
                   scale: 1100,
                 }}
                 className="w-full h-auto transition-all duration-300"
-                style={{ maxHeight: "70vh" }}
+                style={{ maxHeight: isLandscape ? "92vh" : "70vh" }}
               >
                 <Geographies geography="https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json">
                   {({ geographies }) =>
