@@ -180,7 +180,9 @@ const Index = () => {
                           className="font-bold capitalize"
                           style={{
                             fontSize: "32px",
-                            opacity: 0.3,
+                            opacity: isTouch ? 0.3 : (isCountryHovered ? 0.3 : 0),
+                            transition: isTouch ? undefined : "all 0.4s ease",
+                            transform: isTouch ? undefined : (isCountryHovered ? "scale(1.15)" : "scale(1)"),
                             fill: "#000",
                             filter: "blur(4px)",
                           }}
@@ -195,7 +197,9 @@ const Index = () => {
                           className="font-bold capitalize"
                           style={{
                             fontSize: "28px",
-                            opacity: 1,
+                            opacity: isTouch ? 1 : (isCountryHovered ? 1 : 0),
+                            transition: isTouch ? undefined : "all 0.4s ease",
+                            transform: isTouch ? undefined : (isCountryHovered ? "scale(1.15)" : "scale(1)"),
                             fill: "hsl(var(--foreground))",
                             filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.4))",
                           }}
