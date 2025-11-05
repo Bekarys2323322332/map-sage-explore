@@ -27,7 +27,7 @@ interface Message {
   content: string;
 }
 
-const API_BASE = "https://nomadbackend-ok3j.onrender.com; // наш main.py
+const API_BASE = "https://nomadbackend-ok3j.onrender.com"; // наш main.py
 
 const ChatPopup = ({ location, coordinates, onClose, language, country, derivedCountryName }: ChatPopupProps) => {
   const { toast } = useToast();
