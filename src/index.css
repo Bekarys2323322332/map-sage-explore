@@ -188,3 +188,17 @@ All colors MUST be HSL.
     transform: scale(1.15);
   }
 }
+
+/* Typing animation for chatbot messages */
+@keyframes typing {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.typing-animation {
+  animation: typing 1.5s ease-in-out infinite;
+}

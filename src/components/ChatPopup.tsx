@@ -26,6 +26,7 @@ interface Message {
   id: string;
   role: "user" | "assistant";
   content: string;
+  isTyping?: boolean;
 }
 
 const API_BASE = "https://49deb6bd7a66.ngrok-free.app"; // наш main.py
@@ -36,6 +37,7 @@ const ChatPopup = ({ location, coordinates, onClose, language, country, derivedC
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isInvalidLocation, setIsInvalidLocation] = useState(false);
+  const [typingMessageId, setTypingMessageId] = useState<string | null>(null);
 
   // 2. когда попап открылся и есть координаты — сразу запросим описание
   useEffect(() => {
@@ -98,13 +100,22 @@ const ChatPopup = ({ location, coordinates, onClose, language, country, derivedC
         const data = await res.json();
         if (!res.ok) throw new Error(data.detail || "location-chat failed");
 
+        const msgId = "assistant-1";
+        setTypingMessageId(msgId);
         setMessages([
           {
-            id: "assistant-1",
+            id: msgId,
             role: "assistant",
             content: data.answer,
+            isTyping: true,
           },
         ]);
+        
+        // Simulate typing effect
+        setTimeout(() => {
+          setTypingMessageId(null);
+          setMessages((prev) => prev.map((m) => (m.id === msgId ? { ...m, isTyping: false } : m)));
+        }, Math.min(data.answer.length * 20, 2000));
       } catch (err: any) {
         console.error(err);
         setMessages([
@@ -163,14 +174,23 @@ const ChatPopup = ({ location, coordinates, onClose, language, country, derivedC
       const data = await res.json();
       if (!res.ok) throw new Error(data.detail || "location-chat failed");
 
+      const msgId = (Date.now() + 1).toString();
+      setTypingMessageId(msgId);
       setMessages((prev) => [
         ...prev,
         {
-          id: (Date.now() + 1).toString(),
+          id: msgId,
           role: "assistant",
           content: data.answer,
+          isTyping: true,
         },
       ]);
+      
+      // Simulate typing effect
+      setTimeout(() => {
+        setTypingMessageId(null);
+        setMessages((prev) => prev.map((m) => (m.id === msgId ? { ...m, isTyping: false } : m)));
+      }, Math.min(data.answer.length * 20, 2000));
     } catch (err: any) {
       console.error(err);
       toast({
@@ -218,14 +238,18 @@ const ChatPopup = ({ location, coordinates, onClose, language, country, derivedC
         {/* messages */}
         <ScrollArea className="flex-1 h-[calc(90vh-280px)] max-h-[420px] p-6">
           <div className="space-y-4">
-            {messages.map((m) => (
-              <div key={m.id} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
+            {messages.map((m, index) => (
+              <div 
+                key={m.id} 
+                className={`flex ${m.role === "user" ? "justify-end" : "justify-start"} animate-fade-in`}
+                style={{ animationDelay: `${index * 0.05}s` }}
+              >
                 <div
-                  className={`max-w-[85%] px-4 py-3 rounded-2xl ${
+                  className={`max-w-[85%] px-4 py-3 rounded-2xl transition-all duration-300 ${
                     m.role === "user"
-                      ? "bg-primary text-primary-foreground rounded-br-sm"
-                      : "bg-card border rounded-bl-sm"
-                  }`}
+                      ? "bg-primary text-primary-foreground rounded-br-sm animate-scale-in"
+                      : "bg-card border rounded-bl-sm animate-scale-in"
+                  } ${m.isTyping ? "typing-animation" : ""}`}
                 >
                   <div className="prose prose-sm dark:prose-invert max-w-none">
                     <ReactMarkdown
@@ -246,8 +270,8 @@ const ChatPopup = ({ location, coordinates, onClose, language, country, derivedC
               </div>
             ))}
             {isLoading && (
-              <div className="flex justify-start">
-                <div className="bg-card border rounded-2xl px-4 py-3">
+              <div className="flex justify-start animate-fade-in">
+                <div className="bg-card border rounded-2xl px-4 py-3 animate-scale-in">
                   <div className="flex gap-1">
                     <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
                     <div
