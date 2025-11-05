@@ -6,6 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { X, Send, Landmark } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
 import { useToast } from "@/components/ui/use-toast";
+import ReactMarkdown from "react-markdown";
 
 interface ChatPopupProps {
   location: {
@@ -226,7 +227,21 @@ const ChatPopup = ({ location, coordinates, onClose, language, country, derivedC
                       : "bg-card border rounded-bl-sm"
                   }`}
                 >
-                  {m.content}
+                  <div className="prose prose-sm dark:prose-invert max-w-none">
+                    <ReactMarkdown
+                      components={{
+                        p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+                        ul: ({ children }) => <ul className="list-disc ml-4 mb-2">{children}</ul>,
+                        ol: ({ children }) => <ol className="list-decimal ml-4 mb-2">{children}</ol>,
+                        li: ({ children }) => <li className="mb-1">{children}</li>,
+                        strong: ({ children }) => <strong className="font-bold">{children}</strong>,
+                        em: ({ children }) => <em className="italic">{children}</em>,
+                        code: ({ children }) => <code className="bg-muted px-1 py-0.5 rounded text-xs">{children}</code>,
+                      }}
+                    >
+                      {m.content}
+                    </ReactMarkdown>
+                  </div>
                 </div>
               </div>
             ))}
